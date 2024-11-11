@@ -1,24 +1,23 @@
 import 'package:flutter/material.dart';
-import 'settings.dart';
+import 'navigationbars.dart';
 
-class Homepage extends StatelessWidget {
+class Homepage extends StatefulWidget {
   const Homepage({super.key});
+
+  @override
+  State<Homepage> createState() => _HomepageState();
+}
+
+class _HomepageState extends State<Homepage> {
+         
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        title: const SizedBox(child: Text("Hjemmeskærm")),
-        centerTitle: true,
-        actions: <Widget>[
-          IconButton(
-            onPressed: () {},
-            icon: const Icon(Icons.settings),
-          ),
-        ],
-      ),
-      bottomNavigationBar: BottomNavigationBar(
-          items: const [BottomNavigationBarItem(icon: Icon(Icons.home))]),
+      appBar: Topappbar(pagename: "Hjem"),
+      bottomNavigationBar: const Bottomappbar(),
+       
     );
   }
 }
+
