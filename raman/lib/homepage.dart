@@ -9,15 +9,11 @@ class Homepage extends StatefulWidget {
 }
 
 class _HomepageState extends State<Homepage> {
-         
-
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: Topappbar(pagename: "Hjem"),
       bottomNavigationBar: const Bottomappbar(),
-       
     );
   }
 }
-
