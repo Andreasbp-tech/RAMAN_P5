@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'Opsummering.dart';
+import 'homepage.dart';
 
 class _PreferredAppBarSize extends Size {
   _PreferredAppBarSize(this.toolbarHeight, this.bottomHeight)
@@ -9,8 +11,7 @@ class _PreferredAppBarSize extends Size {
   final double? bottomHeight;
 }
 
-class Topappbar extends StatelessWidget implements PreferredSizeWidget{
-
+class Topappbar extends StatelessWidget implements PreferredSizeWidget {
   final String pagename;
   final Widget? leading;
   final Widget? titleWidget;
@@ -20,7 +21,8 @@ class Topappbar extends StatelessWidget implements PreferredSizeWidget{
   final double? elevation;
   final double? toolbarHeight;
 
-  Topappbar({super.key,
+  Topappbar({
+    super.key,
     required this.pagename,
     this.leading,
     this.titleWidget,
@@ -45,19 +47,18 @@ class Topappbar extends StatelessWidget implements PreferredSizeWidget{
     return preferredSize.height;
   }
 
-
   @override
   Widget build(BuildContext context) {
     return AppBar(
-        title: SizedBox(child: Text(pagename)),
-        centerTitle: true,
-        actions: <Widget>[
-          IconButton(
-            onPressed: () {},
-            icon: const Icon(Icons.settings),
-          ),
-        ],
-      );
+      title: SizedBox(child: Text(pagename)),
+      centerTitle: true,
+      actions: <Widget>[
+        IconButton(
+          onPressed: () {},
+          icon: const Icon(Icons.settings),
+        ),
+      ],
+    );
   }
 }
 
@@ -69,38 +70,59 @@ class Bottomappbar extends StatefulWidget {
 }
 
 class _BottomappbarState extends State<Bottomappbar> {
-        int _selectedIndex = 0;
+  int _selectedIndex = 0;
 
   void _onItemTapped(int index) {
     setState(() {
       _selectedIndex = index;
+      if (_selectedIndex == 0) {
+        Navigator.of(context).push(
+          MaterialPageRoute(
+            builder: (BuildContext context) {
+              return const Homepage();
+            },
+          ),
+        );
+      } else if (_selectedIndex == 1) {
+
+      } else if (_selectedIndex == 2) {
+
+      } else if (_selectedIndex == 3) {
+        Navigator.of(context).push(
+          MaterialPageRoute(
+            builder: (BuildContext context) {
+              return const Opsummering();
+            },
+          ),
+        );
+      }
     });
   }
 
   @override
   Widget build(BuildContext context) {
     return BottomNavigationBar(
-        type: BottomNavigationBarType.fixed,
-               currentIndex: _selectedIndex,
-        onTap: _onItemTapped,
-        items: const [
-           BottomNavigationBarItem(
-            icon: Icon(Icons.home),
-            label: "Hjem",
-          ),
-         BottomNavigationBarItem(
-            icon: Icon(Icons.calendar_month_outlined),
-            label:"Kalender",
-           ),
-            BottomNavigationBarItem(
-            icon: Icon(Icons.account_circle),
-            label:"Profil",
-           ),
-           BottomNavigationBarItem(
-            icon: Icon(Icons.bar_chart_rounded),
-            label:"Opsummering",
-           ),
-       ],
-     );
+      type: BottomNavigationBarType.fixed,
+      currentIndex: _selectedIndex,
+      onTap: _onItemTapped,
+      items: const [
+        BottomNavigationBarItem(
+          icon: Icon(Icons.home),
+          label: "Hjem",
+        ),
+        BottomNavigationBarItem(
+          icon: Icon(Icons.calendar_month_outlined),
+          label: "Kalender",
+        ),
+        BottomNavigationBarItem(
+          icon: Icon(Icons.account_circle),
+          label: "Profil",
+        ),
+        BottomNavigationBarItem(
+          icon: Icon(Icons.bar_chart_rounded),
+          label: "Opsummering",
+        ),
+      ],
+    );
   }
 }
