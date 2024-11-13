@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
-import 'Opsummering.dart';
+import 'opsummering.dart';
 import 'homepage.dart';
+import 'globals.dart' as globals;
 
 class _PreferredAppBarSize extends Size {
   _PreferredAppBarSize(this.toolbarHeight, this.bottomHeight)
@@ -69,13 +70,14 @@ class Bottomappbar extends StatefulWidget {
   State<Bottomappbar> createState() => _BottomappbarState();
 }
 
+
 class _BottomappbarState extends State<Bottomappbar> {
-  int _selectedIndex = 0;
+  //int _selectedIndex = 0;
 
   void _onItemTapped(int index) {
     setState(() {
-      _selectedIndex = index;
-      if (_selectedIndex == 0) {
+      globals.bottomNavigationBarIndex = index;
+      if (globals.bottomNavigationBarIndex == 0) {
         Navigator.of(context).push(
           MaterialPageRoute(
             builder: (BuildContext context) {
@@ -83,11 +85,11 @@ class _BottomappbarState extends State<Bottomappbar> {
             },
           ),
         );
-      } else if (_selectedIndex == 1) {
+      } else if (globals.bottomNavigationBarIndex == 1) {
 
-      } else if (_selectedIndex == 2) {
+      } else if (globals.bottomNavigationBarIndex == 2) {
 
-      } else if (_selectedIndex == 3) {
+      } else if (globals.bottomNavigationBarIndex == 3) {
         Navigator.of(context).push(
           MaterialPageRoute(
             builder: (BuildContext context) {
@@ -103,7 +105,7 @@ class _BottomappbarState extends State<Bottomappbar> {
   Widget build(BuildContext context) {
     return BottomNavigationBar(
       type: BottomNavigationBarType.fixed,
-      currentIndex: _selectedIndex,
+      currentIndex: globals.bottomNavigationBarIndex,
       onTap: _onItemTapped,
       items: const [
         BottomNavigationBarItem(
