@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:raman/painjournal.dart';
 import 'homepage.dart';
 
 void main() {
@@ -12,12 +13,13 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
+      debugShowCheckedModeBanner: false,
       title: 'RAMAN',
       theme: ThemeData(
-        colorScheme: ColorScheme.fromSeed(seedColor: Colors.deepPurple),
+        colorScheme: ColorScheme.fromSeed(seedColor: Colors.blue),
         useMaterial3: true,
       ),
-      home: const Homepage(),
+      home: const PainJournal(),
     );
   }
 }
