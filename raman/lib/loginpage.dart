@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'homepage.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
 //import 'package:cloud_firestore/cloud_firestore.dart';
 
 class LoginPage extends StatefulWidget {
@@ -26,6 +27,9 @@ class _LoginPageState extends State<LoginPage> {
         ),
       );
 
+      var UserUID = FirebaseAuth.instance.currentUser!
+          .uid; // Vi gemmer UserUID (bliver nok smart senere;))
+
       // Handle successful sign-in
     } on FirebaseAuthException catch (e) {
       if (e.code == 'user-not-found') {
@@ -42,6 +46,14 @@ class _LoginPageState extends State<LoginPage> {
         email: _emailController.text,
         password: _passwordController.text,
       );
+
+      FirebaseFirestore.instance
+          .collection("users") //Opretter bruger i databasen under users.
+          .doc(FirebaseAuth.instance.currentUser!
+              .uid) //Her oprettes de med et dokument med UUID'et
+          .set({
+        "email": FirebaseAuth.instance.currentUser!.email
+      }); // Gemmer brugeres e-mail i field
     } on FirebaseAuthException catch (e) {
       if (e.code == 'weak-password') {
         print('The password provided is too weak.');
