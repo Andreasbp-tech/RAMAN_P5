@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'opsummering.dart';
 import 'homepage.dart';
 import 'globals.dart' as globals;
+import 'painjournal.dart';
 
 class _PreferredAppBarSize extends Size {
   _PreferredAppBarSize(this.toolbarHeight, this.bottomHeight)
@@ -70,7 +71,6 @@ class Bottomappbar extends StatefulWidget {
   State<Bottomappbar> createState() => _BottomappbarState();
 }
 
-
 class _BottomappbarState extends State<Bottomappbar> {
   //int _selectedIndex = 0;
 
@@ -86,14 +86,12 @@ class _BottomappbarState extends State<Bottomappbar> {
           ),
         );
       } else if (globals.bottomNavigationBarIndex == 1) {
-
       } else if (globals.bottomNavigationBarIndex == 2) {
-
       } else if (globals.bottomNavigationBarIndex == 3) {
         Navigator.of(context).push(
           MaterialPageRoute(
             builder: (BuildContext context) {
-              return const Opsummering();
+              return const PainJournal();
             },
           ),
         );
