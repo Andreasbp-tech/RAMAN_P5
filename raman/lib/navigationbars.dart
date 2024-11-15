@@ -3,6 +3,7 @@ import 'opsummering.dart';
 import 'homepage.dart';
 import 'globals.dart' as globals;
 import 'painjournal.dart';
+import 'loginpage.dart';
 
 class _PreferredAppBarSize extends Size {
   _PreferredAppBarSize(this.toolbarHeight, this.bottomHeight)

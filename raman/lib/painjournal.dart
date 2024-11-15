@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'navigationbars.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
 
 class PainJournal extends StatefulWidget {
   const PainJournal({super.key});
