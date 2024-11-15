@@ -74,37 +74,58 @@ class Bottomappbar extends StatefulWidget {
 class _BottomappbarState extends State<Bottomappbar> {
   //int _selectedIndex = 0;
 
-  void _onItemTapped(int index) {
-    setState(() {
-      globals.bottomNavigationBarIndex = index;
-      if (globals.bottomNavigationBarIndex == 0) {
-        Navigator.of(context).push(
-          MaterialPageRoute(
-            builder: (BuildContext context) {
-              return const Homepage();
-            },
-          ),
-        );
-      } else if (globals.bottomNavigationBarIndex == 1) {
-      } else if (globals.bottomNavigationBarIndex == 2) {
-      } else if (globals.bottomNavigationBarIndex == 3) {
-        Navigator.of(context).push(
-          MaterialPageRoute(
-            builder: (BuildContext context) {
-              return const PainJournal();
-            },
-          ),
-        );
-      }
-    });
+  int _onItemTapped(int index) {
+    setState(
+      () {
+        globals.bottomNavigationBarIndex = index;
+        if (globals.bottomNavigationBarIndex == 0) {
+          Navigator.of(context).push(
+            MaterialPageRoute(
+              builder: (BuildContext context) {
+                return const Homepage();
+              },
+            ),
+          );
+        } else if (globals.bottomNavigationBarIndex == 1) {
+        } else if (globals.bottomNavigationBarIndex == 2) {
+        } else if (globals.bottomNavigationBarIndex == 3) {
+          Navigator.of(context).push(
+            MaterialPageRoute(
+              builder: (BuildContext context) {
+                return const PainJournal();
+              },
+            ),
+          );
+        }
+      },
+    );
+    return globals.bottomNavigationBarIndex;
   }
 
   @override
   Widget build(BuildContext context) {
     return BottomNavigationBar(
       type: BottomNavigationBarType.fixed,
-      currentIndex: globals.bottomNavigationBarIndex,
-      onTap: _onItemTapped,
+      onTap: (int index) {
+        globals.bottomNavigationBarIndex = index;
+        if (index == 0) {
+          Navigator.of(context).push(
+            MaterialPageRoute(
+              builder: (BuildContext context) {
+                return const Homepage();
+              },
+            ),
+          );
+        } else if (index == 3) {
+          Navigator.of(context).push(
+            MaterialPageRoute(
+              builder: (BuildContext context) {
+                return const Opsummering();
+              },
+            ),
+          );
+        }
+      },
       items: const [
         BottomNavigationBarItem(
           icon: Icon(Icons.home),
@@ -123,6 +144,7 @@ class _BottomappbarState extends State<Bottomappbar> {
           label: "Opsummering",
         ),
       ],
+      currentIndex: globals.bottomNavigationBarIndex,
     );
   }
 }
