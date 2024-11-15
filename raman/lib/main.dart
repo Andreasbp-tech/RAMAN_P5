@@ -1,8 +1,17 @@
 import 'package:flutter/material.dart';
-import 'package:raman/painjournal.dart';
-import 'homepage.dart';
+import 'package:firebase_core/firebase_core.dart';
+import 'firebase_options.dart';
+//import 'package:raman/painjournal.dart';
+//import 'homepage.dart';
+import 'loginpage.dart';
+//import 'package:firebase_auth/firebase_auth.dart';
+//import 'package:cloud_firestore/cloud_firestore.dart';
 
-void main() {
+Future<void> main() async {
+  WidgetsFlutterBinding.ensureInitialized();
+  await Firebase.initializeApp(
+    options: DefaultFirebaseOptions.currentPlatform,
+  );
   runApp(const MyApp());
 }
 
@@ -19,7 +28,7 @@ class MyApp extends StatelessWidget {
         colorScheme: ColorScheme.fromSeed(seedColor: Colors.blue),
         useMaterial3: true,
       ),
-      home: const Homepage(),
+      home: LoginPage(),
     );
   }
 }

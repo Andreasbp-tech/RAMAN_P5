@@ -1,8 +1,9 @@
 import 'package:flutter/material.dart';
-import 'opsummering.dart';
+//import 'opsummering.dart';
 import 'homepage.dart';
 import 'globals.dart' as globals;
 import 'painjournal.dart';
+import 'loginpage.dart';
 
 class _PreferredAppBarSize extends Size {
   _PreferredAppBarSize(this.toolbarHeight, this.bottomHeight)
@@ -87,6 +88,13 @@ class _BottomappbarState extends State<Bottomappbar> {
         );
       } else if (globals.bottomNavigationBarIndex == 1) {
       } else if (globals.bottomNavigationBarIndex == 2) {
+        Navigator.of(context).push(
+          MaterialPageRoute(
+            builder: (BuildContext context) {
+              return LoginPage();
+            },
+          ),
+        );
       } else if (globals.bottomNavigationBarIndex == 3) {
         Navigator.of(context).push(
           MaterialPageRoute(
