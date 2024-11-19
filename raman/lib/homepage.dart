@@ -29,14 +29,14 @@ class _HomepageState extends State<Homepage> {
                   child: ElevatedButton(
                     onPressed: () {},
                     style: ElevatedButton.styleFrom(
-                      padding: const EdgeInsets.symmetric(vertical: 40),
+                      padding: const EdgeInsets.symmetric(vertical: 65),
                     ),
                     child: Row(
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: [
                         Icon(Icons.school_rounded, size: 24),
                         SizedBox(width: 8),
-                        Text('E-læring', style: TextStyle(fontSize: 18)),
+                        Text('E-læring', style: TextStyle(fontSize: 20)),
                       ],
                     ),
                   ),
@@ -54,14 +54,14 @@ class _HomepageState extends State<Homepage> {
                       );
                     },
                     style: ElevatedButton.styleFrom(
-                      padding: const EdgeInsets.symmetric(vertical: 40),
+                      padding: const EdgeInsets.symmetric(vertical: 65),
                     ),
                     child: Row(
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: [
                         Icon(Icons.menu_book, size: 24),
                         SizedBox(width: 8),
-                        Text('Smertedagbog', style: TextStyle(fontSize: 18)),
+                        Text('Smertedagbog', style: TextStyle(fontSize: 20)),
                       ],
                     ),
                   ),
@@ -76,14 +76,14 @@ class _HomepageState extends State<Homepage> {
                   child: ElevatedButton(
                     onPressed: () {},
                     style: ElevatedButton.styleFrom(
-                      padding: const EdgeInsets.symmetric(vertical: 40),
+                      padding: const EdgeInsets.symmetric(vertical: 65),
                     ),
                     child: Row(
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: [
                         Icon(Icons.fitness_center, size: 24),
                         SizedBox(width: 8),
-                        Text('Øvelser', style: TextStyle(fontSize: 18)),
+                        Text('Øvelser', style: TextStyle(fontSize: 20)),
                       ],
                     ),
                   ),
@@ -93,7 +93,7 @@ class _HomepageState extends State<Homepage> {
                   child: ElevatedButton(
                     onPressed: () {},
                     style: ElevatedButton.styleFrom(
-                      padding: const EdgeInsets.symmetric(vertical: 15),
+                      padding: const EdgeInsets.symmetric(vertical: 40),
                     ),
                     child: Column(
                       mainAxisSize: MainAxisSize.min,
@@ -104,7 +104,7 @@ class _HomepageState extends State<Homepage> {
                         Text(
                           'Konsultations-\nlogbog',
                           textAlign: TextAlign.center,
-                          style: TextStyle(fontSize: 18),
+                          style: TextStyle(fontSize: 20),
                         ),
                       ],
                     ),
@@ -120,14 +120,14 @@ class _HomepageState extends State<Homepage> {
                   child: ElevatedButton(
                     onPressed: () {},
                     style: ElevatedButton.styleFrom(
-                      padding: const EdgeInsets.symmetric(vertical: 40),
+                      padding: const EdgeInsets.symmetric(vertical: 65),
                     ),
                     child: Row(
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: [
                         Icon(Icons.people, size: 24),
                         SizedBox(width: 8),
-                        Text('Patienthistorier', style: TextStyle(fontSize: 18)),
+                        Text('Patienthistorier', style: TextStyle(fontSize: 20)),
                       ],
                     ),
                   ),
@@ -137,14 +137,14 @@ class _HomepageState extends State<Homepage> {
                   child: ElevatedButton(
                     onPressed: () {},
                     style: ElevatedButton.styleFrom(
-                      padding: const EdgeInsets.symmetric(vertical: 40),
+                      padding: const EdgeInsets.symmetric(vertical: 65),
                     ),
                     child: Row(
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: [
                         Icon(Icons.my_library_books, size: 24),
                         SizedBox(width: 8),
-                        Text('Metafor ordbog', style: TextStyle(fontSize: 18)),
+                        Text('Metafor ordbog', style: TextStyle(fontSize: 20)),
                       ],
                     ),
                   ),

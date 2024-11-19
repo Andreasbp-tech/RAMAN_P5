@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:firebase_core/firebase_core.dart';
+import 'package:raman/homepage.dart';
 import 'firebase_options.dart';
 //import 'package:raman/painjournal.dart';
 //import 'homepage.dart';
@@ -28,7 +29,7 @@ class MyApp extends StatelessWidget {
         colorScheme: ColorScheme.fromSeed(seedColor: Colors.blue),
         useMaterial3: true,
       ),
-      home: LoginPage(),
+      home: Homepage(),
     );
   }
 }

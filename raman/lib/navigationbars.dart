@@ -93,7 +93,7 @@ class _BottomappbarState extends State<Bottomappbar> {
           Navigator.of(context).push(
             MaterialPageRoute(
               builder: (BuildContext context) {
-                return const PainJournal();
+                return const Opsummering();
               },
             ),
           );
