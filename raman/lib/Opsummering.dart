@@ -35,13 +35,15 @@ class _OpsummeringState extends State<Opsummering> {
               children: [
                 Expanded(
                   child: ElevatedButton(
-                    onPressed: () {Navigator.of(context).push(
+                    onPressed: () {
+                      Navigator.of(context).push(
                         MaterialPageRoute(
                           builder: (BuildContext context) {
-                            return  RadardiagramPage();
+                            return RadardiagramPage();
                           },
                         ),
-                      );},
+                      );
+                    },
                     style: ElevatedButton.styleFrom(
                       padding: const EdgeInsets.symmetric(vertical: 60),
                     ),
@@ -63,18 +65,19 @@ class _OpsummeringState extends State<Opsummering> {
               children: [
                 Expanded(
                   child: ElevatedButton(
-                    onPressed: () {Navigator.of(context).push(
+                    onPressed: () {
+                      Navigator.of(context).push(
                         MaterialPageRoute(
                           builder: (BuildContext context) {
-                            return  PunktdiagramPage();
+                            return Punktdiagram();
                           },
                         ),
-                      );},
+                      );
+                    },
                     style: ElevatedButton.styleFrom(
                       padding: const EdgeInsets.symmetric(vertical: 60),
                     ),
                     child: Row(
-                      
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: [
                         Icon(Icons.show_chart, size: 24),
@@ -92,13 +95,15 @@ class _OpsummeringState extends State<Opsummering> {
               children: [
                 Expanded(
                   child: ElevatedButton(
-                    onPressed: () {Navigator.of(context).push(
+                    onPressed: () {
+                      Navigator.of(context).push(
                         MaterialPageRoute(
                           builder: (BuildContext context) {
                             return LaromdinsmertePage();
                           },
                         ),
-                      );},
+                      );
+                    },
                     style: ElevatedButton.styleFrom(
                       padding: const EdgeInsets.symmetric(vertical: 60),
                     ),
