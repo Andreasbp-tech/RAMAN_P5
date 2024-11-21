@@ -1,10 +1,10 @@
 import 'dart:convert';
-
 import 'package:flutter/material.dart';
 import 'navigationbars.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'errormessage.dart';
+import 'popupsmertedagbog.dart';
 import 'package:intl/intl.dart';
 
 class PainJournal extends StatefulWidget {
@@ -82,6 +82,8 @@ class _PainJournalState extends State<PainJournal> {
         "Aktivitetsliste": trueActivities
       },
     );
+    showMyPopup(context, 'Godt arbejde!',
+        "Vil du gå til hjemmeskærm eller opsummering?");
   }
 
   @override
