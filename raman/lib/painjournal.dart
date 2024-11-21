@@ -98,8 +98,8 @@ class _PainJournalState extends State<PainJournal> {
         "Aktivitetsniveau": activityValue,
       },
     );
-<<<<<<< Updated upstream
-=======
+//<<<<<<< Updated upstream =======
+
     FirebaseFirestore.instance
         .collection("users")
         .doc(FirebaseAuth.instance.currentUser!.uid)
@@ -113,7 +113,7 @@ class _PainJournalState extends State<PainJournal> {
 
     showMyPopup(context, 'Godt arbejde!',
         "Vil du gå til hjemmeskærm eller opsummering?");
->>>>>>> Stashed changes
+//>>>>>>> Stashed changes
   }
 
   @override
