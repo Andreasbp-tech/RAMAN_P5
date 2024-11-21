@@ -1,6 +1,11 @@
+import 'dart:convert';
+
 import 'package:flutter/material.dart';
 import 'navigationbars.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart';
+import 'errormessage.dart';
+import 'package:intl/intl.dart';
 
 class PainJournal extends StatefulWidget {
   const PainJournal({super.key});
@@ -49,6 +54,34 @@ class _PainJournalState extends State<PainJournal> {
     print('Mood: $moodValue');
     print('Activity: $activityValue');
     print('Activities: $activityStatus');
+
+    List<String> trueActivities = [];
+
+    for (var activity in activities) {
+      if (activityStatus[activity] == true) {
+        trueActivities.add(activity);
+      }
+    }
+
+    DateTime now = DateTime.now();
+    String dagsDato = DateFormat('yyyy-MM-dd').format(now);
+    FirebaseFirestore.instance
+        .collection("users")
+        .doc(FirebaseAuth.instance.currentUser!.uid)
+        .collection("dage")
+        .doc(dagsDato)
+        .collection("smertedagbog")
+        .doc("smertedagbog")
+        .set(
+      {
+        "Smerte": painValue,
+        "Søvn": sleepValue,
+        "Social": socialValue,
+        "Humør": moodValue,
+        "Aktivitetsniveau": activityValue,
+        "Aktivitetsliste": trueActivities
+      },
+    );
   }
 
   @override
@@ -132,7 +165,7 @@ class _PainJournalState extends State<PainJournal> {
           const Divider(),
           ElevatedButton(
             onPressed: _finish,
-            child: const Text('Finish'),
+            child: const Text('Færdig'),
           ),
         ],
       ),
