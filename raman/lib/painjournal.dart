@@ -6,6 +6,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'errormessage.dart';
 import 'package:intl/intl.dart';
+import 'globals.dart';
 
 class PainJournal extends StatefulWidget {
   const PainJournal({super.key});
@@ -20,41 +21,57 @@ class _PainJournalState extends State<PainJournal> {
   double socialValue = 5;
   double moodValue = 5;
   double activityValue = 5;
-
-  final List<String> activities = [
-    'Exercise',
-    'Læs en bog',
-    'Meditation',
-    'Work',
-    'Træning',
-    'Cook a meal',
-    'Watch TV',
-    'Go for a walk',
-    'Play a game',
-    'Listen to music',
-    'Clean the house',
-    'Do laundry',
-  ];
-
   final Map<String, bool> activityStatus = {};
+
+  bool isLoading = true;
 
   @override
   void initState() {
     super.initState();
-    for (var activity in activities) {
-      activityStatus[activity] = false;
+    _fetchData();
+  }
+
+  Future<void> _fetchData() async {
+    DateTime now = DateTime.now();
+    String dagsDato = DateFormat('yyyy-MM-dd').format(now);
+    String userId = FirebaseAuth.instance.currentUser!.uid;
+
+    DocumentSnapshot documentSnapshot = await FirebaseFirestore.instance
+        .collection("users")
+        .doc(userId)
+        .collection("dage")
+        .doc(dagsDato)
+        .collection("smertedagbog")
+        .doc("VAS")
+        .get();
+
+    if (documentSnapshot.exists) {
+      Map<String, dynamic> data =
+          documentSnapshot.data() as Map<String, dynamic>;
+
+      setState(() {
+        painValue = data['Smerte']?.toDouble() ?? 5.0;
+        sleepValue = data['Søvn']?.toDouble() ?? 5.0;
+        socialValue = data['Social']?.toDouble() ?? 5.0;
+        moodValue = data['Humør']?.toDouble() ?? 5.0;
+        activityValue = data['Aktivitetsniveau']?.toDouble() ?? 5.0;
+
+        for (var activity in activities) {
+          activityStatus[activity] =
+              data['Aktivitetsliste']?.contains(activity) ?? false;
+        }
+
+        isLoading = false;
+      });
+    } else {
+      setState(() {
+        isLoading = false;
+      });
+      print('No such document!');
     }
   }
 
   void _finish() {
-    // Handle the finish action, e.g., print the values or save them
-    print('Pain: $painValue');
-    print('Sleep: $sleepValue');
-    print('Social: $socialValue');
-    print('Mood: $moodValue');
-    print('Activity: $activityValue');
-    print('Activities: $activityStatus');
-
     List<String> trueActivities = [];
 
     for (var activity in activities) {
@@ -71,7 +88,7 @@ class _PainJournalState extends State<PainJournal> {
         .collection("dage")
         .doc(dagsDato)
         .collection("smertedagbog")
-        .doc("smertedagbog")
+        .doc("VAS")
         .set(
       {
         "Smerte": painValue,
@@ -79,63 +96,90 @@ class _PainJournalState extends State<PainJournal> {
         "Social": socialValue,
         "Humør": moodValue,
         "Aktivitetsniveau": activityValue,
-        "Aktivitetsliste": trueActivities
       },
     );
+<<<<<<< Updated upstream
+=======
+    FirebaseFirestore.instance
+        .collection("users")
+        .doc(FirebaseAuth.instance.currentUser!.uid)
+        .collection("dage")
+        .doc(dagsDato)
+        .collection("smertedagbog")
+        .doc("aktiviteter")
+        .set(
+      {"Aktivitetsliste": activityStatus},
+    );
+
+    showMyPopup(context, 'Godt arbejde!',
+        "Vil du gå til hjemmeskærm eller opsummering?");
+>>>>>>> Stashed changes
   }
 
   @override
   Widget build(BuildContext context) {
+    if (isLoading) {
+      return Scaffold(
+        appBar: Topappbar(pagename: "Smertedagbog"),
+        body: const Center(child: CircularProgressIndicator()),
+      );
+    }
+
     return Scaffold(
       appBar: Topappbar(pagename: "Smertedagbog"),
       bottomNavigationBar: const Bottomappbar(),
       body: Column(
         children: [
-          CustomSlider(
-            title: 'Hvor ondt har du haft i dag?',
-            initialSliderValue: painValue,
-            onChanged: (value) {
-              setState(() {
-                painValue = value;
-              });
-            },
-          ),
-          CustomSlider(
-            title: 'Hvordan har du sovet i nat?',
-            initialSliderValue: sleepValue,
-            onChanged: (value) {
-              setState(() {
-                sleepValue = value;
-              });
-            },
-          ),
-          CustomSlider(
-            title: 'Hvor social har du været i dag?',
-            initialSliderValue: socialValue,
-            onChanged: (value) {
-              setState(() {
-                socialValue = value;
-              });
-            },
-          ),
-          CustomSlider(
-            title: 'Hvordan har dit humør været i dag?',
-            initialSliderValue: moodValue,
-            onChanged: (value) {
-              setState(() {
-                moodValue = value;
-              });
-            },
-          ),
-          CustomSlider(
-            title: 'Hvor aktiv har du været i dag?',
-            initialSliderValue: activityValue,
-            onChanged: (value) {
-              setState(() {
-                activityValue = value;
-              });
-            },
-          ),
+          if (painValue != null)
+            CustomSlider(
+              title: 'Hvor ondt har du haft i dag?',
+              initialSliderValue: painValue!,
+              onChanged: (value) {
+                setState(() {
+                  painValue = value;
+                });
+              },
+            ),
+          if (sleepValue != null)
+            CustomSlider(
+              title: 'Hvordan har du sovet i nat?',
+              initialSliderValue: sleepValue!,
+              onChanged: (value) {
+                setState(() {
+                  sleepValue = value;
+                });
+              },
+            ),
+          if (socialValue != null)
+            CustomSlider(
+              title: 'Hvor social har du været i dag?',
+              initialSliderValue: socialValue!,
+              onChanged: (value) {
+                setState(() {
+                  socialValue = value;
+                });
+              },
+            ),
+          if (moodValue != null)
+            CustomSlider(
+              title: 'Hvordan har dit humør været i dag?',
+              initialSliderValue: moodValue!,
+              onChanged: (value) {
+                setState(() {
+                  moodValue = value;
+                });
+              },
+            ),
+          if (activityValue != null)
+            CustomSlider(
+              title: 'Hvor aktiv har du været i dag?',
+              initialSliderValue: activityValue!,
+              onChanged: (value) {
+                setState(() {
+                  activityValue = value;
+                });
+              },
+            ),
           const Divider(),
           const SizedBox(height: 10),
           const Text(
@@ -145,8 +189,7 @@ class _PainJournalState extends State<PainJournal> {
           const SizedBox(height: 3),
           const Divider(),
           SizedBox(
-            height: MediaQuery.of(context).size.height *
-                0.25, // Adjust the height as needed
+            height: MediaQuery.of(context).size.height * 0.25,
             child: Scrollbar(
               thumbVisibility: true,
               child: SingleChildScrollView(
@@ -192,9 +235,35 @@ class CustomSlider extends StatefulWidget {
 class _CustomSliderState extends State<CustomSlider> {
   late double _currentSliderValue;
 
+  void readData() async {
+    DateTime now = DateTime.now();
+    String dagsDato = DateFormat('yyyy-MM-dd').format(now);
+    String userId = FirebaseAuth.instance.currentUser!.uid;
+
+    DocumentSnapshot documentSnapshot = await FirebaseFirestore.instance
+        .collection("users")
+        .doc(userId)
+        .collection("dage")
+        .doc(dagsDato)
+        .collection("smertedagbog")
+        .doc("VAS")
+        .get();
+
+    if (documentSnapshot.exists) {
+      Map<String, dynamic> data =
+          documentSnapshot.data() as Map<String, dynamic>;
+      setState(() {
+        _currentSliderValue = data[widget.title] ?? widget.initialSliderValue;
+      });
+    } else {
+      print('No such document!');
+    }
+  }
+
   @override
   void initState() {
     super.initState();
+    readData();
     _currentSliderValue = widget.initialSliderValue;
   }
 
