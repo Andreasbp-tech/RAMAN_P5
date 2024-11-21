@@ -6,7 +6,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:intl/intl.dart';
 
 class Punktdiagram extends StatefulWidget {
-  final Map<String, String> SmerteData = {};
+  
   Punktdiagram({super.key});
 
   @override
@@ -15,16 +15,21 @@ class Punktdiagram extends StatefulWidget {
 
 Future<void> _data() async {
   DateTime now = DateTime.now();
-  String dagsDato = DateFormat('yyyy-MM-dd').format(now);
-  DocumentReference docRef = FirebaseFirestore.instance
-      .collection("users")
-      .doc(FirebaseAuth.instance.currentUser!.uid)
-      .collection("dage")
-      .doc(dagsDato)
-      .collection("smertedagbog")
-      .doc("smertedagbog");
-  DocumentSnapshot docSnapShot = await docRef.get();
-  var data = docSnapShot.data() as Map<String, dynamic>;
+  final Map<String, dynamic> SmerteData = {};
+  for (var i = 0; i < 30; i++) {
+    DateTime date = now.subtract(Duration(days: i));
+    String dateString = DateFormat('yyyy-MM-dd').format(now);
+    DocumentReference docRef = FirebaseFirestore.instance
+        .collection("users")
+        .doc(FirebaseAuth.instance.currentUser!.uid)
+        .collection("dage")
+        .doc(dateString)
+        .collection("smertedagbog")
+        .doc("smertedagbog");
+    DocumentSnapshot docSnapShot = await docRef.get();
+    var data = docSnapShot.data() as Map<String, dynamic>;
+    SmerteData.addEntries(newEntries)
+  }
 
   print("jeg printer smerte: ${data["Smerte"]}");
   print(data);
