@@ -90,7 +90,7 @@ class _LoginPageState extends State<LoginPage> {
                 labelText: 'Email',
               ),
               //keyboardType: TextInputType.text,
-              //keyboardType: TextInputType.emailAddress,
+              keyboardType: TextInputType.emailAddress,
             ),
             const SizedBox(height: 16.0),
             TextField(
