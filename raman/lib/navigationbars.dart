@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:raman/Profil.dart';
 import 'opsummering.dart';
 import 'homepage.dart';
 import 'globals.dart' as globals;
@@ -114,6 +115,14 @@ class _BottomappbarState extends State<Bottomappbar> {
             MaterialPageRoute(
               builder: (BuildContext context) {
                 return const Homepage();
+              },
+            ),
+          );
+        } else if (index == 2) {
+          Navigator.of(context).push(
+            MaterialPageRoute(
+              builder: (BuildContext context) {
+                return const Profil();
               },
             ),
           );
