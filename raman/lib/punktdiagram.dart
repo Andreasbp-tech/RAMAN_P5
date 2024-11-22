@@ -25,7 +25,8 @@ class _PunktdiagramState extends State<Punktdiagram> {
   bool showMood = true;
   bool showAktivitet = true;
   bool isLoading = true;
-  int datasize = 31;
+  int datasize = 7;
+  int fetchedDatasize = 31;
   List<String> lengthOfDataStatus = [
     "Uge",
     "Måned",
@@ -47,12 +48,8 @@ class _PunktdiagramState extends State<Punktdiagram> {
 
   Future<void> _fetchData() async {
     DateTime now = DateTime.now();
-    if (chosenDataLength == "Uge") {
-      datasize = 7;
-    } else if (chosenDataLength == "Måned") {
-      datasize = 31;
-    }
-    for (var i = 0; i < datasize; i++) {
+
+    for (var i = 0; i < fetchedDatasize; i++) {
       DateTime date = now.subtract(Duration(days: i));
       String dateString = DateFormat('yyyy-MM-dd').format(date);
       String DateWithoutYYYY = DateFormat('dd-MM').format(date);
@@ -152,6 +149,11 @@ class _PunktdiagramState extends State<Punktdiagram> {
                                   setState(() {
                                     chosenDataLength = value;
                                     _fetchData();
+                                    if (chosenDataLength == "Uge") {
+                                      datasize = 7;
+                                    } else if (chosenDataLength == "Måned") {
+                                      datasize = 31;
+                                    }
                                   });
                                 },
                               ),
@@ -268,7 +270,7 @@ class LineChartSample extends StatelessWidget {
               spots: smerteSpots,
               isCurved: false,
               color: Colors.blue,
-              barWidth: 4,
+              barWidth: 2,
               isStrokeCapRound: true,
               dotData: const FlDotData(show: true),
               show: showParametreStatus["Smerte"] ?? false,
@@ -277,7 +279,7 @@ class LineChartSample extends StatelessWidget {
               spots: sleepSpots,
               isCurved: false,
               color: Colors.red,
-              barWidth: 4,
+              barWidth: 2,
               isStrokeCapRound: true,
               dotData: const FlDotData(show: true),
               show: showParametreStatus["Søvn"] ?? false,
@@ -286,7 +288,7 @@ class LineChartSample extends StatelessWidget {
               spots: socialSpots,
               isCurved: false,
               color: Colors.purple,
-              barWidth: 4,
+              barWidth: 2,
               isStrokeCapRound: true,
               dotData: const FlDotData(show: true),
               show: showParametreStatus["Social"] ?? false,
@@ -295,7 +297,7 @@ class LineChartSample extends StatelessWidget {
               spots: moodSpots,
               isCurved: false,
               color: Colors.green,
-              barWidth: 4,
+              barWidth: 2,
               isStrokeCapRound: true,
               dotData: const FlDotData(show: true),
               show: showParametreStatus["Humør"] ?? false,
@@ -304,7 +306,7 @@ class LineChartSample extends StatelessWidget {
               spots: aktivitetsSpots,
               isCurved: false,
               color: Colors.amber,
-              barWidth: 4,
+              barWidth: 2,
               isStrokeCapRound: true,
               dotData: const FlDotData(show: true),
               show: showParametreStatus["Aktivitet"] ?? false,
