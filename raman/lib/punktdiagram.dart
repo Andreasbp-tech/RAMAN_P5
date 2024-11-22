@@ -1,6 +1,5 @@
 import 'package:fl_chart/fl_chart.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/rendering.dart';
 import 'package:raman/navigationbars.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
@@ -14,26 +13,28 @@ class Punktdiagram extends StatefulWidget {
 }
 
 class _PunktdiagramState extends State<Punktdiagram> {
+  //the following variables is to have a data string for the loaded data
   final Map<String, dynamic> smerteData = {};
   final Map<String, dynamic> sleepData = {};
   final Map<String, dynamic> socialData = {};
   final Map<String, dynamic> moodData = {};
   final Map<String, dynamic> aktivitetsData = {};
-  bool showSmerte = true;
-  bool showSleep = true;
-  bool showSocial = true;
-  bool showMood = true;
-  bool showAktivitet = true;
-  bool isLoading = true;
+  //the following variables is to define the length of data to aquire from the dB
   int datasize = 7;
   int fetchedDatasize = 31;
+  //bool for defining whether the dat for the program has been loaded
+  bool isLoading = true;
   List<String> lengthOfDataStatus = [
+    //this List is to define the options available for the user
     "Uge",
     "Måned",
     "År",
   ];
-  String? chosenDataLength = "Uge";
+
+  String? chosenDataLength =
+      "Uge"; //This String? is to define what option is selected by the user, "Uge" is the predefined option
   final Map<String, bool> showParametreStatus = {
+    //This Map is to define which parametre should be displayed
     "Smerte": true,
     "Søvn": false,
     "Social": false,
@@ -42,18 +43,24 @@ class _PunktdiagramState extends State<Punktdiagram> {
   };
   @override
   void initState() {
+    //the functions that is needed to run at the start of the file
     super.initState();
     _fetchData();
   }
 
   Future<void> _fetchData() async {
+    //the function for fetching data in the database
     DateTime now = DateTime.now();
 
     for (var i = 0; i < fetchedDatasize; i++) {
+      //loop for running through the dB, starting from todays date and going backwards
+      //var i = 0; i < fetchedDatasize; i++ ==> today is the leftmost day
+      //var i = fetchedDatasize; i > 0; i-- ==> today is the rightmost day
       DateTime date = now.subtract(Duration(days: i));
       String dateString = DateFormat('yyyy-MM-dd').format(date);
       String DateWithoutYYYY = DateFormat('dd-MM').format(date);
-      DocumentReference docRef = FirebaseFirestore.instance
+      DocumentReference docRef = FirebaseFirestore
+          .instance //instance for the program to fetch data in the dB
           .collection("users")
           .doc(FirebaseAuth.instance.currentUser!.uid)
           .collection("dage")
@@ -63,6 +70,7 @@ class _PunktdiagramState extends State<Punktdiagram> {
       DocumentSnapshot docSnapShot = await docRef.get();
 
       if (docSnapShot.exists) {
+        //when new data is aquired save it at the appropriate data locations
         Map<String, dynamic> data = docSnapShot.data() as Map<String, dynamic>;
         setState(() {
           smerteData.addEntries([MapEntry(DateWithoutYYYY, data["Smerte"])]);
@@ -77,21 +85,25 @@ class _PunktdiagramState extends State<Punktdiagram> {
     }
     setState(
       () {
+        //when data is finsihed loading set the bool to false so that the page can be rendered
         isLoading = false;
       },
     );
     //print("jeg printer smerte: ${data["Smerte"]}");
-    print(smerteData);
+    print(smerteData); //debugging remove at production
   }
 
   Widget build(BuildContext context) {
     if (isLoading) {
+      //loading page, that is active until data is loaded
+      //TODO: add descriptive text of why the program is loading
       return Scaffold(
         appBar: Topappbar(pagename: "Punktdiagram"),
         body: const Center(child: CircularProgressIndicator()),
       );
     }
     return Scaffold(
+      //the rendering of the page
       appBar: Topappbar(pagename: "Punktdiagram"),
       bottomNavigationBar: const Bottomappbar(),
       body: Stack(
@@ -108,9 +120,11 @@ class _PunktdiagramState extends State<Punktdiagram> {
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
                       const SizedBox(
+                        //top left most title
                         child: Text("Tid\n"),
                       ),
                       SizedBox(
+                        //top left most checkbox
                         height: 90,
                         width: 180,
                         child: ListView(
@@ -133,9 +147,11 @@ class _PunktdiagramState extends State<Punktdiagram> {
                     crossAxisAlignment: CrossAxisAlignment.end,
                     children: [
                       const SizedBox(
+                        //top rightmost title
                         child: Text("Smerte\nParametre"),
                       ),
                       SizedBox(
+                        //top rightmost checkbox
                         height: 90,
                         width: 180,
                         child: ListView(
@@ -165,11 +181,11 @@ class _PunktdiagramState extends State<Punktdiagram> {
                   )
                 ],
               ),
-              //need to add checklist of enabled graphs
               const SizedBox(
                 height: 30, //whitespace between checkboxes and graph
               ),
               Expanded(
+                //the graph
                 child: Padding(
                   padding: const EdgeInsets.only(right: 16, left: 6),
                   child: LineChartSample(
@@ -191,12 +207,16 @@ class _PunktdiagramState extends State<Punktdiagram> {
 }
 
 class LineChartSample extends StatelessWidget {
+  //class to make the linegraph
+  //maps to take the data
   Map<String, dynamic> smerteData = {};
   Map<String, dynamic> sleepData = {};
   Map<String, dynamic> socialData = {};
   Map<String, dynamic> moodData = {};
   Map<String, dynamic> aktivitetsData = {};
+  //map to define whether a parametre should be shown on the graph
   Map<String, bool> showParametreStatus = {};
+  //int to define the size of the graph to be rendered
   int datasize;
 
   LineChartSample({
@@ -211,6 +231,7 @@ class LineChartSample extends StatelessWidget {
   });
   @override
   Widget build(BuildContext context) {
+    //the following Lists is to convert the data into the appropriate datatype "FlSpot" for the linechart
     List<FlSpot> smerteSpots = smerteData.entries
         .map((entry) {
           int index = smerteData.keys.toList().indexOf(entry.key);
@@ -257,6 +278,7 @@ class LineChartSample extends StatelessWidget {
           minY: 0,
           maxY: 10,
           borderData: FlBorderData(
+            //define which borders is shown
             show: true,
             border: const Border(
               bottom: BorderSide(color: Colors.black, width: 2),
@@ -267,15 +289,18 @@ class LineChartSample extends StatelessWidget {
           ),
           lineBarsData: [
             LineChartBarData(
-              spots: smerteSpots,
-              isCurved: false,
-              color: Colors.blue,
-              barWidth: 2,
+              //smerte
+              spots: smerteSpots, //datainput
+              isCurved: false, //curved or straight lines
+              color: Colors.blue, //color of line
+              barWidth: 2, //width of line
               isStrokeCapRound: true,
               dotData: const FlDotData(show: true),
-              show: showParametreStatus["Smerte"] ?? false,
+              show: showParametreStatus["Smerte"] ??
+                  false, //whether or not the parametre should be shown
             ),
             LineChartBarData(
+              //søvn
               spots: sleepSpots,
               isCurved: false,
               color: Colors.red,
@@ -285,6 +310,7 @@ class LineChartSample extends StatelessWidget {
               show: showParametreStatus["Søvn"] ?? false,
             ),
             LineChartBarData(
+              //social
               spots: socialSpots,
               isCurved: false,
               color: Colors.purple,
@@ -294,6 +320,7 @@ class LineChartSample extends StatelessWidget {
               show: showParametreStatus["Social"] ?? false,
             ),
             LineChartBarData(
+              //humør
               spots: moodSpots,
               isCurved: false,
               color: Colors.green,
@@ -303,6 +330,7 @@ class LineChartSample extends StatelessWidget {
               show: showParametreStatus["Humør"] ?? false,
             ),
             LineChartBarData(
+              //aktivitet
               spots: aktivitetsSpots,
               isCurved: false,
               color: Colors.amber,
