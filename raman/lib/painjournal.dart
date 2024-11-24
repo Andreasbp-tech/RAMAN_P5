@@ -130,7 +130,7 @@ class _PainJournalState extends State<PainJournal> {
           if (painValue != null)
             CustomSlider(
               title: 'Hvor ondt har du haft i dag?',
-              initialSliderValue: painValue!,
+              initialSliderValue: painValue,
               onChanged: (value) {
                 setState(() {
                   painValue = value;
@@ -140,7 +140,7 @@ class _PainJournalState extends State<PainJournal> {
           if (sleepValue != null)
             CustomSlider(
               title: 'Hvordan har du sovet i nat?',
-              initialSliderValue: sleepValue!,
+              initialSliderValue: sleepValue,
               onChanged: (value) {
                 setState(() {
                   sleepValue = value;
@@ -150,7 +150,7 @@ class _PainJournalState extends State<PainJournal> {
           if (socialValue != null)
             CustomSlider(
               title: 'Hvor social har du været i dag?',
-              initialSliderValue: socialValue!,
+              initialSliderValue: socialValue,
               onChanged: (value) {
                 setState(() {
                   socialValue = value;
@@ -160,7 +160,7 @@ class _PainJournalState extends State<PainJournal> {
           if (moodValue != null)
             CustomSlider(
               title: 'Hvordan har dit humør været i dag?',
-              initialSliderValue: moodValue!,
+              initialSliderValue: moodValue,
               onChanged: (value) {
                 setState(() {
                   moodValue = value;
@@ -170,7 +170,7 @@ class _PainJournalState extends State<PainJournal> {
           if (activityValue != null)
             CustomSlider(
               title: 'Hvor aktiv har du været i dag?',
-              initialSliderValue: activityValue!,
+              initialSliderValue: activityValue,
               onChanged: (value) {
                 setState(() {
                   activityValue = value;

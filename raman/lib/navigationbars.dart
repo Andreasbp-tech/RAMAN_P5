@@ -3,8 +3,6 @@ import 'package:raman/Profil.dart';
 import 'opsummering.dart';
 import 'homepage.dart';
 import 'globals.dart' as globals;
-import 'painjournal.dart';
-import 'loginpage.dart';
 
 class _PreferredAppBarSize extends Size {
   _PreferredAppBarSize(this.toolbarHeight, this.bottomHeight)
@@ -37,26 +35,37 @@ class Topappbar extends StatelessWidget implements PreferredSizeWidget {
         preferredSize =
             _PreferredAppBarSize(toolbarHeight, bottom?.preferredSize.height);
 
-  /// Used by [Scaffold] to compute its [AppBar]'s overall height. The returned value is
-  /// the same `preferredSize.height` unless [AppBar.toolbarHeight] was null and
-  /// `AppBarTheme.of(context).toolbarHeight` is non-null. In that case the
-  /// return value is the sum of the theme's toolbar height and the height of
-  /// the app bar's [AppBar.bottom] widget.
-  static double preferredHeightFor(BuildContext context, Size preferredSize) {
-    if (preferredSize is _PreferredAppBarSize &&
-        preferredSize.toolbarHeight == null) {
-      return (AppBarTheme.of(context).toolbarHeight ?? kToolbarHeight) +
-          (preferredSize.bottomHeight ?? 0);
-    }
-    return preferredSize.height;
-  }
-
   @override
   Widget build(BuildContext context) {
     return AppBar(
+      leading: IconButton(
+        icon: Icon(Icons.arrow_back),
+        onPressed: () {
+          // Handle back button press here
+          if (globals.bottomNavigationBarIndex == 0) {
+            // Do nothing if already on the home screen
+            return;
+          } else {
+            if (Navigator.of(context).canPop()) {
+              Navigator.of(context).pop();
+            } else {
+              // Prevent navigating to the login page
+              if (globals.bottomNavigationBarIndex != 0) {
+                Navigator.of(context).pushReplacement(
+                  MaterialPageRoute(
+                    builder: (BuildContext context) {
+                      return const Homepage();
+                    },
+                  ),
+                );
+              }
+            }
+          }
+        },
+      ),
       title: SizedBox(child: Text(pagename)),
       centerTitle: true,
-      actions: <Widget>[
+      actions: [
         IconButton(
           onPressed: () {},
           icon: const Icon(Icons.settings),
@@ -70,72 +79,43 @@ class Bottomappbar extends StatefulWidget {
   const Bottomappbar({super.key});
 
   @override
-  State<Bottomappbar> createState() => _BottomappbarState();
+  State createState() => _BottomappbarState();
 }
 
 class _BottomappbarState extends State<Bottomappbar> {
-  //int _selectedIndex = 0;
-
-  int _onItemTapped(int index) {
-    setState(
-      () {
-        globals.bottomNavigationBarIndex = index;
-        if (globals.bottomNavigationBarIndex == 0) {
-          Navigator.of(context).push(
-            MaterialPageRoute(
-              builder: (BuildContext context) {
-                return const Homepage();
-              },
-            ),
-          );
-        } else if (globals.bottomNavigationBarIndex == 1) {
-        } else if (globals.bottomNavigationBarIndex == 2) {
-        } else if (globals.bottomNavigationBarIndex == 3) {
-          Navigator.of(context).push(
-            MaterialPageRoute(
-              builder: (BuildContext context) {
-                return const Opsummering();
-              },
-            ),
-          );
-        }
-      },
+  void _navigateToPage(int index) {
+    globals.bottomNavigationBarIndex = index;
+    Widget page;
+    switch (index) {
+      case 0:
+        page = const Homepage();
+        break;
+      case 1:
+        // Add your Calendar page here
+        return;
+      case 2:
+        page = const Profil();
+        break;
+      case 3:
+        page = const Opsummering();
+        break;
+      default:
+        return;
+    }
+    Navigator.of(context).push(
+      MaterialPageRoute(
+        builder: (BuildContext context) {
+          return page;
+        },
+      ),
     );
-    return globals.bottomNavigationBarIndex;
   }
 
   @override
   Widget build(BuildContext context) {
     return BottomNavigationBar(
       type: BottomNavigationBarType.fixed,
-      onTap: (int index) {
-        globals.bottomNavigationBarIndex = index;
-        if (index == 0) {
-          Navigator.of(context).push(
-            MaterialPageRoute(
-              builder: (BuildContext context) {
-                return const Homepage();
-              },
-            ),
-          );
-        } else if (index == 2) {
-          Navigator.of(context).push(
-            MaterialPageRoute(
-              builder: (BuildContext context) {
-                return const Profil();
-              },
-            ),
-          );
-        } else if (index == 3) {
-          Navigator.of(context).push(
-            MaterialPageRoute(
-              builder: (BuildContext context) {
-                return const Opsummering();
-              },
-            ),
-          );
-        }
-      },
+      onTap: _navigateToPage,
       items: const [
         BottomNavigationBarItem(
           icon: Icon(Icons.home),

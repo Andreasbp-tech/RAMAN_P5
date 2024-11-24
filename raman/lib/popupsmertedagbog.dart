@@ -33,12 +33,12 @@ class MyPopup extends StatelessWidget {
                 child: TextButton(
                   child: const Text('Hjemmeskærm'),
                   onPressed: () {
-                    Navigator.of(context).push(
+                    Navigator.pushAndRemoveUntil(
+                      context,
                       MaterialPageRoute(
-                        builder: (BuildContext context) {
-                          return const Homepage();
-                        },
+                        builder: (context) => const Homepage(),
                       ),
+                      (Route<dynamic> route) => false,
                     );
                   },
                 ),
@@ -52,12 +52,12 @@ class MyPopup extends StatelessWidget {
                 child: TextButton(
                   child: const Text('Opsummering'),
                   onPressed: () {
-                    Navigator.of(context).push(
+                    Navigator.pushAndRemoveUntil(
+                      context,
                       MaterialPageRoute(
-                        builder: (BuildContext context) {
-                          return const Opsummering();
-                        },
+                        builder: (context) => const Opsummering(),
                       ),
+                      (Route<dynamic> route) => false,
                     );
                   },
                 ),

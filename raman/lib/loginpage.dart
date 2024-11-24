@@ -22,11 +22,11 @@ class _LoginPageState extends State<LoginPage> {
         email: _emailController.text,
         password: _passwordController.text,
       );
-      Navigator.of(context).push(
+      //Denne linje "pusher replacement" i navigator, så man ikke retunerer til loginpage.
+      Navigator.pushReplacement(
+        context,
         MaterialPageRoute(
-          builder: (BuildContext context) {
-            return const Homepage();
-          },
+          builder: (context) => const Homepage(),
         ),
       );
 
