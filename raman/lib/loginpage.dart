@@ -3,9 +3,6 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'homepage.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'errormessage.dart';
-import 'package:intl/intl.dart';
-
-//import 'package:cloud_firestore/cloud_firestore.dart';
 
 class LoginPage extends StatefulWidget {
   @override
@@ -16,7 +13,7 @@ class _LoginPageState extends State<LoginPage> {
   final TextEditingController _emailController = TextEditingController();
   final TextEditingController _passwordController = TextEditingController();
 
-  Future<void> _signIn() async {
+  Future _signIn() async {
     try {
       await FirebaseAuth.instance.signInWithEmailAndPassword(
         email: _emailController.text,
@@ -39,7 +36,7 @@ class _LoginPageState extends State<LoginPage> {
     }
   }
 
-  Future<void> _register() async {
+  Future _register() async {
     try {
       await FirebaseAuth.instance.createUserWithEmailAndPassword(
         email: _emailController.text,
@@ -69,10 +66,15 @@ class _LoginPageState extends State<LoginPage> {
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: Color(0xFFF5F5DC),
-      body: Padding(
-        padding: const EdgeInsets.all(16.0),
+      body: SingleChildScrollView(
+        padding: EdgeInsets.only(
+          left: 16.0,
+          right: 16.0,
+          top: 16.0,
+          bottom: MediaQuery.of(context).viewInsets.bottom + 16.0,
+        ),
         child: Column(
-          children: <Widget>[
+          children: [
             const SizedBox(height: 100),
             const Center(
               child: Text(
@@ -80,7 +82,7 @@ class _LoginPageState extends State<LoginPage> {
                 style: TextStyle(fontSize: 30),
               ),
             ),
-            SizedBox(height: 200),
+            const SizedBox(height: 200),
             TextField(
               controller: _emailController,
               decoration: InputDecoration(
@@ -89,7 +91,6 @@ class _LoginPageState extends State<LoginPage> {
                 border: OutlineInputBorder(),
                 labelText: 'Email',
               ),
-              //keyboardType: TextInputType.text,
               keyboardType: TextInputType.emailAddress,
             ),
             const SizedBox(height: 16.0),
