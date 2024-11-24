@@ -1,4 +1,3 @@
-
 import 'package:flutter/material.dart';
 import 'package:raman/painjournal.dart';
 import 'navigationbars.dart';
@@ -18,12 +17,14 @@ class _HomepageState extends State<Homepage> {
       appBar: Topappbar(pagename: "Hjem"),
       bottomNavigationBar: const Bottomappbar(),
       body: Padding(
-        padding: const EdgeInsets.symmetric(horizontal: 16.0), // Margen ud til kanten
+        padding: const EdgeInsets.symmetric(
+            horizontal: 16.0), // Margen ud til kanten
         child: Column(
           children: [
             Spacer(), // Tomt mellemrum før første række
             Row(
-              mainAxisAlignment: MainAxisAlignment.spaceEvenly, // Ensartet spacing mellem knapper
+              mainAxisAlignment: MainAxisAlignment
+                  .spaceEvenly, // Ensartet spacing mellem knapper
               children: [
                 Expanded(
                   child: ElevatedButton(
@@ -127,7 +128,8 @@ class _HomepageState extends State<Homepage> {
                       children: [
                         Icon(Icons.people, size: 24),
                         SizedBox(width: 8),
-                        Text('Patienthistorier', style: TextStyle(fontSize: 20)),
+                        Text('Patienthistorier',
+                            style: TextStyle(fontSize: 20)),
                       ],
                     ),
                   ),

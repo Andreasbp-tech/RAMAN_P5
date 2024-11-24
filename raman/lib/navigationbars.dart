@@ -1,7 +1,9 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:raman/Profil.dart';
 import 'opsummering.dart';
 import 'homepage.dart';
+import 'settingspage.dart';
 import 'globals.dart' as globals;
 
 class _PreferredAppBarSize extends Size {
@@ -67,7 +69,15 @@ class Topappbar extends StatelessWidget implements PreferredSizeWidget {
       centerTitle: true,
       actions: [
         IconButton(
-          onPressed: () {},
+          onPressed: () {
+            Navigator.of(context).push(
+              MaterialPageRoute(
+                builder: (BuildContext context) {
+                  return SettingsPage();
+                },
+              ),
+            );
+          },
           icon: const Icon(Icons.settings),
         ),
       ],

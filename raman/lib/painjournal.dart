@@ -123,6 +123,7 @@ class _PainJournalState extends State<PainJournal> {
     }
 
     return Scaffold(
+      backgroundColor: Color(0xFFF5F5DC),
       appBar: Topappbar(pagename: "Smertedagbog"),
       bottomNavigationBar: const Bottomappbar(),
       body: Column(
