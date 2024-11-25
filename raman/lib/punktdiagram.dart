@@ -4,6 +4,7 @@ import 'package:raman/navigationbars.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:intl/intl.dart';
+import 'dart:math';
 
 class Punktdiagram extends StatefulWidget {
   Punktdiagram({super.key});
@@ -66,18 +67,16 @@ class _PunktdiagramState extends State<Punktdiagram> {
   }
 
   Future<void> _fetchData() async {
-    //the function for fetching data in the database
+    // The function for fetching data from the database
     DateTime now = DateTime.now();
 
-    for (var i = 0; i < fetchedDatasize; i++) {
-      //loop for running through the dB, starting from todays date and going backwards
-      //var i = 0; i < fetchedDatasize; i++ ==> today is the leftmost day
-      //var i = fetchedDatasize; i > 0; i-- ==> today is the rightmost day
+    for (var i = fetchedDatasize; i >= 0; i--) {
+      // Loop for running through the database, starting from today's date and going backwards
       DateTime date = now.subtract(Duration(days: i));
       String dateString = DateFormat('yyyy-MM-dd').format(date);
       String DateWithoutYYYY = DateFormat('dd-MM').format(date);
       DocumentReference docRef = FirebaseFirestore
-          .instance //instance for the program to fetch data in the dB
+          .instance // Instance for the program to fetch data from the database
           .collection("users")
           .doc(FirebaseAuth.instance.currentUser!.uid)
           .collection("dage")
@@ -86,28 +85,35 @@ class _PunktdiagramState extends State<Punktdiagram> {
           .doc("VAS");
       DocumentSnapshot docSnapShot = await docRef.get();
 
-      if (docSnapShot.exists) {
-        //when new data is aquired save it at the appropriate data locations
-        Map<String, dynamic> data = docSnapShot.data() as Map<String, dynamic>;
-        setState(() {
+      setState(() {
+        if (docSnapShot.exists) {
+          // When new data is acquired, save it at the appropriate data locations
+          Map<String, dynamic> data =
+              docSnapShot.data() as Map<String, dynamic>;
           smerteData.addEntries([MapEntry(DateWithoutYYYY, data["Smerte"])]);
           sleepData.addEntries([MapEntry(DateWithoutYYYY, data["Søvn"])]);
           socialData.addEntries([MapEntry(DateWithoutYYYY, data["Social"])]);
           moodData.addEntries([MapEntry(DateWithoutYYYY, data["Humør"])]);
           aktivitetsData.addEntries(
               [MapEntry(DateWithoutYYYY, data["Aktivitetsniveau"])]);
-          // isLoading = false;
-        });
-      }
+        } else {
+          // Add null entries if the document does not exist
+          smerteData.addEntries([MapEntry(DateWithoutYYYY, null)]);
+          sleepData.addEntries([MapEntry(DateWithoutYYYY, null)]);
+          socialData.addEntries([MapEntry(DateWithoutYYYY, null)]);
+          moodData.addEntries([MapEntry(DateWithoutYYYY, null)]);
+          aktivitetsData.addEntries([MapEntry(DateWithoutYYYY, null)]);
+        }
+      });
     }
-    setState(
-      () {
-        //when data is finsihed loading set the bool to false so that the page can be rendered
-        isLoading = false;
-      },
-    );
-    //print("jeg printer smerte: ${data["Smerte"]}");
-    print(smerteData); //debugging remove at production
+
+    setState(() {
+      // When data is finished loading, set the bool to false so that the page can be rendered
+      isLoading = false;
+    });
+
+    // Debugging: remove in production
+    print(smerteData);
   }
 
   Widget build(BuildContext context) {
@@ -123,367 +129,405 @@ class _PunktdiagramState extends State<Punktdiagram> {
       //the rendering of the page
       appBar: Topappbar(pagename: "Punktdiagram"),
       bottomNavigationBar: const Bottomappbar(),
-      body: Stack(
+      body: Column(
+        crossAxisAlignment: CrossAxisAlignment.stretch,
         children: <Widget>[
-          Column(
-            crossAxisAlignment: CrossAxisAlignment.stretch,
-            children: <Widget>[
-              Row(
-                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                children: [
-                  Expanded(
-                    child: DropDownMenuWithMultipleTrue(
-                      items: showParametreStatus,
-                      updatedItems: updateParametre,
-                    ),
-                  ),
-                  Expanded(
-                    child: DropDownMenuWithSingleTrue(
-                      items: lengthOfDataStatus,
-                      updatedItem: updateLength,
-                      selectedItem: chosenDataLength,
-                    ),
-                  )
-                ],
-              ),
-              const Divider(
-                height: 10,
-              ),
-              // Row(
-              //   children: <Widget>[
-              //     Column(
-              //       crossAxisAlignment: CrossAxisAlignment.center,
-              //       children: [
-              //         const SizedBox(
-              //           //top left most title
-              //           child: Text("Tid\n"),
-              //         ),
-              //         SizedBox(
-              //           height: 110,
-              //           width: 180,
-              //           child: DropDownMenuWithMultipleTrue(
-              //             items: showParametreStatus,
-              //           ),
-              //           //   //top left most checkbox
-              //           //   height: 110,
-              //           //   width: 180,
-              //           //   child: ListView(
-              //           //     children: showParametreStatus.keys.map((String key) {
-              //           //       return CheckboxListTile(
-              //           //         title: Text(key),
-              //           //         value: showParametreStatus[key],
-              //           //         onChanged: (bool? value) {
-              //           //           setState(() {
-              //           //             showParametreStatus[key] = value!;
-              //           //           });
-              //           //         },
-              //           //       );
-              //           //     }).toList(),
-              //           //   ),
-              //         ),
-              //       ],
-              //     ),
-              //     Column(
-              //       crossAxisAlignment: CrossAxisAlignment.center,
-              //       children: [
-              //         const SizedBox(
-              //           //top rightmost title
-              //           child: Text("Smerte\nParametre"),
-              //         ),
-              //         SizedBox(
-              //           //top rightmost checkbox
-              //           height: 110,
-              //           width: 180,
-              //           child: ListView(
-              //             children: lengthOfDataStatus.map((String item) {
-              //               return ListTile(
-              //                 title: Text(item),
-              //                 leading: Radio<String>(
-              //                   value: item,
-              //                   groupValue: chosenDataLength,
-              //                   onChanged: (String? value) {
-              //                     setState(() {
-              //                       chosenDataLength = value;
-              //                       _fetchData();
-              //                       if (chosenDataLength == "Uge") {
-              //                         datasize = 7;
-              //                       } else if (chosenDataLength == "Måned") {
-              //                         datasize = 31;
-              //                       }
-              //                     });
-              //                   },
-              //                 ),
-              //               );
-              //             }).toList(),
-              //           ),
-              //         ),
-              //       ],
-              //     )
-              //   ],
-              // ),
-              // const SizedBox(
-              //   height: 30, //whitespace between checkboxes and graph
-              // ),
+          Row(
+            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+            children: [
               Expanded(
-                //the graph
-                child: Padding(
-                  padding: const EdgeInsets.only(right: 16, left: 6),
-                  child: LineChartSample(
-                      smerteData: smerteData,
-                      sleepData: sleepData,
-                      socialData: socialData,
-                      moodData: moodData,
-                      aktivitetsData: aktivitetsData,
-                      showParametreStatus: showParametreStatus,
-                      datasize: datasize),
+                child: OptionsMenu(
+                  items: showParametreStatus,
+                  updatedItems: updateParametre,
                 ),
               ),
+              Expanded(
+                child: OptionsMenuSingle(
+                  items: lengthOfDataStatus,
+                  updatedItem: updateLength,
+                  selectedItem: chosenDataLength,
+                ),
+              )
             ],
-          )
+          ),
+          const Divider(
+            height: 10,
+          ),
+          Expanded(
+            //the graph
+            child: Padding(
+              padding: const EdgeInsets.only(right: 16, left: 6),
+              child: LineChartSample(
+                  smerteData: smerteData,
+                  sleepData: sleepData,
+                  socialData: socialData,
+                  moodData: moodData,
+                  aktivitetsData: aktivitetsData,
+                  showParametreStatus: showParametreStatus,
+                  datasize: datasize),
+            ),
+          ),
         ],
       ),
     );
   }
 }
 
-class LineChartSample extends StatelessWidget {
-  //class to make the linegraph
-  //maps to take the data
-  Map<String, dynamic> smerteData = {};
-  Map<String, dynamic> sleepData = {};
-  Map<String, dynamic> socialData = {};
-  Map<String, dynamic> moodData = {};
-  Map<String, dynamic> aktivitetsData = {};
-  //map to define whether a parametre should be shown on the graph
-  Map<String, bool> showParametreStatus = {};
-  //int to define the size of the graph to be rendered
-  int datasize;
+// class LineChartSample extends StatelessWidget {
+//   //class to make the linegraph
+//   //maps to take the data
+//   Map<String, dynamic> smerteData = {};
+//   Map<String, dynamic> sleepData = {};
+//   Map<String, dynamic> socialData = {};
+//   Map<String, dynamic> moodData = {};
+//   Map<String, dynamic> aktivitetsData = {};
+//   //map to define whether a parametre should be shown on the graph
+//   Map<String, bool> showParametreStatus = {};
+//   //int to define the size of the graph to be rendered
+//   int datasize;
 
-  LineChartSample({
-    super.key,
-    required this.smerteData,
-    required this.sleepData,
-    required this.socialData,
-    required this.moodData,
-    required this.aktivitetsData,
-    required this.showParametreStatus,
-    required this.datasize,
-  });
+//   LineChartSample({
+//     super.key,
+//     required this.smerteData,
+//     required this.sleepData,
+//     required this.socialData,
+//     required this.moodData,
+//     required this.aktivitetsData,
+//     required this.showParametreStatus,
+//     required this.datasize,
+//   });
+//   @override
+//   Widget build(BuildContext context) {
+//     //the following Lists is to convert the data into the appropriate datatype "FlSpot" for the linechart
+//     List<FlSpot> smerteSpots = smerteData.entries
+//         .where((entry) => entry.value != null) // Filter out null values
+//         .map((entry) {
+//           int index = smerteData.keys.toList().indexOf(entry.key);
+//           return FlSpot(index.toDouble(), entry.value);
+//         })
+//         .take(datasize) // Take the next 8 entries (24 to 31 inclusive)
+//         .toList();
+//     List<FlSpot> sleepSpots = sleepData.entries
+//         .map((entry) {
+//           int index = smerteData.keys.toList().indexOf(entry.key);
+//           return FlSpot(index.toDouble(), entry.value);
+//         })
+//         .skip(24)
+//         .take(datasize)
+//         .toList();
+//     List<FlSpot> socialSpots = socialData.entries
+//         .map((entry) {
+//           int index = smerteData.keys.toList().indexOf(entry.key);
+//           return FlSpot(index.toDouble(), entry.value);
+//         })
+//         .skip(24)
+//         .take(datasize)
+//         .toList();
+//     List<FlSpot> moodSpots = moodData.entries
+//         .map((entry) {
+//           int index = smerteData.keys.toList().indexOf(entry.key);
+//           return FlSpot(index.toDouble(), entry.value);
+//         })
+//         .skip(24)
+//         .take(datasize)
+//         .toList();
+//     List<FlSpot> aktivitetsSpots = aktivitetsData.entries
+//         .map((entry) {
+//           int index = smerteData.keys.toList().indexOf(entry.key);
+//           return FlSpot(index.toDouble(), entry.value);
+//         })
+//         .skip(24)
+//         .take(datasize)
+//         .toList();
+//     return Padding(
+//       padding: const EdgeInsets.all(16.0),
+//       child: LineChart(
+//         LineChartData(
+//           minX: 0,
+//           maxX: datasize.toDouble(),
+//           baselineX: 0,
+//           baselineY: 10,
+//           minY: 0,
+//           maxY: 10,
+//           borderData: FlBorderData(
+//             //define which borders is shown
+//             show: true,
+//             border: const Border(
+//               bottom: BorderSide(color: Colors.black, width: 2),
+//               left: BorderSide(color: Colors.black, width: 2),
+//               top: BorderSide(color: Colors.transparent),
+//               right: BorderSide(color: Colors.transparent),
+//             ),
+//           ),
+//           lineBarsData: [
+//             LineChartBarData(
+//               //smerte
+//               spots: smerteSpots, //datainput
+//               isCurved: false, //curved or straight lines
+//               color: Colors.blue, //color of line
+//               barWidth: 2, //width of line
+//               isStrokeCapRound: true,
+//               dotData: const FlDotData(show: true),
+//               show: showParametreStatus["Smerte"] ??
+//                   false, //whether or not the parametre should be shown
+//             ),
+//             LineChartBarData(
+//               //søvn
+//               spots: sleepSpots,
+//               isCurved: false,
+//               color: Colors.red,
+//               barWidth: 2,
+//               isStrokeCapRound: true,
+//               dotData: const FlDotData(show: true),
+//               show: showParametreStatus["Søvn"] ?? false,
+//             ),
+//             LineChartBarData(
+//               //social
+//               spots: socialSpots,
+//               isCurved: false,
+//               color: Colors.purple,
+//               barWidth: 2,
+//               isStrokeCapRound: true,
+//               dotData: const FlDotData(show: true),
+//               show: showParametreStatus["Social"] ?? false,
+//             ),
+//             LineChartBarData(
+//               //humør
+//               spots: moodSpots,
+//               isCurved: false,
+//               color: Colors.green,
+//               barWidth: 2,
+//               isStrokeCapRound: true,
+//               dotData: const FlDotData(show: true),
+//               show: showParametreStatus["Humør"] ?? false,
+//             ),
+//             LineChartBarData(
+//               //aktivitet
+//               spots: aktivitetsSpots,
+//               isCurved: false,
+//               color: Colors.amber,
+//               barWidth: 2,
+//               isStrokeCapRound: true,
+//               dotData: const FlDotData(show: true),
+//               show: showParametreStatus["Aktivitet"] ?? false,
+//             ),
+//           ],
+//           titlesData: FlTitlesData(
+//             bottomTitles: AxisTitles(
+//               sideTitles: SideTitles(
+//                   showTitles: true,
+//                   getTitlesWidget: (value, meta) {
+//                     if (value.toInt() >= 0 &&
+//                         value.toInt() < smerteData.keys.length) {
+//                       return Text(smerteData.keys.elementAt(value.toInt()));
+//                     } else {
+//                       return const Text('');
+//                     }
+//                   }),
+//             ),
+//             leftTitles: const AxisTitles(
+//               sideTitles: SideTitles(showTitles: true, reservedSize: 30),
+//             ),
+//             topTitles: const AxisTitles(
+//               sideTitles: SideTitles(showTitles: false),
+//             ),
+//             rightTitles: const AxisTitles(
+//               sideTitles: SideTitles(showTitles: false),
+//             ),
+//           ),
+//         ),
+//       ),
+//     );
+//   }
+// }
+
+// class DropDownMenuWithMultipleTrue extends StatefulWidget {
+//   Map<String, bool> items;
+//   final Function(Map<String, bool>) updatedItems;
+//   // VoidCallback onchange;
+//   DropDownMenuWithMultipleTrue(
+//       {super.key, required this.items, required this.updatedItems});
+
+//   @override
+//   State<DropDownMenuWithMultipleTrue> createState() =>
+//       _DropDownMenuWithMultipleTrueState();
+// }
+
+// class _DropDownMenuWithMultipleTrueState
+//     extends State<DropDownMenuWithMultipleTrue> {
+//   bool _isDropdownOpen = false;
+
+//   void _itemChange(String itemValue, bool isSelected) {
+//     setState(() {
+//       widget.items[itemValue] = isSelected;
+//     });
+//   }
+
+//   @override
+//   Widget build(BuildContext context) {
+//     return Padding(
+//       padding: const EdgeInsets.only(top: 0),
+//       child: Column(
+//         crossAxisAlignment: CrossAxisAlignment.start,
+//         children: [
+//           GestureDetector(
+//             onTap: () {
+//               setState(() {
+//                 _isDropdownOpen = !_isDropdownOpen;
+//               });
+//             },
+//             child: Container(
+//               padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 15),
+//               decoration: BoxDecoration(
+//                 border: Border.all(color: Colors.grey),
+//                 borderRadius: BorderRadius.circular(5),
+//               ),
+//               child: Row(
+//                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
+//                 children: [
+//                   Text(
+//                       /*widget.items.entries.where((entry) => entry.value).isEmpty
+//                           ?*/
+//                       'vælg parametre'
+//                       /*: widget.items.entries
+//                               .where((entry) => entry.value)
+//                               .map((entry) => entry.key)
+//                               .join(', ')*/
+//                       ),
+//                   Icon(_isDropdownOpen
+//                       ? Icons.arrow_drop_up
+//                       : Icons.arrow_drop_down),
+//                 ],
+//               ),
+//             ),
+//           ),
+//           if (_isDropdownOpen)
+//             Column(
+//               children: widget.items.keys.map((item) {
+//                 return CheckboxListTile(
+//                     value: widget.items[item],
+//                     title: Text(item),
+//                     controlAffinity: ListTileControlAffinity.leading,
+//                     onChanged: (isChecked) {
+//                       setState(() {
+//                         _itemChange(item, isChecked!);
+//                         widget.updatedItems(widget.items);
+//                       });
+//                     });
+//               }).toList(),
+//             ),
+//         ],
+//       ),
+//     );
+//   }
+// }
+
+class OptionsMenu extends StatefulWidget {
+  final Map<String, bool> items;
+  final Function(Map<String, bool>) updatedItems;
+
+  OptionsMenu({
+    Key? key,
+    required this.items,
+    required this.updatedItems,
+  }) : super(key: key);
+
+  @override
+  State<OptionsMenu> createState() => _OptionsMenuState();
+}
+
+class _OptionsMenuState extends State<OptionsMenu> {
+  void _itemChange(String itemValue, bool isSelected) {
+    setState(() {
+      widget.items[itemValue] = isSelected;
+    });
+    widget.updatedItems(widget.items);
+  }
+
   @override
   Widget build(BuildContext context) {
-    //the following Lists is to convert the data into the appropriate datatype "FlSpot" for the linechart
-    List<FlSpot> smerteSpots = smerteData.entries
-        .map((entry) {
-          int index = smerteData.keys.toList().indexOf(entry.key);
-          return FlSpot(index.toDouble(), entry.value);
-        })
-        .take(datasize)
-        .toList();
-    List<FlSpot> sleepSpots = sleepData.entries
-        .map((entry) {
-          int index = smerteData.keys.toList().indexOf(entry.key);
-          return FlSpot(index.toDouble(), entry.value);
-        })
-        .take(datasize)
-        .toList();
-    List<FlSpot> socialSpots = socialData.entries
-        .map((entry) {
-          int index = smerteData.keys.toList().indexOf(entry.key);
-          return FlSpot(index.toDouble(), entry.value);
-        })
-        .take(datasize)
-        .toList();
-    List<FlSpot> moodSpots = moodData.entries
-        .map((entry) {
-          int index = smerteData.keys.toList().indexOf(entry.key);
-          return FlSpot(index.toDouble(), entry.value);
-        })
-        .take(datasize)
-        .toList();
-    List<FlSpot> aktivitetsSpots = aktivitetsData.entries
-        .map((entry) {
-          int index = smerteData.keys.toList().indexOf(entry.key);
-          return FlSpot(index.toDouble(), entry.value);
-        })
-        .take(datasize)
-        .toList();
     return Padding(
       padding: const EdgeInsets.all(16.0),
-      child: LineChart(
-        LineChartData(
-          minX: 0,
-          maxX: datasize.toDouble(),
-          baselineX: 0,
-          baselineY: 10,
-          minY: 0,
-          maxY: 10,
-          borderData: FlBorderData(
-            //define which borders is shown
-            show: true,
-            border: const Border(
-              bottom: BorderSide(color: Colors.black, width: 2),
-              left: BorderSide(color: Colors.black, width: 2),
-              top: BorderSide(color: Colors.transparent),
-              right: BorderSide(color: Colors.transparent),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Text(
+            'Vælg parametre',
+            style: TextStyle(
+              fontSize: 16,
+              fontWeight: FontWeight.bold,
             ),
           ),
-          lineBarsData: [
-            LineChartBarData(
-              //smerte
-              spots: smerteSpots, //datainput
-              isCurved: false, //curved or straight lines
-              color: Colors.blue, //color of line
-              barWidth: 2, //width of line
-              isStrokeCapRound: true,
-              dotData: const FlDotData(show: true),
-              show: showParametreStatus["Smerte"] ??
-                  false, //whether or not the parametre should be shown
-            ),
-            LineChartBarData(
-              //søvn
-              spots: sleepSpots,
-              isCurved: false,
-              color: Colors.red,
-              barWidth: 2,
-              isStrokeCapRound: true,
-              dotData: const FlDotData(show: true),
-              show: showParametreStatus["Søvn"] ?? false,
-            ),
-            LineChartBarData(
-              //social
-              spots: socialSpots,
-              isCurved: false,
-              color: Colors.purple,
-              barWidth: 2,
-              isStrokeCapRound: true,
-              dotData: const FlDotData(show: true),
-              show: showParametreStatus["Social"] ?? false,
-            ),
-            LineChartBarData(
-              //humør
-              spots: moodSpots,
-              isCurved: false,
-              color: Colors.green,
-              barWidth: 2,
-              isStrokeCapRound: true,
-              dotData: const FlDotData(show: true),
-              show: showParametreStatus["Humør"] ?? false,
-            ),
-            LineChartBarData(
-              //aktivitet
-              spots: aktivitetsSpots,
-              isCurved: false,
-              color: Colors.amber,
-              barWidth: 2,
-              isStrokeCapRound: true,
-              dotData: const FlDotData(show: true),
-              show: showParametreStatus["Aktivitet"] ?? false,
-            ),
-          ],
-          titlesData: FlTitlesData(
-            bottomTitles: AxisTitles(
-              sideTitles: SideTitles(
-                  showTitles: true,
-                  getTitlesWidget: (value, meta) {
-                    if (value.toInt() >= 0 &&
-                        value.toInt() < smerteData.keys.length) {
-                      return Text(smerteData.keys.elementAt(value.toInt()));
-                    } else {
-                      return const Text('');
-                    }
-                  }),
-            ),
-            leftTitles: const AxisTitles(
-              sideTitles: SideTitles(showTitles: true, reservedSize: 30),
-            ),
-            topTitles: const AxisTitles(
-              sideTitles: SideTitles(showTitles: false),
-            ),
-            rightTitles: const AxisTitles(
-              sideTitles: SideTitles(showTitles: false),
-            ),
+          Column(
+            children: widget.items.keys.map((item) {
+              return CheckboxListTile(
+                value: widget.items[item],
+                title: Text(item),
+                controlAffinity: ListTileControlAffinity.leading,
+                onChanged: (isChecked) {
+                  _itemChange(item, isChecked!);
+                },
+              );
+            }).toList(),
           ),
-        ),
+        ],
       ),
     );
   }
 }
 
-class DropDownMenuWithMultipleTrue extends StatefulWidget {
-  Map<String, bool> items;
-  final Function(Map<String, bool>) updatedItems;
-  // VoidCallback onchange;
-  DropDownMenuWithMultipleTrue(
-      {super.key, required this.items, required this.updatedItems});
+class OptionsMenuSingle extends StatefulWidget {
+  final List<String> items;
+  final Function(String) updatedItem;
+  String? selectedItem;
+
+  OptionsMenuSingle({
+    Key? key,
+    required this.items,
+    required this.updatedItem,
+    required this.selectedItem,
+  }) : super(key: key);
 
   @override
-  State<DropDownMenuWithMultipleTrue> createState() =>
-      _DropDownMenuWithMultipleTrueState();
+  State<OptionsMenuSingle> createState() => _OptionsMenuSingleState();
 }
 
-class _DropDownMenuWithMultipleTrueState
-    extends State<DropDownMenuWithMultipleTrue> {
-  bool _isDropdownOpen = false;
-
-  void _itemChange(String itemValue, bool isSelected) {
+class _OptionsMenuSingleState extends State<OptionsMenuSingle> {
+  void _itemChange(String itemValue) {
     setState(() {
-      widget.items[itemValue] = isSelected;
+      widget.selectedItem = itemValue;
     });
+    widget.updatedItem(itemValue);
   }
 
   @override
   Widget build(BuildContext context) {
     return Padding(
-      padding: const EdgeInsets.only(top: 0),
+      padding: const EdgeInsets.all(16.0),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          GestureDetector(
-            onTap: () {
-              setState(() {
-                _isDropdownOpen = !_isDropdownOpen;
-              });
-            },
-            child: Container(
-              padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 15),
-              decoration: BoxDecoration(
-                border: Border.all(color: Colors.grey),
-                borderRadius: BorderRadius.circular(5),
-              ),
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: [
-                  Text(
-                      /*widget.items.entries.where((entry) => entry.value).isEmpty
-                          ?*/
-                      'vælg parametre'
-                      /*: widget.items.entries
-                              .where((entry) => entry.value)
-                              .map((entry) => entry.key)
-                              .join(', ')*/
-                      ),
-                  Icon(_isDropdownOpen
-                      ? Icons.arrow_drop_up
-                      : Icons.arrow_drop_down),
-                ],
-              ),
+          Text(
+            'Vælg tidsramme',
+            style: TextStyle(
+              fontSize: 16,
+              fontWeight: FontWeight.bold,
             ),
           ),
-          if (_isDropdownOpen)
-            Column(
-              children: widget.items.keys.map((item) {
-                return CheckboxListTile(
-                    value: widget.items[item],
-                    title: Text(item),
-                    controlAffinity: ListTileControlAffinity.leading,
-                    onChanged: (isChecked) {
-                      setState(() {
-                        _itemChange(item, isChecked!);
-                        widget.updatedItems(widget.items);
-                      });
-                    });
-              }).toList(),
-            ),
+          Column(
+            children: widget.items.map((item) {
+              return RadioListTile<String>(
+                value: item,
+                groupValue: widget.selectedItem,
+                title: Text(item),
+                onChanged: (value) {
+                  if (value != null) {
+                    _itemChange(value);
+                  }
+                },
+              );
+            }).toList(),
+          ),
         ],
       ),
     );
@@ -572,5 +616,171 @@ class _DropDownMenuWithSingleTrueState
         ],
       ),
     );
+  }
+}
+
+class LineChartSample extends StatelessWidget {
+  final Map<String, dynamic> smerteData;
+  final Map<String, dynamic> sleepData;
+  final Map<String, dynamic> socialData;
+  final Map<String, dynamic> moodData;
+  final Map<String, dynamic> aktivitetsData;
+  final Map<String, bool> showParametreStatus;
+  final int datasize;
+
+  LineChartSample({
+    Key? key,
+    required this.smerteData,
+    required this.sleepData,
+    required this.socialData,
+    required this.moodData,
+    required this.aktivitetsData,
+    required this.showParametreStatus,
+    required this.datasize,
+  }) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    int actualDataSize =
+        smerteData.length < datasize ? smerteData.length : datasize;
+
+    return Padding(
+      padding: const EdgeInsets.all(16.0),
+      child: LineChart(
+        LineChartData(
+          minX: 0,
+          maxX: actualDataSize.toDouble() - 1,
+          minY: 0,
+          maxY: 10,
+          borderData: FlBorderData(
+            show: true,
+            border: const Border(
+              bottom: BorderSide(color: Colors.black, width: 2),
+              left: BorderSide(color: Colors.black, width: 2),
+              top: BorderSide(color: Colors.transparent),
+              right: BorderSide(color: Colors.transparent),
+            ),
+          ),
+          gridData: FlGridData(
+            show: true,
+            drawVerticalLine: true,
+            verticalInterval: 1,
+            horizontalInterval: 1,
+            getDrawingVerticalLine: (value) {
+              if (value.toInt() >= 0 && value.toInt() < actualDataSize) {
+                return const FlLine(
+                  color: Colors.grey,
+                  strokeWidth: 1,
+                );
+              } else {
+                return FlLine(
+                  color: Colors.transparent,
+                );
+              }
+            },
+            getDrawingHorizontalLine: (value) {
+              return const FlLine(
+                color: Colors.grey,
+                strokeWidth: 1,
+              );
+            },
+          ),
+          lineBarsData: _createLineBarsData(actualDataSize),
+          titlesData: FlTitlesData(
+            bottomTitles: AxisTitles(
+              sideTitles: SideTitles(
+                showTitles: true,
+                getTitlesWidget: (value, meta) {
+                  if (value.toInt() >= 0 && value.toInt() < actualDataSize) {
+                    return Transform.rotate(
+                      angle: -pi / 2, // Rotate 90 degrees
+                      child: Text(smerteData.keys.elementAt(value.toInt())),
+                    );
+                  } else {
+                    return const SizedBox.shrink();
+                  }
+                },
+              ),
+            ),
+            leftTitles: const AxisTitles(
+              sideTitles: SideTitles(showTitles: true, reservedSize: 30),
+            ),
+            topTitles: const AxisTitles(
+              sideTitles: SideTitles(showTitles: false),
+            ),
+            rightTitles: const AxisTitles(
+              sideTitles: SideTitles(showTitles: false),
+            ),
+          ),
+        ),
+      ),
+    );
+  }
+
+  List<LineChartBarData> _createLineBarsData(int actualDataSize) {
+    return [
+      if (showParametreStatus["Smerte"] ?? false)
+        LineChartBarData(
+          spots: _createFlSpots(smerteData, actualDataSize),
+          isCurved: false,
+          color: Colors.blue,
+          barWidth: 2,
+          isStrokeCapRound: true,
+          dotData: const FlDotData(show: true),
+        ),
+      if (showParametreStatus["Søvn"] ?? false)
+        LineChartBarData(
+          spots: _createFlSpots(sleepData, actualDataSize),
+          isCurved: false,
+          color: Colors.red,
+          barWidth: 2,
+          isStrokeCapRound: true,
+          dotData: const FlDotData(show: true),
+        ),
+      if (showParametreStatus["Social"] ?? false)
+        LineChartBarData(
+          spots: _createFlSpots(socialData, actualDataSize),
+          isCurved: false,
+          color: Colors.purple,
+          barWidth: 2,
+          isStrokeCapRound: true,
+          dotData: const FlDotData(show: true),
+        ),
+      if (showParametreStatus["Humør"] ?? false)
+        LineChartBarData(
+          spots: _createFlSpots(moodData, actualDataSize),
+          isCurved: false,
+          color: Colors.green,
+          barWidth: 2,
+          isStrokeCapRound: true,
+          dotData: const FlDotData(show: true),
+        ),
+      if (showParametreStatus["Aktivitet"] ?? false)
+        LineChartBarData(
+          spots: _createFlSpots(aktivitetsData, actualDataSize),
+          isCurved: false,
+          color: Colors.amber,
+          barWidth: 2,
+          isStrokeCapRound: true,
+          dotData: const FlDotData(show: true),
+        ),
+    ];
+  }
+
+  List<FlSpot> _createFlSpots(Map<String, dynamic> data, int actualDataSize) {
+    List<MapEntry<String, dynamic>> reversedEntries =
+        data.entries.toList().reversed.toList();
+    return reversedEntries
+        .asMap()
+        .entries
+        .map((entry) {
+          int index = entry.key;
+          var value = entry.value.value;
+          return value != null
+              ? FlSpot((actualDataSize - 1 - index).toDouble(), value)
+              : FlSpot.nullSpot;
+        })
+        .take(actualDataSize)
+        .toList();
   }
 }
