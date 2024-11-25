@@ -13,7 +13,7 @@ class _HomepageState extends State<Homepage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: const Color(0xFFC8E6C9),
+      backgroundColor: const Color.fromARGB(255, 243, 243, 228),
       appBar: Topappbar(pagename: "Hjem"),
       bottomNavigationBar: const Bottomappbar(),
       body: Padding(
@@ -146,7 +146,7 @@ class _HomepageState extends State<Homepage> {
                       children: [
                         Icon(Icons.my_library_books, size: 24),
                         SizedBox(width: 8),
-                        Text('Metafor ordbog', style: TextStyle(fontSize: 20)),
+                        Text('Metaforordbog', style: TextStyle(fontSize: 20)),
                       ],
                     ),
                   ),
