@@ -78,7 +78,7 @@ class _LoginPageState extends State<LoginPage> {
             const SizedBox(height: 100),
             const Center(
               child: Text(
-                'RAMAN',
+                'MinSmerte',
                 style: TextStyle(fontSize: 30),
               ),
             ),
@@ -89,7 +89,7 @@ class _LoginPageState extends State<LoginPage> {
                 filled: true,
                 fillColor: Colors.white,
                 border: OutlineInputBorder(),
-                labelText: 'Email',
+                labelText: 'E-mail',
               ),
               keyboardType: TextInputType.emailAddress,
             ),
@@ -100,14 +100,14 @@ class _LoginPageState extends State<LoginPage> {
                 filled: true,
                 fillColor: Colors.white,
                 border: OutlineInputBorder(),
-                labelText: 'Password',
+                labelText: 'Kodeord',
               ),
               obscureText: true,
             ),
             const SizedBox(height: 16.0),
             ElevatedButton(
               onPressed: _signIn,
-              child: Text('Sign In'),
+              child: Text('Log ind'),
             ),
             const SizedBox(height: 45.0),
             const Center(
@@ -118,7 +118,7 @@ class _LoginPageState extends State<LoginPage> {
             ),
             const Center(
               child: Text(
-                'Indtast email og password ovenstående felter og tryk:',
+                'Indtast e-mail og kodeord i ovenstående felter og tryk:',
                 style: TextStyle(
                   fontSize: 15,
                   fontStyle: FontStyle.italic,
