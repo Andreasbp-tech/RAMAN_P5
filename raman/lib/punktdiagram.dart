@@ -33,7 +33,7 @@ class _PunktdiagramState extends State<Punktdiagram> {
 
   String? chosenDataLength =
       "Uge"; //This String? is to define what option is selected by the user, "Uge" is the predefined option
-  final Map<String, bool> showParametreStatus = {
+  Map<String, bool> showParametreStatus = {
     //This Map is to define which parametre should be displayed
     "Smerte": true,
     "Søvn": false,
@@ -46,6 +46,23 @@ class _PunktdiagramState extends State<Punktdiagram> {
     //the functions that is needed to run at the start of the file
     super.initState();
     _fetchData();
+  }
+
+  void updateParametre(Map<String, bool> parametre) {
+    setState(() {
+      showParametreStatus = parametre;
+    });
+  }
+
+  void updateLength(String Length) {
+    setState(() {
+      chosenDataLength = Length;
+      if (chosenDataLength == "Uge") {
+        datasize = 7;
+      } else if (chosenDataLength == "Måned") {
+        datasize = 31;
+      }
+    });
   }
 
   Future<void> _fetchData() async {
@@ -111,79 +128,102 @@ class _PunktdiagramState extends State<Punktdiagram> {
           Column(
             crossAxisAlignment: CrossAxisAlignment.stretch,
             children: <Widget>[
-              const SizedBox(
-                height: 30, //whitespace in top of screen
-              ),
               Row(
-                children: <Widget>[
-                  Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      const SizedBox(
-                        //top left most title
-                        child: Text("Tid\n"),
-                      ),
-                      SizedBox(
-                        //top left most checkbox
-                        height: 90,
-                        width: 180,
-                        child: ListView(
-                          children: showParametreStatus.keys.map((String key) {
-                            return CheckboxListTile(
-                              title: Text(key),
-                              value: showParametreStatus[key],
-                              onChanged: (bool? value) {
-                                setState(() {
-                                  showParametreStatus[key] = value!;
-                                });
-                              },
-                            );
-                          }).toList(),
-                        ),
-                      )
-                    ],
+                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                children: [
+                  Expanded(
+                    child: DropDownMenuWithMultipleTrue(
+                      items: showParametreStatus,
+                      updatedItems: updateParametre,
+                    ),
                   ),
-                  Column(
-                    crossAxisAlignment: CrossAxisAlignment.end,
-                    children: [
-                      const SizedBox(
-                        //top rightmost title
-                        child: Text("Smerte\nParametre"),
-                      ),
-                      SizedBox(
-                        //top rightmost checkbox
-                        height: 90,
-                        width: 180,
-                        child: ListView(
-                          children: lengthOfDataStatus.map((String item) {
-                            return ListTile(
-                              title: Text(item),
-                              leading: Radio<String>(
-                                value: item,
-                                groupValue: chosenDataLength,
-                                onChanged: (String? value) {
-                                  setState(() {
-                                    chosenDataLength = value;
-                                    _fetchData();
-                                    if (chosenDataLength == "Uge") {
-                                      datasize = 7;
-                                    } else if (chosenDataLength == "Måned") {
-                                      datasize = 31;
-                                    }
-                                  });
-                                },
-                              ),
-                            );
-                          }).toList(),
-                        ),
-                      ),
-                    ],
+                  Expanded(
+                    child: DropDownMenuWithSingleTrue(
+                      items: lengthOfDataStatus,
+                      updatedItem: updateLength,
+                      selectedItem: chosenDataLength,
+                    ),
                   )
                 ],
               ),
-              const SizedBox(
-                height: 30, //whitespace between checkboxes and graph
+              const Divider(
+                height: 10,
               ),
+              // Row(
+              //   children: <Widget>[
+              //     Column(
+              //       crossAxisAlignment: CrossAxisAlignment.center,
+              //       children: [
+              //         const SizedBox(
+              //           //top left most title
+              //           child: Text("Tid\n"),
+              //         ),
+              //         SizedBox(
+              //           height: 110,
+              //           width: 180,
+              //           child: DropDownMenuWithMultipleTrue(
+              //             items: showParametreStatus,
+              //           ),
+              //           //   //top left most checkbox
+              //           //   height: 110,
+              //           //   width: 180,
+              //           //   child: ListView(
+              //           //     children: showParametreStatus.keys.map((String key) {
+              //           //       return CheckboxListTile(
+              //           //         title: Text(key),
+              //           //         value: showParametreStatus[key],
+              //           //         onChanged: (bool? value) {
+              //           //           setState(() {
+              //           //             showParametreStatus[key] = value!;
+              //           //           });
+              //           //         },
+              //           //       );
+              //           //     }).toList(),
+              //           //   ),
+              //         ),
+              //       ],
+              //     ),
+              //     Column(
+              //       crossAxisAlignment: CrossAxisAlignment.center,
+              //       children: [
+              //         const SizedBox(
+              //           //top rightmost title
+              //           child: Text("Smerte\nParametre"),
+              //         ),
+              //         SizedBox(
+              //           //top rightmost checkbox
+              //           height: 110,
+              //           width: 180,
+              //           child: ListView(
+              //             children: lengthOfDataStatus.map((String item) {
+              //               return ListTile(
+              //                 title: Text(item),
+              //                 leading: Radio<String>(
+              //                   value: item,
+              //                   groupValue: chosenDataLength,
+              //                   onChanged: (String? value) {
+              //                     setState(() {
+              //                       chosenDataLength = value;
+              //                       _fetchData();
+              //                       if (chosenDataLength == "Uge") {
+              //                         datasize = 7;
+              //                       } else if (chosenDataLength == "Måned") {
+              //                         datasize = 31;
+              //                       }
+              //                     });
+              //                   },
+              //                 ),
+              //               );
+              //             }).toList(),
+              //           ),
+              //         ),
+              //       ],
+              //     )
+              //   ],
+              // ),
+              // const SizedBox(
+              //   height: 30, //whitespace between checkboxes and graph
+              // ),
               Expanded(
                 //the graph
                 child: Padding(
@@ -364,6 +404,172 @@ class LineChartSample extends StatelessWidget {
             ),
           ),
         ),
+      ),
+    );
+  }
+}
+
+class DropDownMenuWithMultipleTrue extends StatefulWidget {
+  Map<String, bool> items;
+  final Function(Map<String, bool>) updatedItems;
+  // VoidCallback onchange;
+  DropDownMenuWithMultipleTrue(
+      {super.key, required this.items, required this.updatedItems});
+
+  @override
+  State<DropDownMenuWithMultipleTrue> createState() =>
+      _DropDownMenuWithMultipleTrueState();
+}
+
+class _DropDownMenuWithMultipleTrueState
+    extends State<DropDownMenuWithMultipleTrue> {
+  bool _isDropdownOpen = false;
+
+  void _itemChange(String itemValue, bool isSelected) {
+    setState(() {
+      widget.items[itemValue] = isSelected;
+    });
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return Padding(
+      padding: const EdgeInsets.only(top: 0),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          GestureDetector(
+            onTap: () {
+              setState(() {
+                _isDropdownOpen = !_isDropdownOpen;
+              });
+            },
+            child: Container(
+              padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 15),
+              decoration: BoxDecoration(
+                border: Border.all(color: Colors.grey),
+                borderRadius: BorderRadius.circular(5),
+              ),
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  Text(
+                      /*widget.items.entries.where((entry) => entry.value).isEmpty
+                          ?*/
+                      'vælg parametre'
+                      /*: widget.items.entries
+                              .where((entry) => entry.value)
+                              .map((entry) => entry.key)
+                              .join(', ')*/
+                      ),
+                  Icon(_isDropdownOpen
+                      ? Icons.arrow_drop_up
+                      : Icons.arrow_drop_down),
+                ],
+              ),
+            ),
+          ),
+          if (_isDropdownOpen)
+            Column(
+              children: widget.items.keys.map((item) {
+                return CheckboxListTile(
+                    value: widget.items[item],
+                    title: Text(item),
+                    controlAffinity: ListTileControlAffinity.leading,
+                    onChanged: (isChecked) {
+                      setState(() {
+                        _itemChange(item, isChecked!);
+                        widget.updatedItems(widget.items);
+                      });
+                    });
+              }).toList(),
+            ),
+        ],
+      ),
+    );
+  }
+}
+
+class DropDownMenuWithSingleTrue extends StatefulWidget {
+  final List<String> items;
+  final Function(String) updatedItem;
+  String? selectedItem;
+
+  DropDownMenuWithSingleTrue(
+      {super.key,
+      required this.items,
+      required this.updatedItem,
+      required this.selectedItem});
+
+  @override
+  State<DropDownMenuWithSingleTrue> createState() =>
+      _DropDownMenuWithSingleTrueState();
+}
+
+class _DropDownMenuWithSingleTrueState
+    extends State<DropDownMenuWithSingleTrue> {
+  bool _isDropdownOpen = false;
+
+  void _itemChange(String itemValue) {
+    setState(() {
+      widget.selectedItem = itemValue;
+    });
+    widget.updatedItem(itemValue);
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return Padding(
+      padding: const EdgeInsets.only(top: 0),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          GestureDetector(
+            onTap: () {
+              setState(() {
+                _isDropdownOpen = !_isDropdownOpen;
+              });
+            },
+            child: Container(
+              padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 15),
+              decoration: BoxDecoration(
+                border: Border.all(color: Colors.grey),
+                borderRadius: BorderRadius.circular(5),
+              ),
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  Text(
+                    /*widget.selectedItem == null
+                        ?*/
+                    'vælg tidsramme' /*: widget.selectedItem!*/,
+                  ),
+                  Icon(
+                    _isDropdownOpen
+                        ? Icons.arrow_drop_up
+                        : Icons.arrow_drop_down,
+                  ),
+                ],
+              ),
+            ),
+          ),
+          if (_isDropdownOpen)
+            Column(
+              children: widget.items.map((item) {
+                return RadioListTile<String>(
+                  value: item,
+                  groupValue: widget.selectedItem,
+                  title: Text(item),
+                  onChanged: (value) {
+                    if (value != null) {
+                      _itemChange(value);
+                      widget.updatedItem(value);
+                    }
+                  },
+                );
+              }).toList(),
+            ),
+        ],
       ),
     );
   }
