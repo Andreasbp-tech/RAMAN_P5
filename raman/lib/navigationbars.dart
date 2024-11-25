@@ -43,26 +43,26 @@ class Topappbar extends StatelessWidget implements PreferredSizeWidget {
       leading: IconButton(
         icon: Icon(Icons.arrow_back),
         onPressed: () {
-          // Handle back button press here
-          if (globals.bottomNavigationBarIndex == 0) {
-            // Do nothing if already on the home screen
-            return;
+          // // Handle back button press here
+          // if (globals.bottomNavigationBarIndex == 0) {
+          //   // Do nothing if already on the home screen
+          //   return;
+          // } else {
+          if (Navigator.of(context).canPop()) {
+            Navigator.of(context).pop();
           } else {
-            if (Navigator.of(context).canPop()) {
-              Navigator.of(context).pop();
-            } else {
-              // Prevent navigating to the login page
-              if (globals.bottomNavigationBarIndex != 0) {
-                Navigator.of(context).pushReplacement(
-                  MaterialPageRoute(
-                    builder: (BuildContext context) {
-                      return const Homepage();
-                    },
-                  ),
-                );
-              }
+            // Prevent navigating to the login page
+            if (globals.bottomNavigationBarIndex != 0) {
+              Navigator.of(context).pushReplacement(
+                MaterialPageRoute(
+                  builder: (BuildContext context) {
+                    return const Homepage();
+                  },
+                ),
+              );
             }
           }
+          //}
         },
       ),
       title: SizedBox(child: Text(pagename)),
