@@ -23,6 +23,30 @@ class _PainJournalState extends State<PainJournal> {
   double activityValue = 5;
   final Map<String, bool> activityStatus = {};
 
+  Map<String, bool> _items = {
+    'Flutter': false,
+    'Node.js': false,
+    'React Native': false,
+    'Java': false,
+    'Docker': false,
+    'MySQL': false,
+  };
+
+  void _showMultiSelect() async {
+    final Map<String, bool>? results = await showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return MultiSelect(items: _items);
+      },
+    );
+
+    if (results != null) {
+      setState(() {
+        _items = results;
+      });
+    }
+  }
+
   bool isLoading = true;
 
   @override
@@ -30,6 +54,30 @@ class _PainJournalState extends State<PainJournal> {
     super.initState();
     _fetchData();
   }
+
+  // Map<String, bool> _items = {
+  //   'Flutter': false,
+  //   'Node.js': false,
+  //   'React Native': false,
+  //   'Java': false,
+  //   'Docker': false,
+  //   'MySQL': false,
+  // };
+
+  // void _showMultiSelect() async {
+  //   final Map<String, bool>? results = await showDialog(
+  //     context: context,
+  //     builder: (BuildContext context) {
+  //       return MultiSelect(items: _items);
+  //     },
+  //   );
+
+  //   if (results != null) {
+  //     setState(() {
+  //       _items = results;
+  //     });
+  //   }
+  // }
 
   Future<void> _fetchData() async {
     DateTime now = DateTime.now();
@@ -188,22 +236,27 @@ class _PainJournalState extends State<PainJournal> {
           const SizedBox(height: 3),
           const Divider(),
           SizedBox(
-            height: MediaQuery.of(context).size.height * 0.25,
-            child: Scrollbar(
-              thumbVisibility: true,
-              child: SingleChildScrollView(
-                child: CheckboxList(
-                  activities: activities,
-                  activityStatus: activityStatus,
-                  onChanged: (activity, value) {
-                    setState(() {
-                      activityStatus[activity] = value;
-                    });
-                  },
-                ),
-              ),
-            ),
-          ),
+              height: MediaQuery.of(context).size.height * 0.25,
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                children: [
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                    children: [
+                      ElevatedButton(onPressed: () {}, child: Text("1")),
+                      ElevatedButton(onPressed: () {}, child: Text("2")),
+                    ],
+                  ),
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                    children: [
+                      ElevatedButton(onPressed: () {}, child: Text("3")),
+                      ElevatedButton(
+                          onPressed: _showMultiSelect, child: Text("4")),
+                    ],
+                  )
+                ],
+              )),
           const Divider(),
           ElevatedButton(
             onPressed: _finish,
@@ -462,6 +515,129 @@ class CheckboxList extends StatelessWidget {
           },
         );
       }).toList(),
+    );
+  }
+}
+
+// class MultiSelect extends StatefulWidget {
+//   final Map<String, bool> items;
+
+//   const MultiSelect({Key? key, required this.items}) : super(key: key);
+
+//   @override
+//   State<MultiSelect> createState() => _MultiSelectState();
+// }
+
+// class _MultiSelectState extends State<MultiSelect> {
+//   late Map<String, bool> _selectedItems;
+
+//   @override
+//   void initState() {
+//     super.initState();
+//     _selectedItems = Map.from(widget.items);
+//   }
+
+//   void _itemChange(String itemValue, bool isSelected) {
+//     setState(() {
+//       _selectedItems[itemValue] = isSelected;
+//     });
+//   }
+
+//   void _cancel() {
+//     Navigator.pop(context);
+//   }
+
+//   void _submit() {
+//     Navigator.pop(context, _selectedItems);
+//   }
+
+//   @override
+//   Widget build(BuildContext context) {
+//     return AlertDialog(
+//       title: const Text('Select Topics'),
+//       content: SingleChildScrollView(
+//         child: ListBody(
+//           children: _selectedItems.keys.map((item) {
+//             return CheckboxListTile(
+//               value: _selectedItems[item]!,
+//               title: Text(item),
+//               controlAffinity: ListTileControlAffinity.leading,
+//               onChanged: (isChecked) => _itemChange(item, isChecked!),
+//             );
+//           }).toList(),
+//         ),
+//       ),
+//       actions: [
+//         TextButton(
+//           onPressed: _cancel,
+//           child: const Text('Cancel'),
+//         ),
+//         ElevatedButton(
+//           onPressed: _submit,
+//           child: const Text('Submit'),
+//         ),
+//       ],
+//     );
+//   }
+// }
+class MultiSelect extends StatefulWidget {
+  final Map<String, bool> items;
+
+  const MultiSelect({Key? key, required this.items}) : super(key: key);
+
+  @override
+  State<MultiSelect> createState() => _MultiSelectState();
+}
+
+class _MultiSelectState extends State<MultiSelect> {
+  late Map<String, bool> _selectedItems;
+
+  @override
+  void initState() {
+    super.initState();
+    _selectedItems = Map.from(widget.items);
+  }
+
+  void _itemChange(String itemValue, bool isSelected) {
+    setState(() {
+      _selectedItems[itemValue] = isSelected;
+    });
+  }
+
+  void _cancel() {
+    Navigator.pop(context);
+  }
+
+  void _submit() {
+    Navigator.pop(context, _selectedItems);
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return AlertDialog(
+      title: const Text('Select Topics'),
+      content: SingleChildScrollView(
+        child: ListBody(
+          children: _selectedItems.keys.map((item) {
+            return CheckboxListTile(
+              value: _selectedItems[item]!,
+              title: Text(item),
+              controlAffinity: ListTileControlAffinity.leading,
+              onChanged: (isChecked) => _itemChange(item, isChecked!),
+            );
+          }).toList(),
+        ),
+      ),
+      actions: [
+        TextButton(
+          onPressed: _cancel,
+          child: const Text('Cancel'),
+        ),
+        ElevatedButton(
+          onPressed: _submit,
+          child: const Text('Submit'),
+        ),
+      ],
     );
   }
 }
