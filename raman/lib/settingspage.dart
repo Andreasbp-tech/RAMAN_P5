@@ -17,13 +17,15 @@ class SettingsPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      backgroundColor: const Color.fromARGB(255, 243, 243, 228),
       appBar: AppBar(
+        backgroundColor: const Color.fromARGB(255, 243, 243, 228),
         title: const Text('Indstillinger'),
       ),
       body: Center(
         child: ElevatedButton(
           onPressed: () => _signOut(context),
-          child: const Text('Logud'),
+          child: const Text('Log ud'),
         ),
       ),
     );

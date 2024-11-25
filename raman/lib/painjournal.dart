@@ -117,6 +117,7 @@ class _PainJournalState extends State<PainJournal> {
   Widget build(BuildContext context) {
     if (isLoading) {
       return Scaffold(
+        backgroundColor: const Color.fromARGB(255, 243, 243, 228),
         appBar: Topappbar(pagename: "Smertedagbog"),
         body: const Center(child: CircularProgressIndicator()),
       );

@@ -115,6 +115,7 @@ class _PunktdiagramState extends State<Punktdiagram> {
       //loading page, that is active until data is loaded
       //TODO: add descriptive text of why the program is loading
       return Scaffold(
+        backgroundColor: const Color.fromARGB(255, 243, 243, 228),
         appBar: Topappbar(pagename: "Punktdiagram"),
         body: const Center(child: CircularProgressIndicator()),
       );

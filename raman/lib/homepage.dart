@@ -146,7 +146,7 @@ class _HomepageState extends State<Homepage> {
                       children: [
                         Icon(Icons.my_library_books, size: 24),
                         SizedBox(width: 8),
-                        Text('Metafor ordbog', style: TextStyle(fontSize: 20)),
+                        Text('Metaforordbog', style: TextStyle(fontSize: 20)),
                       ],
                     ),
                   ),
