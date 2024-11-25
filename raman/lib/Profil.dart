@@ -61,11 +61,12 @@ class _ProfilState extends State<Profil> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: Topappbar(pagename: "profil"),
+      backgroundColor: const Color.fromARGB(255, 243, 243, 228),
+      appBar: Topappbar(pagename: "Profil"),
       bottomNavigationBar: BottomAppBar(),
       body: ElevatedButton(
           onPressed: _generateData,
-          child: const Text('Push to generate a month of data')),
+          child: const Text('Tryk for at generere en måneds data')),
     );
   }
 }
