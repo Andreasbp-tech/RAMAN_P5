@@ -130,7 +130,7 @@ class _PainJournalState extends State<PainJournal> {
       body: Column(
         children: [
           if (painValue != null)
-            CustomSlider(
+            InverseCustomSlider(
               title: 'Hvor ondt har du haft i dag?',
               initialSliderValue: painValue,
               onChanged: (value) {
@@ -322,6 +322,118 @@ class _CustomSliderState extends State<CustomSlider> {
     } else {
       // Transition from yellow to green
       return Color.lerp(Colors.yellow, Colors.green, (ratio - 0.5) * 2)!;
+    }
+  }
+}
+
+class InverseCustomSlider extends StatefulWidget {
+  final String title;
+  final double initialSliderValue;
+  final ValueChanged<double> onChanged;
+
+  const InverseCustomSlider({
+    super.key,
+    required this.title,
+    required this.initialSliderValue,
+    required this.onChanged,
+  });
+
+  @override
+  State<InverseCustomSlider> createState() => _InverseCustomSliderState();
+}
+
+class _InverseCustomSliderState extends State<InverseCustomSlider> {
+  late double _currentSliderValue;
+
+  void readData() async {
+    DateTime now = DateTime.now();
+    String dagsDato = DateFormat('yyyy-MM-dd').format(now);
+    String userId = FirebaseAuth.instance.currentUser!.uid;
+
+    DocumentSnapshot documentSnapshot = await FirebaseFirestore.instance
+        .collection("users")
+        .doc(userId)
+        .collection("dage")
+        .doc(dagsDato)
+        .collection("smertedagbog")
+        .doc("VAS")
+        .get();
+
+    if (documentSnapshot.exists) {
+      Map<String, dynamic> data =
+          documentSnapshot.data() as Map<String, dynamic>;
+      setState(() {
+        _currentSliderValue = data[widget.title] ?? widget.initialSliderValue;
+      });
+    } else {
+      print('No such document!');
+    }
+  }
+
+  @override
+  void initState() {
+    super.initState();
+    readData();
+    _currentSliderValue = widget.initialSliderValue;
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return Center(
+      child: Column(
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: <Widget>[
+          Text(
+            widget.title,
+            style: const TextStyle(fontSize: 20),
+          ),
+          Row(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              const Padding(
+                padding: EdgeInsets.only(left: 15.0),
+                child: Text('0'),
+              ),
+              Expanded(
+                child: SliderTheme(
+                  data: SliderTheme.of(context).copyWith(
+                    activeTrackColor:
+                        _getinverseSliderColor(_currentSliderValue),
+                    thumbColor: _getinverseSliderColor(_currentSliderValue),
+                  ),
+                  child: Slider(
+                    value: _currentSliderValue,
+                    max: 10,
+                    divisions: 100,
+                    label: _currentSliderValue.toStringAsFixed(1),
+                    onChanged: (double value) {
+                      setState(() {
+                        _currentSliderValue = value;
+                      });
+                      widget.onChanged(value);
+                    },
+                  ),
+                ),
+              ),
+              const Padding(
+                padding: EdgeInsets.only(right: 15.0),
+                child: Text('10'),
+              ),
+            ],
+          ),
+        ],
+      ),
+    );
+  }
+
+  Color _getinverseSliderColor(double value) {
+    double ratio = value / 10;
+    if (ratio <= 0.5) {
+      // Transition from red to yellow
+      return Color.lerp(Colors.green, Colors.yellow, ratio * 2)!;
+    } else {
+      // Transition from yellow to green
+      return Color.lerp(Colors.yellow, Colors.red, (ratio - 0.5) * 2)!;
     }
   }
 }
