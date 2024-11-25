@@ -65,7 +65,7 @@ class _LoginPageState extends State<LoginPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: Color(0xFFF5F5DC),
+      backgroundColor: const Color.fromARGB(255, 243, 243, 228),
       body: SingleChildScrollView(
         padding: EdgeInsets.only(
           left: 16.0,

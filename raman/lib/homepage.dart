@@ -13,7 +13,7 @@ class _HomepageState extends State<Homepage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: const Color(0xFFC8E6C9),
+      backgroundColor: const Color.fromARGB(255, 243, 243, 228),
       appBar: Topappbar(pagename: "Hjem"),
       bottomNavigationBar: const Bottomappbar(),
       body: Padding(
