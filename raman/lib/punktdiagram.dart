@@ -128,6 +128,8 @@ class _PunktdiagramState extends State<Punktdiagram> {
     }
     return Scaffold(
       //the rendering of the page
+      backgroundColor: const Color.fromARGB(255, 243, 243, 228),
+
       appBar: Topappbar(pagename: "Punktdiagram"),
       bottomNavigationBar: const Bottomappbar(),
       body: Column(
