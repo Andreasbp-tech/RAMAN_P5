@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:raman/painjournal.dart';
 import 'navigationbars.dart';
+import 'package:awesome_notifications/awesome_notifications.dart';
 
 class Homepage extends StatefulWidget {
   const Homepage({super.key});
@@ -10,6 +11,31 @@ class Homepage extends StatefulWidget {
 }
 
 class _HomepageState extends State<Homepage> {
+  @override
+  void initState() {
+    AwesomeNotifications().isNotificationAllowed().then((isAllowed) {
+      if (!isAllowed) {
+        AwesomeNotifications().requestPermissionToSendNotifications();
+      }
+    });
+    super.initState();
+  }
+
+  triggerNotification() {
+    AwesomeNotifications().createNotification(
+      content: NotificationContent(
+        id: 10,
+        channelKey: 'basic_channel',
+        title: 'Udfyld Smertedagbog',
+        body: 'Vurder smerteparametre',
+        displayOnBackground: true,
+        displayOnForeground: true,
+      ),
+      schedule: NotificationCalendar.fromDate(
+          date: DateTime.now().add(Duration(seconds: 2)), repeats: true),
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -28,7 +54,7 @@ class _HomepageState extends State<Homepage> {
               children: [
                 Expanded(
                   child: ElevatedButton(
-                    onPressed: () {},
+                    onPressed: triggerNotification,
                     style: ElevatedButton.styleFrom(
                       padding: const EdgeInsets.symmetric(vertical: 65),
                     ),
