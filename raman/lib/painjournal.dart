@@ -29,6 +29,7 @@ class _PainJournalState extends State<PainJournal> {
   bool isCheckedButton2 = false;
   bool isCheckedButton3 = false;
   Map<String, bool> activitiesBoolMap = {};
+  int prevalenceLength = 14;
 
   bool isLoading = true;
 
@@ -72,21 +73,51 @@ class _PainJournalState extends State<PainJournal> {
               .collection("AktivitetsOversigt")
               .doc("Aktiviteter")
               .get();
-
+          Map<String, int> activitiesPrevalence = {};
           if (documentSnapshot3.exists) {
             activityPrevalance =
                 documentSnapshot3.data() as Map<String, dynamic>;
-            Map<String, dynamic> nested2Map = activityPrevalance['Aktiviteter'];
-            Map<String, dynamic> dbbool =
-                documentSnapshot2.data() as Map<String, dynamic>;
-            Map<String, dynamic> activitiesBoolNestedMap =
-                dbbool['Aktivitetsliste'];
+            Map<String, dynamic> nestedMap = activityPrevalance['Aktiviteter'];
 
             // Convert to Map<String, int>
-            Map<String, int> activitiesPrevalence =
-                nested2Map.map((key, value) => MapEntry(key, value as int));
-            Map<String, bool> activitiesBool = activitiesBoolNestedMap
-                .map((key, value) => MapEntry(key, value as bool));
+            activitiesPrevalence =
+                nestedMap.map((key, value) => MapEntry(key, value as int));
+
+            // Initialize activitiesPrevalence with zeros
+            activitiesPrevalence = {for (var key in nestedMap.keys) key: 0};
+
+            for (var i = 0; i < prevalenceLength; i++) {
+              DateTime date = now.subtract(Duration(days: i));
+              String prevalenceDate = DateFormat('yyyy-MM-dd').format(date);
+              DocumentSnapshot documentSnapshot4 = await FirebaseFirestore
+                  .instance
+                  .collection("users")
+                  .doc(userId)
+                  .collection("dage")
+                  .doc(prevalenceDate)
+                  .collection("smertedagbog")
+                  .doc("aktiviteter")
+                  .get();
+              if (documentSnapshot4.exists) {
+                Map<String, dynamic> dbbool =
+                    documentSnapshot4.data() as Map<String, dynamic>;
+                Map<String, dynamic> activitiesBoolNestedMap =
+                    dbbool['Aktivitetsliste'];
+                Map<String, bool> activitiesBool = activitiesBoolNestedMap
+                    .map((key, value) => MapEntry(key, value as bool));
+
+                activitiesBool.forEach((key, value) {
+                  if (value == true) {
+                    if (activitiesPrevalence.containsKey(key)) {
+                      activitiesPrevalence[key] =
+                          activitiesPrevalence[key]! + 1;
+                    } else {
+                      activitiesPrevalence[key] = 1;
+                    }
+                  }
+                });
+              }
+            }
 
             // Sort the map by values in descending order
             activityPrevalanceSortedEntries = activitiesPrevalence.entries
@@ -98,7 +129,14 @@ class _PainJournalState extends State<PainJournal> {
               for (var entry in activityPrevalanceSortedEntries)
                 entry.key: false
             };
-            // Update activitiesBoolMap with values from activitiesBool
+
+            // Update activitiesBoolMap with values from the latest document
+            Map<String, dynamic> dbbool =
+                documentSnapshot2.data() as Map<String, dynamic>;
+            Map<String, dynamic> activitiesBoolNestedMap =
+                dbbool['Aktivitetsliste'];
+            Map<String, bool> activitiesBool = activitiesBoolNestedMap
+                .map((key, value) => MapEntry(key, value as bool));
             activitiesBool.forEach((key, value) {
               if (activitiesBoolMap.containsKey(key)) {
                 activitiesBoolMap[key] = value;
@@ -116,6 +154,7 @@ class _PainJournalState extends State<PainJournal> {
           isLoading = false;
         });
       } else {
+        Map<String, int> activitiesPrevalence = {};
         DocumentSnapshot documentSnapshot3 = await FirebaseFirestore.instance
             .collection("users")
             .doc(userId)
@@ -127,8 +166,46 @@ class _PainJournalState extends State<PainJournal> {
           Map<String, dynamic> nestedMap = activityPrevalance['Aktiviteter'];
 
           // Convert to Map<String, int>
-          Map<String, int> activitiesPrevalence =
+          activitiesPrevalence =
               nestedMap.map((key, value) => MapEntry(key, value as int));
+
+          // Initialize activitiesPrevalence with zeros
+          activitiesPrevalence = {for (var key in nestedMap.keys) key: 0};
+
+          for (var i = 0; i < prevalenceLength; i++) {
+            DateTime date = now.subtract(Duration(days: i));
+            String prevalenceDate = DateFormat('yyyy-MM-dd').format(date);
+            DocumentSnapshot documentSnapshot4 = await FirebaseFirestore
+                .instance
+                .collection("users")
+                .doc(userId)
+                .collection("dage")
+                .doc(prevalenceDate)
+                .collection("smertedagbog")
+                .doc("aktiviteter")
+                .get();
+            if (documentSnapshot4.exists) {
+              Map<String, dynamic>? dbbool =
+                  documentSnapshot4.data() as Map<String, dynamic>?;
+              if (dbbool != null && dbbool.containsKey('Aktivitetsliste')) {
+                Map<String, dynamic> activitiesBoolNestedMap =
+                    dbbool['Aktivitetsliste'];
+                Map<String, bool> activitiesBool = activitiesBoolNestedMap
+                    .map((key, value) => MapEntry(key, value as bool));
+
+                activitiesBool.forEach((key, value) {
+                  if (value == true) {
+                    if (activitiesPrevalence.containsKey(key)) {
+                      activitiesPrevalence[key] =
+                          activitiesPrevalence[key]! + 1;
+                    } else {
+                      activitiesPrevalence[key] = 1;
+                    }
+                  }
+                });
+              }
+            }
+          }
 
           // Sort the map by values in descending order
           activityPrevalanceSortedEntries = activitiesPrevalence.entries
@@ -139,8 +216,22 @@ class _PainJournalState extends State<PainJournal> {
           activitiesBoolMap = {
             for (var entry in activityPrevalanceSortedEntries) entry.key: false
           };
+
+          // Update activitiesBoolMap with values from the latest document
+          Map<String, dynamic>? dbbool =
+              documentSnapshot2.data() as Map<String, dynamic>?;
+          if (dbbool != null && dbbool.containsKey('Aktivitetsliste')) {
+            Map<String, dynamic> activitiesBoolNestedMap =
+                dbbool['Aktivitetsliste'];
+            Map<String, bool> activitiesBool = activitiesBoolNestedMap
+                .map((key, value) => MapEntry(key, value as bool));
+            activitiesBool.forEach((key, value) {
+              if (activitiesBoolMap.containsKey(key)) {
+                activitiesBoolMap[key] = value;
+              }
+            });
+          }
         }
-// Extract the nested map
 
         setState(() {
           isLoading = false;
@@ -156,6 +247,7 @@ class _PainJournalState extends State<PainJournal> {
   }
 
   void _finish() {
+    print(activitiesBoolMap);
     DateTime now = DateTime.now();
     String dagsDato = DateFormat('yyyy-MM-dd').format(now);
     FirebaseFirestore.instance
@@ -202,6 +294,7 @@ class _PainJournalState extends State<PainJournal> {
         activitiesBoolMap = results;
       });
     }
+    print(activitiesBoolMap);
   }
 
   @override
@@ -645,7 +738,6 @@ class CheckboxList extends StatelessWidget {
 
 class MultiSelect extends StatefulWidget {
   final Map<String, bool> items;
-
   const MultiSelect({Key? key, required this.items}) : super(key: key);
 
   @override
@@ -654,6 +746,7 @@ class MultiSelect extends StatefulWidget {
 
 class _MultiSelectState extends State<MultiSelect> {
   late Map<String, bool> _selectedItems;
+  final TextEditingController _textController = TextEditingController();
 
   @override
   void initState() {
@@ -665,6 +758,16 @@ class _MultiSelectState extends State<MultiSelect> {
     setState(() {
       _selectedItems[itemValue] = isSelected;
     });
+  }
+
+  void _addItem() {
+    String newItem = _textController.text.trim();
+    if (newItem.isNotEmpty && !_selectedItems.containsKey(newItem)) {
+      setState(() {
+        _selectedItems[newItem] = true; // Set the new item to true
+      });
+      _textController.clear();
+    }
   }
 
   void _cancel() {
@@ -680,15 +783,30 @@ class _MultiSelectState extends State<MultiSelect> {
     return AlertDialog(
       title: const Text('Tilføj aktiviteter'),
       content: SingleChildScrollView(
-        child: ListBody(
-          children: _selectedItems.keys.map((item) {
-            return CheckboxListTile(
-              value: _selectedItems[item]!,
-              title: Text(item),
-              controlAffinity: ListTileControlAffinity.leading,
-              onChanged: (isChecked) => _itemChange(item, isChecked!),
-            );
-          }).toList(),
+        child: Column(
+          children: [
+            TextField(
+              controller: _textController,
+              decoration: InputDecoration(
+                labelText: 'Ny aktivitet',
+                suffixIcon: IconButton(
+                  icon: const Icon(Icons.add),
+                  onPressed: _addItem,
+                ),
+              ),
+            ),
+            const SizedBox(height: 10),
+            ListBody(
+              children: _selectedItems.keys.map((item) {
+                return CheckboxListTile(
+                  value: _selectedItems[item]!,
+                  title: Text(item),
+                  controlAffinity: ListTileControlAffinity.leading,
+                  onChanged: (isChecked) => _itemChange(item, isChecked!),
+                );
+              }).toList(),
+            ),
+          ],
         ),
       ),
       actions: [
