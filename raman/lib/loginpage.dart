@@ -3,6 +3,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'homepage.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'errormessage.dart';
+import 'globals.dart' as globals;
 
 class LoginPage extends StatefulWidget {
   @override
@@ -42,7 +43,12 @@ class _LoginPageState extends State<LoginPage> {
         email: _emailController.text,
         password: _passwordController.text,
       );
-
+      FirebaseFirestore.instance
+          .collection("users")
+          .doc(FirebaseAuth.instance.currentUser!.uid)
+          .collection("AktivitetsOversigt")
+          .doc("Aktiviteter")
+          .set({"Aktiviteter": globals.activitiesPrevalence});
       FirebaseFirestore.instance
           .collection("users") //Opretter bruger i databasen under users.
           .doc(FirebaseAuth.instance.currentUser!
