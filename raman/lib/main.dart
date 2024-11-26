@@ -1,11 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:firebase_core/firebase_core.dart';
+import 'package:raman/homepage.dart';
 //  import 'package:raman/homepage.dart';
 import 'firebase_options.dart';
 //import 'package:raman/painjournal.dart';
 //import 'homepage.dart';
 import 'loginpage.dart';
-//import 'package:firebase_auth/firebase_auth.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 //import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
 
@@ -23,6 +24,15 @@ Future<void> main() async {
   runApp(const MyApp());
 }
 
+Future<Widget> loginOrHome() async {
+  final User? user = FirebaseAuth.instance.currentUser;
+  if (user != null) {
+    return const Homepage();
+  } else {
+    return LoginPage();
+  }
+}
+
 class MyApp extends StatelessWidget {
   const MyApp({super.key});
 
@@ -36,7 +46,22 @@ class MyApp extends StatelessWidget {
         colorScheme: ColorScheme.fromSeed(seedColor: Colors.blue),
         useMaterial3: true,
       ),
-      home: LoginPage(),
+      home: FutureBuilder<Widget>(
+        future: loginOrHome(),
+        builder: (BuildContext context, AsyncSnapshot<Widget> snapshot) {
+          if (snapshot.connectionState == ConnectionState.waiting) {
+            return const Scaffold(
+              body: Center(child: CircularProgressIndicator()),
+            );
+          } else if (snapshot.hasError) {
+            return const Scaffold(
+              body: Center(child: Text('Error occurred')),
+            );
+          } else {
+            return snapshot.data!;
+          }
+        },
+      ),
     );
   }
 }
