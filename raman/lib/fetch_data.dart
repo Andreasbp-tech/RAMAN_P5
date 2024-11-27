@@ -9,11 +9,17 @@ import 'package:raman/opsummering.dart';
 int prevalenceLength = 14;
 int fetchVASDatasize = 31;
 int fetchGodeOgDaarligeDageDataSize = 31;
+int dataLengthForAktivitiesOnGoodAndBadDays = 5;
+double gnsSmerte = 0;
+double gnsSmerteUpperLimit = 0;
+double gnsSmerteLowerLimit = 0;
+int gnsInputDataLength = 7;
 double painValue = 5;
 double sleepValue = 5;
 double socialValue = 5;
 double moodValue = 5;
 double activityValue = 5;
+String userUID = FirebaseAuth.instance.currentUser!.uid;
 Map<String, dynamic> smerteData = {};
 Map<String, dynamic> sleepData = {};
 Map<String, dynamic> socialData = {};
@@ -22,6 +28,7 @@ Map<String, dynamic> aktivitetsData = {};
 Map<String, dynamic> activityPrevalance = {};
 Map<String, bool> activitiesBoolMap = {};
 List<MapEntry<String, int>> activityPrevalanceSortedEntries = [];
+List<Map<String, Map<String, bool>>> senesteDagesAktiviteter = [];
 
 class LoadingDataPage extends StatefulWidget {
   int pageIndex = 0;
@@ -35,11 +42,67 @@ class LoadingDataPage extends StatefulWidget {
 class _LoadingDataPageState extends State<LoadingDataPage> {
   //start of punktdiagram fetching
   bool isLoading = true;
+
   Future<void> _fetchData() async {
+    gnsSmerte = 0;
+    gnsSmerteUpperLimit = 0;
+    gnsSmerteLowerLimit = 0;
+    senesteDagesAktiviteter = [];
     DateTime now = DateTime.now();
     String userUID = FirebaseAuth.instance.currentUser!.uid;
     String dagsDato = DateFormat('yyyy-MM-dd').format(now);
-    for (var i = fetchGodeOgDaarligeDageDataSize; i >= 0; i--) {
+    for (var i = 0; i < gnsInputDataLength; i++) {
+      DateTime date = now.subtract(Duration(days: i));
+      String dateString = DateFormat('yyyy-MM-dd').format(date);
+      DocumentSnapshot docSnapShot = await FirebaseFirestore.instance
+          .collection("users")
+          .doc(userUID)
+          .collection("dage")
+          .doc(dateString)
+          .collection("smertedagbog")
+          .doc("VAS")
+          .get();
+      if (docSnapShot.exists) {
+        Map<String, dynamic> data = docSnapShot.data() as Map<String, dynamic>;
+        gnsSmerte = gnsSmerte + data['Smerte']?.toDouble();
+      }
+    }
+    gnsSmerte = gnsSmerte / gnsInputDataLength;
+    gnsSmerteUpperLimit = gnsSmerte + (gnsSmerte * 0.33);
+    gnsSmerteLowerLimit = gnsSmerte - (gnsSmerte * 0.33);
+    print("gnsSmerte = $gnsSmerte");
+    print("gnsSmerteUpperLimit = $gnsSmerteUpperLimit");
+    print("gnsSmerteLowerLimit = $gnsSmerteLowerLimit");
+
+    for (var i = 0; i <= dataLengthForAktivitiesOnGoodAndBadDays; i++) {
+      DateTime date = now.subtract(Duration(days: i));
+      String dateString = DateFormat('yyyy-MM-dd').format(date);
+      DocumentSnapshot docSnapShot = await FirebaseFirestore.instance
+          .collection("users")
+          .doc(userUID)
+          .collection("dage")
+          .doc(dateString)
+          .collection("smertedagbog")
+          .doc("aktiviteter")
+          .get();
+      if (docSnapShot.exists) {
+        Map<String, dynamic> data = docSnapShot.data() as Map<String, dynamic>;
+        Map<String, Map<String, bool>> mellemMap = {};
+
+// Assuming 'Aktivitetsliste' is the key for the map you want to extract
+        if (data['Aktivitetsliste'] is Map<String, dynamic>) {
+          Map<String, dynamic> aktivitetslisteDynamic =
+              data['Aktivitetsliste'] as Map<String, dynamic>;
+          Map<String, bool> aktivitetsliste = aktivitetslisteDynamic
+              .map((key, value) => MapEntry(key, value as bool));
+          if (aktivitetsliste is Map<String, bool>) {
+            mellemMap[dateString] = aktivitetsliste;
+            senesteDagesAktiviteter.add(mellemMap);
+          }
+        }
+      }
+    }
+    for (var i = fetchVASDatasize; i >= 0; i--) {
       // Loop for running through the database, starting from today's date and going backwards
       DateTime date = now.subtract(Duration(days: i));
       String dateString = DateFormat('yyyy-MM-dd').format(date);
@@ -267,13 +330,11 @@ class _LoadingDataPageState extends State<LoadingDataPage> {
         setState(() {
           isLoading = false;
         });
-        print('No such document!');
       }
     } catch (e) {
       setState(() {
         isLoading = false;
       });
-      print('Error fetching data: $e');
     }
 
     setState(() {

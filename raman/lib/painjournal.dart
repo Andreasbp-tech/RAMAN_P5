@@ -33,6 +33,7 @@ class _PainJournalState extends State<PainJournal> {
   //bool isCheckedButton3 = false;
   Map<String, bool> activitiesBoolMap = {};
   //int prevalenceLength = 14;
+  int goodNeutralBadDayIndex = 0; //0 is Good, 1 is Neutral, 2 is Bad
 
   bool isLoading = true;
 
@@ -51,26 +52,9 @@ class _PainJournalState extends State<PainJournal> {
     activityPrevalanceSortedEntries = data.activityPrevalanceSortedEntries;
     activitiesBoolMap = data.activitiesBoolMap;
     isLoading = false;
-    print(painValue);
-    print("\n");
-    print(sleepValue);
-    print("\n");
-    print(socialValue);
-    print("\n");
-    print(moodValue);
-    print("\n");
-    print(activityValue);
-    print("\n");
-    print(activityPrevalanceSortedEntries);
-    print("\n");
-    print(activitiesBoolMap);
-    print("\n");
-    print(isLoading);
-    print("\n");
   }
 
   void _finish() {
-    print(activitiesBoolMap);
     DateTime now = DateTime.now();
     String dagsDato = DateFormat('yyyy-MM-dd').format(now);
     FirebaseFirestore.instance
@@ -87,6 +71,7 @@ class _PainJournalState extends State<PainJournal> {
         "Social": socialValue,
         "Humør": moodValue,
         "Aktivitetsniveau": activityValue,
+        "Gennemsnitsmerte": data.gnsSmerte,
       },
     );
     FirebaseFirestore.instance
@@ -99,7 +84,29 @@ class _PainJournalState extends State<PainJournal> {
         .set(
       {"Aktivitetsliste": activitiesBoolMap},
     );
-
+    /*logik for gode og dårlige dage*/
+    DateTime now2 = DateTime.now();
+    String dateString = DateFormat('yyyy-MM-dd').format(now2);
+    Map<String, Map<String, bool>> mellemMap = {};
+    mellemMap[dateString] = activitiesBoolMap;
+    List<Map<String, Map<String, bool>>> exportList =
+        data.senesteDagesAktiviteter;
+    exportList[0] = mellemMap;
+    if (painValue < data.gnsSmerteLowerLimit) {
+      FirebaseFirestore.instance
+          .collection("users")
+          .doc(data.userUID)
+          .collection("LærOmDinSmerte")
+          .doc("GodeDage")
+          .set({dagsDato: exportList});
+    } else if (painValue > data.gnsSmerteUpperLimit) {
+      FirebaseFirestore.instance
+          .collection("users")
+          .doc(data.userUID)
+          .collection("LærOmDinSmerte")
+          .doc("DårligeDage")
+          .set({dagsDato: exportList});
+    }
     showMyPopup(context, 'Godt arbejde!',
         "Vil du gå til hjemmeskærm eller opsummering?");
   }
@@ -117,7 +124,6 @@ class _PainJournalState extends State<PainJournal> {
         activitiesBoolMap = results;
       });
     }
-    print(activitiesBoolMap);
   }
 
   @override
@@ -186,7 +192,7 @@ class _PainJournalState extends State<PainJournal> {
                 });
               },
             ),
-         
+
           const SizedBox(height: 10),
           // const Text(
           //   'Hvilke aktiviteter har du udført i dag?',
@@ -435,9 +441,7 @@ class _CustomSliderState extends State<CustomSlider> {
       setState(() {
         _currentSliderValue = data[widget.title] ?? widget.initialSliderValue;
       });
-    } else {
-      print('No such document!');
-    }
+    } else {}
   }
 
   @override
@@ -546,9 +550,7 @@ class _InverseCustomSliderState extends State<InverseCustomSlider> {
       setState(() {
         _currentSliderValue = data[widget.title] ?? widget.initialSliderValue;
       });
-    } else {
-      print('No such document!');
-    }
+    } else {}
   }
 
   @override

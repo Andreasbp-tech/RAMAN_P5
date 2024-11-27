@@ -7,6 +7,7 @@ import 'package:intl/intl.dart';
 //import 'globals.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'popupsmertedagbog.dart';
+import 'fetch_data.dart' as data;
 
 class Profil extends StatefulWidget {
   const Profil({super.key});
@@ -21,6 +22,11 @@ class _ProfilState extends State<Profil> {
   double socialValue = 5;
   double moodValue = 5;
   double activityValue = 5;
+  Map<String, bool> activitiesBoolMap = data.activitiesBoolMap;
+  void generateRandomBoolValues(Map<String, bool> activitiesBoolMap) {
+    Random random = Random();
+    activitiesBoolMap.updateAll((key, value) => random.nextBool());
+  }
 
   void _generateData() {
     DateTime now = DateTime.now();
@@ -33,6 +39,7 @@ class _ProfilState extends State<Profil> {
       moodValue = double.parse((Random().nextDouble() * 10).toStringAsFixed(1));
       activityValue =
           double.parse((Random().nextDouble() * 10).toStringAsFixed(1));
+      generateRandomBoolValues(activitiesBoolMap);
 
       DateTime date = now.subtract(Duration(days: i));
       String dagsDato = DateFormat('yyyy-MM-dd').format(date);
@@ -52,6 +59,17 @@ class _ProfilState extends State<Profil> {
           "Aktivitetsniveau": activityValue,
         },
       );
+      FirebaseFirestore.instance
+          .collection("users")
+          .doc(FirebaseAuth.instance.currentUser!.uid)
+          .collection("dage")
+          .doc(dagsDato)
+          .collection("smertedagbog")
+          .doc("aktiviteter")
+          .set(
+        {"Aktivitetsliste": activitiesBoolMap},
+      );
+      print(activitiesBoolMap);
     }
     print(painValue);
     showMyPopup(context, 'Godt arbejde!',
@@ -65,7 +83,10 @@ class _ProfilState extends State<Profil> {
       appBar: Topappbar(pagename: "Profil"),
       bottomNavigationBar: BottomAppBar(),
       body: ElevatedButton(
-          onPressed: _generateData,
+          onPressed: () {
+            _generateData();
+            generateRandomBoolValues(activitiesBoolMap);
+          },
           child: const Text('Tryk for at generere en måneds data')),
     );
   }
