@@ -1,99 +1,26 @@
-// import 'package:flutter_local_notifications/flutter_local_notifications.dart';
-// import 'package:flutter/material.dart';
-
-// class NotificationWidget extends StatefulWidget {
-//   @override
-//   _NotificationWidgetState createState() => _NotificationWidgetState();
-// }
-// class _NotificationWidgetState extends State<NotificationWidget> {
-//   final FirebaseMessaging _firebaseMessaging = FirebaseMessaging.instance;
-//   @override
-//   void initState() {
-//     super.initState();
-//     _firebaseMessaging.requestPermission();
-//     FirebaseMessaging.onMessage.listen((RemoteMessage message) {
-//       print('Message data: ${message.data}');
-//       if (message.notification != null) {
-//         print('Message also contained a notification: ${message.notification}');
-//       }
-//     });
-//     FirebaseMessaging.onMessageOpenedApp.listen((RemoteMessage message) {
-//       print('Message clicked! ${message.messageId}');
-//     });
-//   }
-//   @override
-//   Widget build(BuildContext context) {
-//     return Center(
-//       child: Text('Waiting for messages'),
-//     );
-//   }
-// }
-
 import 'package:flutter/material.dart';
-import 'package:firebase_messaging/firebase_messaging.dart';
-import 'package:flutter_local_notifications/flutter_local_notifications.dart';
+import 'package:awesome_notifications/awesome_notifications.dart';
 
-class NotificationWidget extends StatefulWidget {
-  @override
-  _NotificationWidgetState createState() => _NotificationWidgetState();
-}
-
-class _NotificationWidgetState extends State<NotificationWidget> {
-  final FirebaseMessaging _firebaseMessaging = FirebaseMessaging.instance;
-  FlutterLocalNotificationsPlugin flutterLocalNotificationsPlugin =
-      FlutterLocalNotificationsPlugin();
-
-  @override
-  void initState() {
-    super.initState();
-    _firebaseMessaging.requestPermission();
-
-    // Initialize the local notifications plugin
-    const AndroidInitializationSettings initializationSettingsAndroid =
-        AndroidInitializationSettings('@mipmap/ic_launcher');
-    final InitializationSettings initializationSettings =
-        InitializationSettings(android: initializationSettingsAndroid);
-    flutterLocalNotificationsPlugin.initialize(initializationSettings);
-
-    FirebaseMessaging.onMessage.listen((RemoteMessage message) {
-      print('Message data: ${message.data}');
-      if (message.notification != null) {
-        print('Message also contained a notification: ${message.notification}');
-        _showNotification(message);
-      }
-    });
-
-    FirebaseMessaging.onMessageOpenedApp.listen((RemoteMessage message) {
-      print('Message clicked! ${message.messageId}');
-    });
-  }
-
-  Future<void> _showNotification(RemoteMessage message) async {
-    const AndroidNotificationDetails androidPlatformChannelSpecifics =
-        AndroidNotificationDetails('your_channel_id', 'your_channel_name',
-            importance: Importance.max,
-            priority: Priority.high,
-            showWhen: false);
-    const NotificationDetails platformChannelSpecifics =
-        NotificationDetails(android: androidPlatformChannelSpecifics);
-    await flutterLocalNotificationsPlugin.show(
-      0,
-      message.notification?.title,
-      message.notification?.body,
-      platformChannelSpecifics,
-      payload: 'item x',
-    );
-  }
-
-  @override
-  Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        title: Text('Push Notifications'),
-      ),
-      body: Center(
-        child: Text('Waiting for messages'),
-      ),
-    );
-  }
+Future<void> scheduleNotification(int id, DateTime scheduleTime) async {
+  await AwesomeNotifications().createNotification(
+    content: NotificationContent(
+      id: id,
+      channelKey: 'basic_channel',
+      title: 'Udfyld smertedagbog',
+      body: 'Vurder smerteparametre ',
+      wakeUpScreen: true,
+      category: NotificationCategory.Reminder,
+      notificationLayout: NotificationLayout.Default, // Use BigPicture layout
+      //bigPicture: 'asset://Assets/20210715_135142.jpg', // Path to your image
+      // importance: NotificationImportance.High, // Set importance to High
+      // priority: NotificationPriority.Max, // Set priority to Max
+      displayOnBackground: true,
+      displayOnForeground: true,
+    ),
+    schedule: NotificationCalendar.fromDate(
+        date: scheduleTime,
+        repeats: true,
+        preciseAlarm: true,
+        allowWhileIdle: true),
+  );
 }

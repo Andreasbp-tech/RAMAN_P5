@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:raman/painjournal.dart';
 import 'navigationbars.dart';
+import 'notifications.dart';
+import 'package:awesome_notifications/awesome_notifications.dart';
 
 class Homepage extends StatefulWidget {
   const Homepage({super.key});
@@ -10,6 +12,15 @@ class Homepage extends StatefulWidget {
 }
 
 class _HomepageState extends State<Homepage> {
+  @override
+  void initState() {
+    super.initState();
+    // AwesomeNotifications().actionStream.listen((receivedNotification) {
+    //   // Handle notification action
+    // });
+    //setupNotification();
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(

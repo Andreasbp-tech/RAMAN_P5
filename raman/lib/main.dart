@@ -8,19 +8,41 @@ import 'firebase_options.dart';
 import 'loginpage.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 //import 'package:cloud_firestore/cloud_firestore.dart';
+<<<<<<< HEAD
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'fetch_data.dart' as data;
 
 Future<void> _backgroundHandler(RemoteMessage message) async {
   // Handle background message
 }
+=======
+import 'package:awesome_notifications/awesome_notifications.dart';
+import 'notifications.dart';
+>>>>>>> Notifications
 
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
+
+  AwesomeNotifications().initialize(
+    null,
+    [
+      NotificationChannel(
+        channelKey: 'basic_channel',
+        channelName: 'Basic notifications',
+        channelDescription: 'Notification channel for basic test',
+
+        importance:
+            NotificationImportance.Max, // Ensure channel importance is High
+        defaultRingtoneType: DefaultRingtoneType.Notification,
+        enableVibration: true,
+        channelShowBadge: true,
+      ),
+    ],
+    debug: true,
+  );
   await Firebase.initializeApp(
     options: DefaultFirebaseOptions.currentPlatform,
   );
-  FirebaseMessaging.onBackgroundMessage(_backgroundHandler);
 
   runApp(const MyApp());
 }
