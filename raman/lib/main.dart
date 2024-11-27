@@ -9,6 +9,7 @@ import 'loginpage.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 //import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
+import 'fetch_data.dart' as data;
 
 Future<void> _backgroundHandler(RemoteMessage message) async {
   // Handle background message
@@ -27,7 +28,7 @@ Future<void> main() async {
 Future<Widget> loginOrHome() async {
   final User? user = FirebaseAuth.instance.currentUser;
   if (user != null) {
-    return const Homepage();
+    return data.LoadingDataPage(pageIndex: 0,);
   } else {
     return LoginPage();
   }
