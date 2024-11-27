@@ -68,9 +68,7 @@ class _LoadingDataPageState extends State<LoadingDataPage> {
           .collection("LærOmDinSmerte")
           .doc("GodeDage")
           .get();
-      if (docSnapShot.exists) {
-        
-      }
+      if (docSnapShot.exists) {}
     }
 
     gnsSmerte = 0;
@@ -101,6 +99,62 @@ class _LoadingDataPageState extends State<LoadingDataPage> {
     print("gnsSmerte = $gnsSmerte");
     print("gnsSmerteUpperLimit = $gnsSmerteUpperLimit");
     print("gnsSmerteLowerLimit = $gnsSmerteLowerLimit");
+
+    int jUge = 0;
+    for (var i = 0; i < 7; i++) {
+      DateTime date = now.subtract(Duration(days: i));
+      String dateString = DateFormat('yyyy-MM-dd').format(date);
+      DocumentSnapshot docSnapShot = await FirebaseFirestore.instance
+          .collection("users")
+          .doc(userUID)
+          .collection("dage")
+          .doc(dateString)
+          .collection("smertedagbog")
+          .doc("VAS")
+          .get();
+      if (docSnapShot.exists) {
+        Map<String, dynamic> data = docSnapShot.data() as Map<String, dynamic>;
+        smerteUge = smerteUge + data['Smerte']?.toDouble();
+        humorUge = humorUge + data['Humør']?.toDouble();
+        sovnUge = sovnUge + data['Søvn']?.toDouble();
+        aktivitetUge = aktivitetUge + data['Aktivitet']?.toDouble();
+        socialUge = socialUge + data['Social']?.toDouble();
+        jUge++;
+      }
+    }
+    smerteUge = smerteUge / jUge;
+    humorUge = humorUge / jUge;
+    sovnUge = sovnUge / jUge;
+    aktivitetUge = aktivitetUge / jUge;
+    socialUge = socialUge / jUge;
+
+    int jManed = 0;
+    for (var i = 0; i < 31; i++) {
+      DateTime date = now.subtract(Duration(days: i));
+      String dateString = DateFormat('yyyy-MM-dd').format(date);
+      DocumentSnapshot docSnapShot = await FirebaseFirestore.instance
+          .collection("users")
+          .doc(userUID)
+          .collection("dage")
+          .doc(dateString)
+          .collection("smertedagbog")
+          .doc("VAS")
+          .get();
+      if (docSnapShot.exists) {
+        Map<String, dynamic> data = docSnapShot.data() as Map<String, dynamic>;
+        smerteManed = smerteManed + data['Smerte']?.toDouble();
+        humorManed = humorManed + data['Humør']?.toDouble();
+        sovnManed = sovnManed + data['Søvn']?.toDouble();
+        aktivitetManed = aktivitetManed + data['Aktivitet']?.toDouble();
+        socialManed = socialManed + data['Social']?.toDouble();
+        jManed++;
+      }
+    }
+    smerteManed = smerteManed / jManed;
+    humorManed = humorManed / jManed;
+    sovnManed = sovnManed / jManed;
+    aktivitetManed = aktivitetManed / jManed;
+    socialManed = socialManed / jManed;
 
     for (var i = 0; i <= dataLengthForAktivitiesOnGoodAndBadDays; i++) {
       DateTime date = now.subtract(Duration(days: i));

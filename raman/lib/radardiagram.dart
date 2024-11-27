@@ -11,9 +11,9 @@ class RadarChartExample extends StatefulWidget {
 class _RadarChartExampleState extends State<RadarChartExample> {
   bool isDaySelected = true;
   bool isWeekSelected = false;
-  bool isMonthSelected = false;
+  bool isMonthSelected = true;
 
-// data.dart
+  // data.dart
   List<double> dayData = [
     data.painValue,
     data.sleepValue,
@@ -96,10 +96,11 @@ class _RadarChartExampleState extends State<RadarChartExample> {
                           return RadarChartTitle(text: '');
                       }
                     },
-                    tickCount: 5,
+                    tickCount: 10, // Set the number of ticks
                     ticksTextStyle: TextStyle(color: Colors.grey, fontSize: 10),
                     tickBorderData: BorderSide(color: Colors.grey),
                     gridBorderData: BorderSide(color: Colors.grey, width: 2),
+                    radarShape: RadarShape.polygon,
                   ),
                 ),
               ),
