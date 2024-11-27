@@ -19,6 +19,17 @@ double sleepValue = 5;
 double socialValue = 5;
 double moodValue = 5;
 double activityValue = 5;
+double smerteUge = 5;
+double humorUge = 5;
+double aktivitetUge = 5;
+double socialUge = 5;
+double sovnUge = 5;
+double smerteManed = 5;
+double humorManed = 5;
+double aktivitetManed = 5;
+double socialManed = 5;
+double sovnManed = 5;
+
 String userUID = FirebaseAuth.instance.currentUser!.uid;
 Map<String, dynamic> smerteData = {};
 Map<String, dynamic> sleepData = {};

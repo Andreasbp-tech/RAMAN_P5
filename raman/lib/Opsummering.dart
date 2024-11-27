@@ -39,7 +39,7 @@ class _OpsummeringState extends State<Opsummering> {
                       Navigator.of(context).push(
                         MaterialPageRoute(
                           builder: (BuildContext context) {
-                            return RadardiagramPage();
+                            return RadarChartExample();
                           },
                         ),
                       );
@@ -124,16 +124,6 @@ class _OpsummeringState extends State<Opsummering> {
           ],
         ),
       ),
-    );
-  }
-}
-
-class RadardiagramPage extends StatelessWidget {
-  @override
-  Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(title: Text('Radardiagram')),
-      body: Center(child: Text('Indhold for Radardiagram-siden')),
     );
   }
 }
