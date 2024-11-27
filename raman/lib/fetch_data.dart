@@ -29,6 +29,8 @@ Map<String, dynamic> activityPrevalance = {};
 Map<String, bool> activitiesBoolMap = {};
 List<MapEntry<String, int>> activityPrevalanceSortedEntries = [];
 List<Map<String, Map<String, bool>>> senesteDagesAktiviteter = [];
+List<String> godeDage = [];
+List<String> badDays = [];
 
 class LoadingDataPage extends StatefulWidget {
   int pageIndex = 0;
@@ -42,14 +44,29 @@ class LoadingDataPage extends StatefulWidget {
 class _LoadingDataPageState extends State<LoadingDataPage> {
   //start of punktdiagram fetching
   bool isLoading = true;
+  DateTime now = DateTime.now();
+  String userUID = FirebaseAuth.instance.currentUser!.uid;
 
   Future<void> _fetchData() async {
+    for (var i = 0; i < 90; i++) {
+      DateTime date = now.subtract(Duration(days: i));
+      String dateString = DateFormat('yyyy-MM-dd').format(date);
+      DocumentSnapshot docSnapShot = await FirebaseFirestore.instance
+          .collection("users")
+          .doc(userUID)
+          .collection("LærOmDinSmerte")
+          .doc("GodeDage")
+          .get();
+      if (docSnapShot.exists) {
+        
+      }
+    }
+
     gnsSmerte = 0;
     gnsSmerteUpperLimit = 0;
     gnsSmerteLowerLimit = 0;
     senesteDagesAktiviteter = [];
-    DateTime now = DateTime.now();
-    String userUID = FirebaseAuth.instance.currentUser!.uid;
+
     String dagsDato = DateFormat('yyyy-MM-dd').format(now);
     for (var i = 0; i < gnsInputDataLength; i++) {
       DateTime date = now.subtract(Duration(days: i));
