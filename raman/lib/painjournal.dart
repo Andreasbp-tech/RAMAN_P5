@@ -7,6 +7,9 @@ import 'errormessage.dart';
 import 'popupsmertedagbog.dart';
 import 'package:intl/intl.dart';
 import 'globals.dart' as globals;
+import 'fetch_data.dart' as data;
+
+int painjournalNavigationIndex = 0;
 
 class PainJournal extends StatefulWidget {
   const PainJournal({super.key});
@@ -21,15 +24,15 @@ class _PainJournalState extends State<PainJournal> {
   double socialValue = 5;
   double moodValue = 5;
   double activityValue = 5;
-  final Map<String, bool> activityStatus = {};
-  Map<String, dynamic> activityPrevalance = {};
-  Map<String, dynamic> activityPrevalanceSorted = {};
+  //final Map<String, bool> activityStatus = {};
+  //Map<String, dynamic> activityPrevalance = {};
+  //Map<String, dynamic> activityPrevalanceSorted = {};
   List<MapEntry<String, int>> activityPrevalanceSortedEntries = [];
-  bool isCheckedButton1 = false;
-  bool isCheckedButton2 = false;
-  bool isCheckedButton3 = false;
+  //bool isCheckedButton1 = false;
+  //bool isCheckedButton2 = false;
+  //bool isCheckedButton3 = false;
   Map<String, bool> activitiesBoolMap = {};
-  int prevalenceLength = 14;
+  //int prevalenceLength = 14;
 
   bool isLoading = true;
 
@@ -39,211 +42,31 @@ class _PainJournalState extends State<PainJournal> {
     _fetchData();
   }
 
-  Future<void> _fetchData() async {
-    DateTime now = DateTime.now();
-    String dagsDato = DateFormat('yyyy-MM-dd').format(now);
-    String userId = FirebaseAuth.instance.currentUser!.uid;
-
-    try {
-      DocumentSnapshot documentSnapshot = await FirebaseFirestore.instance
-          .collection("users")
-          .doc(userId)
-          .collection("dage")
-          .doc(dagsDato)
-          .collection("smertedagbog")
-          .doc("VAS")
-          .get();
-
-      DocumentSnapshot documentSnapshot2 = await FirebaseFirestore.instance
-          .collection("users")
-          .doc(userId)
-          .collection("dage")
-          .doc(dagsDato)
-          .collection("smertedagbog")
-          .doc("aktiviteter")
-          .get();
-
-      if (documentSnapshot.exists) {
-        Map<String, dynamic> data =
-            documentSnapshot.data() as Map<String, dynamic>;
-        if (documentSnapshot2.exists) {
-          DocumentSnapshot documentSnapshot3 = await FirebaseFirestore.instance
-              .collection("users")
-              .doc(userId)
-              .collection("AktivitetsOversigt")
-              .doc("Aktiviteter")
-              .get();
-          Map<String, int> activitiesPrevalence = {};
-          if (documentSnapshot3.exists) {
-            activityPrevalance =
-                documentSnapshot3.data() as Map<String, dynamic>;
-            Map<String, dynamic> nestedMap = activityPrevalance['Aktiviteter'];
-
-            // Convert to Map<String, int>
-            activitiesPrevalence =
-                nestedMap.map((key, value) => MapEntry(key, value as int));
-
-            // Initialize activitiesPrevalence with zeros
-            activitiesPrevalence = {for (var key in nestedMap.keys) key: 0};
-
-            for (var i = 0; i < prevalenceLength; i++) {
-              DateTime date = now.subtract(Duration(days: i));
-              String prevalenceDate = DateFormat('yyyy-MM-dd').format(date);
-              DocumentSnapshot documentSnapshot4 = await FirebaseFirestore
-                  .instance
-                  .collection("users")
-                  .doc(userId)
-                  .collection("dage")
-                  .doc(prevalenceDate)
-                  .collection("smertedagbog")
-                  .doc("aktiviteter")
-                  .get();
-              if (documentSnapshot4.exists) {
-                Map<String, dynamic> dbbool =
-                    documentSnapshot4.data() as Map<String, dynamic>;
-                Map<String, dynamic> activitiesBoolNestedMap =
-                    dbbool['Aktivitetsliste'];
-                Map<String, bool> activitiesBool = activitiesBoolNestedMap
-                    .map((key, value) => MapEntry(key, value as bool));
-
-                activitiesBool.forEach((key, value) {
-                  if (value == true) {
-                    if (activitiesPrevalence.containsKey(key)) {
-                      activitiesPrevalence[key] =
-                          activitiesPrevalence[key]! + 1;
-                    } else {
-                      activitiesPrevalence[key] = 1;
-                    }
-                  }
-                });
-              }
-            }
-
-            // Sort the map by values in descending order
-            activityPrevalanceSortedEntries = activitiesPrevalence.entries
-                .toList()
-              ..sort((a, b) => b.value.compareTo(a.value));
-
-            // Convert to Map<String, bool> with all values set to false
-            activitiesBoolMap = {
-              for (var entry in activityPrevalanceSortedEntries)
-                entry.key: false
-            };
-
-            // Update activitiesBoolMap with values from the latest document
-            Map<String, dynamic> dbbool =
-                documentSnapshot2.data() as Map<String, dynamic>;
-            Map<String, dynamic> activitiesBoolNestedMap =
-                dbbool['Aktivitetsliste'];
-            Map<String, bool> activitiesBool = activitiesBoolNestedMap
-                .map((key, value) => MapEntry(key, value as bool));
-            activitiesBool.forEach((key, value) {
-              if (activitiesBoolMap.containsKey(key)) {
-                activitiesBoolMap[key] = value;
-              }
-            });
-          }
-        }
-
-        setState(() {
-          painValue = data['Smerte']?.toDouble() ?? 5.0;
-          sleepValue = data['Søvn']?.toDouble() ?? 5.0;
-          socialValue = data['Social']?.toDouble() ?? 5.0;
-          moodValue = data['Humør']?.toDouble() ?? 5.0;
-          activityValue = data['Aktivitetsniveau']?.toDouble() ?? 5.0;
-          isLoading = false;
-        });
-      } else {
-        Map<String, int> activitiesPrevalence = {};
-        DocumentSnapshot documentSnapshot3 = await FirebaseFirestore.instance
-            .collection("users")
-            .doc(userId)
-            .collection("AktivitetsOversigt")
-            .doc("Aktiviteter")
-            .get();
-        if (documentSnapshot3.exists) {
-          activityPrevalance = documentSnapshot3.data() as Map<String, dynamic>;
-          Map<String, dynamic> nestedMap = activityPrevalance['Aktiviteter'];
-
-          // Convert to Map<String, int>
-          activitiesPrevalence =
-              nestedMap.map((key, value) => MapEntry(key, value as int));
-
-          // Initialize activitiesPrevalence with zeros
-          activitiesPrevalence = {for (var key in nestedMap.keys) key: 0};
-
-          for (var i = 0; i < prevalenceLength; i++) {
-            DateTime date = now.subtract(Duration(days: i));
-            String prevalenceDate = DateFormat('yyyy-MM-dd').format(date);
-            DocumentSnapshot documentSnapshot4 = await FirebaseFirestore
-                .instance
-                .collection("users")
-                .doc(userId)
-                .collection("dage")
-                .doc(prevalenceDate)
-                .collection("smertedagbog")
-                .doc("aktiviteter")
-                .get();
-            if (documentSnapshot4.exists) {
-              Map<String, dynamic>? dbbool =
-                  documentSnapshot4.data() as Map<String, dynamic>?;
-              if (dbbool != null && dbbool.containsKey('Aktivitetsliste')) {
-                Map<String, dynamic> activitiesBoolNestedMap =
-                    dbbool['Aktivitetsliste'];
-                Map<String, bool> activitiesBool = activitiesBoolNestedMap
-                    .map((key, value) => MapEntry(key, value as bool));
-
-                activitiesBool.forEach((key, value) {
-                  if (value == true) {
-                    if (activitiesPrevalence.containsKey(key)) {
-                      activitiesPrevalence[key] =
-                          activitiesPrevalence[key]! + 1;
-                    } else {
-                      activitiesPrevalence[key] = 1;
-                    }
-                  }
-                });
-              }
-            }
-          }
-
-          // Sort the map by values in descending order
-          activityPrevalanceSortedEntries = activitiesPrevalence.entries
-              .toList()
-            ..sort((a, b) => b.value.compareTo(a.value));
-
-          // Convert to Map<String, bool> with all values set to false
-          activitiesBoolMap = {
-            for (var entry in activityPrevalanceSortedEntries) entry.key: false
-          };
-
-          // Update activitiesBoolMap with values from the latest document
-          Map<String, dynamic>? dbbool =
-              documentSnapshot2.data() as Map<String, dynamic>?;
-          if (dbbool != null && dbbool.containsKey('Aktivitetsliste')) {
-            Map<String, dynamic> activitiesBoolNestedMap =
-                dbbool['Aktivitetsliste'];
-            Map<String, bool> activitiesBool = activitiesBoolNestedMap
-                .map((key, value) => MapEntry(key, value as bool));
-            activitiesBool.forEach((key, value) {
-              if (activitiesBoolMap.containsKey(key)) {
-                activitiesBoolMap[key] = value;
-              }
-            });
-          }
-        }
-
-        setState(() {
-          isLoading = false;
-        });
-        print('No such document!');
-      }
-    } catch (e) {
-      setState(() {
-        isLoading = false;
-      });
-      print('Error fetching data: $e');
-    }
+  void _fetchData() {
+    painValue = data.painValue;
+    sleepValue = data.sleepValue;
+    socialValue = data.socialValue;
+    moodValue = data.moodValue;
+    activityValue = data.activityValue;
+    activityPrevalanceSortedEntries = data.activityPrevalanceSortedEntries;
+    activitiesBoolMap = data.activitiesBoolMap;
+    isLoading = false;
+    print(painValue);
+    print("\n");
+    print(sleepValue);
+    print("\n");
+    print(socialValue);
+    print("\n");
+    print(moodValue);
+    print("\n");
+    print(activityValue);
+    print("\n");
+    print(activityPrevalanceSortedEntries);
+    print("\n");
+    print(activitiesBoolMap);
+    print("\n");
+    print(isLoading);
+    print("\n");
   }
 
   void _finish() {

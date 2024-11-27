@@ -5,6 +5,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:intl/intl.dart';
 import 'dart:math';
+import 'fetch_data.dart' as data;
 
 class Punktdiagram extends StatefulWidget {
   Punktdiagram({super.key});
@@ -15,11 +16,11 @@ class Punktdiagram extends StatefulWidget {
 
 class _PunktdiagramState extends State<Punktdiagram> {
   //the following variables is to have a data string for the loaded data
-  final Map<String, dynamic> smerteData = {};
-  final Map<String, dynamic> sleepData = {};
-  final Map<String, dynamic> socialData = {};
-  final Map<String, dynamic> moodData = {};
-  final Map<String, dynamic> aktivitetsData = {};
+  Map<String, dynamic> smerteData = {};
+  Map<String, dynamic> sleepData = {};
+  Map<String, dynamic> socialData = {};
+  Map<String, dynamic> moodData = {};
+  Map<String, dynamic> aktivitetsData = {};
   //the following variables is to define the length of data to aquire from the dB
   int datasize = 7;
   int fetchedDatasize = 31;
@@ -67,53 +68,12 @@ class _PunktdiagramState extends State<Punktdiagram> {
   }
 
   Future<void> _fetchData() async {
-    // The function for fetching data from the database
-    DateTime now = DateTime.now();
-
-    for (var i = fetchedDatasize; i >= 0; i--) {
-      // Loop for running through the database, starting from today's date and going backwards
-      DateTime date = now.subtract(Duration(days: i));
-      String dateString = DateFormat('yyyy-MM-dd').format(date);
-      String DateWithoutYYYY = DateFormat('dd-MM').format(date);
-      DocumentReference docRef = FirebaseFirestore
-          .instance // Instance for the program to fetch data from the database
-          .collection("users")
-          .doc(FirebaseAuth.instance.currentUser!.uid)
-          .collection("dage")
-          .doc(dateString)
-          .collection("smertedagbog")
-          .doc("VAS");
-      DocumentSnapshot docSnapShot = await docRef.get();
-
-      setState(() {
-        if (docSnapShot.exists) {
-          // When new data is acquired, save it at the appropriate data locations
-          Map<String, dynamic> data =
-              docSnapShot.data() as Map<String, dynamic>;
-          smerteData.addEntries([MapEntry(DateWithoutYYYY, data["Smerte"])]);
-          sleepData.addEntries([MapEntry(DateWithoutYYYY, data["Søvn"])]);
-          socialData.addEntries([MapEntry(DateWithoutYYYY, data["Social"])]);
-          moodData.addEntries([MapEntry(DateWithoutYYYY, data["Humør"])]);
-          aktivitetsData.addEntries(
-              [MapEntry(DateWithoutYYYY, data["Aktivitetsniveau"])]);
-        } else {
-          // Add null entries if the document does not exist
-          smerteData.addEntries([MapEntry(DateWithoutYYYY, null)]);
-          sleepData.addEntries([MapEntry(DateWithoutYYYY, null)]);
-          socialData.addEntries([MapEntry(DateWithoutYYYY, null)]);
-          moodData.addEntries([MapEntry(DateWithoutYYYY, null)]);
-          aktivitetsData.addEntries([MapEntry(DateWithoutYYYY, null)]);
-        }
-      });
-    }
-
-    setState(() {
-      // When data is finished loading, set the bool to false so that the page can be rendered
-      isLoading = false;
-    });
-
-    // Debugging: remove in production
-    print(smerteData);
+    smerteData = data.smerteData;
+    sleepData = data.sleepData;
+    socialData = data.socialData;
+    moodData = data.moodData;
+    aktivitetsData = data.aktivitetsData;
+    isLoading = false;
   }
 
   Widget build(BuildContext context) {
