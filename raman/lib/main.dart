@@ -9,9 +9,11 @@ import 'loginpage.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 //import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:awesome_notifications/awesome_notifications.dart';
+import 'notifications.dart';
 
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
+
   AwesomeNotifications().initialize(
     null,
     [
@@ -19,6 +21,12 @@ Future<void> main() async {
         channelKey: 'basic_channel',
         channelName: 'Basic notifications',
         channelDescription: 'Notification channel for basic test',
+
+        importance:
+            NotificationImportance.Max, // Ensure channel importance is High
+        defaultRingtoneType: DefaultRingtoneType.Notification,
+        enableVibration: true,
+        channelShowBadge: true,
       ),
     ],
     debug: true,
