@@ -311,175 +311,177 @@ class _PainJournalState extends State<PainJournal> {
       backgroundColor: const Color.fromARGB(255, 243, 243, 228),
       appBar: Topappbar(pagename: "Smertedagbog"),
       bottomNavigationBar: const Bottomappbar(),
-      body: Column(
-        children: [
-          if (painValue != null)
-            InverseCustomSlider(
-              title: 'Hvor ondt har du haft i dag?',
-              initialSliderValue: painValue,
-              onChanged: (value) {
-                setState(() {
-                  painValue = value;
-                });
-              },
+      body: SingleChildScrollView(
+        child: Column(
+          children: [
+            if (painValue != null)
+              InverseCustomSlider(
+                title: 'Hvor ondt har du haft i dag?',
+                initialSliderValue: painValue,
+                onChanged: (value) {
+                  setState(() {
+                    painValue = value;
+                  });
+                },
+              ),
+            if (sleepValue != null)
+              CustomSlider(
+                title: 'Hvordan har du sovet i nat?',
+                initialSliderValue: sleepValue,
+                onChanged: (value) {
+                  setState(() {
+                    sleepValue = value;
+                  });
+                },
+              ),
+            if (socialValue != null)
+              CustomSlider(
+                title: 'Hvor social har du været i dag?',
+                initialSliderValue: socialValue,
+                onChanged: (value) {
+                  setState(() {
+                    socialValue = value;
+                  });
+                },
+              ),
+            if (moodValue != null)
+              CustomSlider(
+                title: 'Hvordan har dit humør været i dag?',
+                initialSliderValue: moodValue,
+                onChanged: (value) {
+                  setState(() {
+                    moodValue = value;
+                  });
+                },
+              ),
+            if (activityValue != null)
+              CustomSlider(
+                title: 'Hvor aktiv har du været i dag?',
+                initialSliderValue: activityValue,
+                onChanged: (value) {
+                  setState(() {
+                    activityValue = value;
+                  });
+                },
+              ),
+            const Divider(),
+            const SizedBox(height: 10),
+            const Text(
+              'Hvilke aktiviteter har du udført i dag?',
+              style: TextStyle(fontSize: 20),
             ),
-          if (sleepValue != null)
-            CustomSlider(
-              title: 'Hvordan har du sovet i nat?',
-              initialSliderValue: sleepValue,
-              onChanged: (value) {
-                setState(() {
-                  sleepValue = value;
-                });
-              },
-            ),
-          if (socialValue != null)
-            CustomSlider(
-              title: 'Hvor social har du været i dag?',
-              initialSliderValue: socialValue,
-              onChanged: (value) {
-                setState(() {
-                  socialValue = value;
-                });
-              },
-            ),
-          if (moodValue != null)
-            CustomSlider(
-              title: 'Hvordan har dit humør været i dag?',
-              initialSliderValue: moodValue,
-              onChanged: (value) {
-                setState(() {
-                  moodValue = value;
-                });
-              },
-            ),
-          if (activityValue != null)
-            CustomSlider(
-              title: 'Hvor aktiv har du været i dag?',
-              initialSliderValue: activityValue,
-              onChanged: (value) {
-                setState(() {
-                  activityValue = value;
-                });
-              },
-            ),
-          const Divider(),
-          const SizedBox(height: 10),
-          const Text(
-            'Hvilke aktiviteter har du udført i dag?',
-            style: TextStyle(fontSize: 20),
-          ),
-          const SizedBox(height: 3),
-          const Divider(),
-          SizedBox(
-              height: MediaQuery.of(context).size.height * 0.25,
-              child: Column(
-                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                children: [
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                    children: [
-                      ElevatedButton(
-                        onPressed: () {
-                          setState(() {
-                            activitiesBoolMap[
-                                    activityPrevalanceSortedEntries[0].key] =
-                                !activitiesBoolMap[
-                                    activityPrevalanceSortedEntries[0].key]!;
-                          });
-                        },
-                        child: Row(
-                          mainAxisSize: MainAxisSize.min,
-                          children: [
-                            Checkbox(
-                              value: activitiesBoolMap[
-                                  activityPrevalanceSortedEntries[0].key],
-                              onChanged: (bool? value) {
-                                setState(() {
-                                  activitiesBoolMap[
-                                      activityPrevalanceSortedEntries[0]
-                                          .key] = value!;
-                                });
-                              },
-                            ),
-                            Text('${activityPrevalanceSortedEntries[0].key}'),
-                          ],
-                        ),
-                      ),
-                      ElevatedButton(
-                        onPressed: () {
-                          setState(() {
-                            activitiesBoolMap[
-                                    activityPrevalanceSortedEntries[1].key] =
-                                !activitiesBoolMap[
-                                    activityPrevalanceSortedEntries[1].key]!;
-                          });
-                        },
-                        child: Row(
-                          mainAxisSize: MainAxisSize.min,
-                          children: [
-                            Checkbox(
-                              value: activitiesBoolMap[
-                                  activityPrevalanceSortedEntries[1].key],
-                              onChanged: (bool? value) {
-                                setState(() {
-                                  activitiesBoolMap[
-                                      activityPrevalanceSortedEntries[1]
-                                          .key] = value!;
-                                });
-                              },
-                            ),
-                            Text('${activityPrevalanceSortedEntries[1].key}'),
-                          ],
-                        ),
-                      ),
-                    ],
-                  ),
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                    children: [
-                      ElevatedButton(
-                        onPressed: () {
-                          setState(() {
-                            activitiesBoolMap[
-                                    activityPrevalanceSortedEntries[2].key] =
-                                !activitiesBoolMap[
-                                    activityPrevalanceSortedEntries[2].key]!;
-                          });
-                        },
-                        child: Row(
-                          mainAxisSize: MainAxisSize.min,
-                          children: [
-                            Checkbox(
-                              value: activitiesBoolMap[
-                                  activityPrevalanceSortedEntries[2].key],
-                              onChanged: (bool? value) {
-                                setState(() {
-                                  activitiesBoolMap[
-                                      activityPrevalanceSortedEntries[2]
-                                          .key] = value!;
-                                });
-                              },
-                            ),
-                            Text('${activityPrevalanceSortedEntries[2].key}'),
-                          ],
-                        ),
-                      ),
-                      ElevatedButton(
+            const SizedBox(height: 3),
+            const Divider(),
+            SizedBox(
+                height: MediaQuery.of(context).size.height * 0.25,
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                  children: [
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                      children: [
+                        ElevatedButton(
                           onPressed: () {
-                            _showMultiSelect(activitiesBoolMap);
+                            setState(() {
+                              activitiesBoolMap[
+                                      activityPrevalanceSortedEntries[0].key] =
+                                  !activitiesBoolMap[
+                                      activityPrevalanceSortedEntries[0].key]!;
+                            });
                           },
-                          child: const Text("Flere aktiviteter")),
-                    ],
-                  )
-                ],
-              )),
-          const Divider(),
-          ElevatedButton(
-            onPressed: _finish,
-            child: const Text('Færdig'),
-          ),
-        ],
+                          child: Row(
+                            mainAxisSize: MainAxisSize.min,
+                            children: [
+                              Checkbox(
+                                value: activitiesBoolMap[
+                                    activityPrevalanceSortedEntries[0].key],
+                                onChanged: (bool? value) {
+                                  setState(() {
+                                    activitiesBoolMap[
+                                        activityPrevalanceSortedEntries[0]
+                                            .key] = value!;
+                                  });
+                                },
+                              ),
+                              Text('${activityPrevalanceSortedEntries[0].key}'),
+                            ],
+                          ),
+                        ),
+                        ElevatedButton(
+                          onPressed: () {
+                            setState(() {
+                              activitiesBoolMap[
+                                      activityPrevalanceSortedEntries[1].key] =
+                                  !activitiesBoolMap[
+                                      activityPrevalanceSortedEntries[1].key]!;
+                            });
+                          },
+                          child: Row(
+                            mainAxisSize: MainAxisSize.min,
+                            children: [
+                              Checkbox(
+                                value: activitiesBoolMap[
+                                    activityPrevalanceSortedEntries[1].key],
+                                onChanged: (bool? value) {
+                                  setState(() {
+                                    activitiesBoolMap[
+                                        activityPrevalanceSortedEntries[1]
+                                            .key] = value!;
+                                  });
+                                },
+                              ),
+                              Text('${activityPrevalanceSortedEntries[1].key}'),
+                            ],
+                          ),
+                        ),
+                      ],
+                    ),
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                      children: [
+                        ElevatedButton(
+                          onPressed: () {
+                            setState(() {
+                              activitiesBoolMap[
+                                      activityPrevalanceSortedEntries[2].key] =
+                                  !activitiesBoolMap[
+                                      activityPrevalanceSortedEntries[2].key]!;
+                            });
+                          },
+                          child: Row(
+                            mainAxisSize: MainAxisSize.min,
+                            children: [
+                              Checkbox(
+                                value: activitiesBoolMap[
+                                    activityPrevalanceSortedEntries[2].key],
+                                onChanged: (bool? value) {
+                                  setState(() {
+                                    activitiesBoolMap[
+                                        activityPrevalanceSortedEntries[2]
+                                            .key] = value!;
+                                  });
+                                },
+                              ),
+                              Text('${activityPrevalanceSortedEntries[2].key}'),
+                            ],
+                          ),
+                        ),
+                        ElevatedButton(
+                            onPressed: () {
+                              _showMultiSelect(activitiesBoolMap);
+                            },
+                            child: const Text("Flere aktiviteter")),
+                      ],
+                    )
+                  ],
+                )),
+            const Divider(),
+            ElevatedButton(
+              onPressed: _finish,
+              child: const Text('Færdig'),
+            ),
+          ],
+        ),
       ),
     );
   }
