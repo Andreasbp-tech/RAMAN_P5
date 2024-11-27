@@ -47,7 +47,7 @@ class _OpsummeringState extends State<Opsummering> {
                     style: ElevatedButton.styleFrom(
                       padding: const EdgeInsets.symmetric(vertical: 60),
                     ),
-                    child: Row(
+                    child: const Row(
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: [
                         Icon(Icons.radar_rounded, size: 24),
@@ -59,7 +59,7 @@ class _OpsummeringState extends State<Opsummering> {
                 ),
               ],
             ),
-            Spacer(),
+            const Spacer(),
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceEvenly,
               children: [
@@ -77,7 +77,7 @@ class _OpsummeringState extends State<Opsummering> {
                     style: ElevatedButton.styleFrom(
                       padding: const EdgeInsets.symmetric(vertical: 60),
                     ),
-                    child: Row(
+                    child: const Row(
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: [
                         Icon(Icons.show_chart, size: 24),
@@ -89,7 +89,7 @@ class _OpsummeringState extends State<Opsummering> {
                 ),
               ],
             ),
-            Spacer(),
+            const Spacer(),
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceEvenly,
               children: [
@@ -99,7 +99,7 @@ class _OpsummeringState extends State<Opsummering> {
                       Navigator.of(context).push(
                         MaterialPageRoute(
                           builder: (BuildContext context) {
-                            return LaromdinsmertePage();
+                            return Laromdinsmerte();
                           },
                         ),
                       );
@@ -107,7 +107,7 @@ class _OpsummeringState extends State<Opsummering> {
                     style: ElevatedButton.styleFrom(
                       padding: const EdgeInsets.symmetric(vertical: 60),
                     ),
-                    child: Row(
+                    child: const Row(
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: [
                         Icon(Icons.insert_chart_outlined_outlined, size: 24),
@@ -134,26 +134,6 @@ class RadardiagramPage extends StatelessWidget {
     return Scaffold(
       appBar: AppBar(title: Text('Radardiagram')),
       body: Center(child: Text('Indhold for Radardiagram-siden')),
-    );
-  }
-}
-
-class PunktdiagramPage extends StatelessWidget {
-  @override
-  Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(title: Text('Punktdiagram')),
-      body: Center(child: Text('Indhold for Punktdiagram-siden')),
-    );
-  }
-}
-
-class LaromdinsmertePage extends StatelessWidget {
-  @override
-  Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(title: Text('Lær om din smerte')),
-      body: Center(child: Text('Indhold for Lær om din smerte-siden')),
     );
   }
 }
