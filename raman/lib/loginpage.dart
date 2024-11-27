@@ -4,6 +4,7 @@ import 'homepage.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'errormessage.dart';
 import 'globals.dart' as globals;
+import 'fetch_data.dart' as data;
 
 class LoginPage extends StatefulWidget {
   @override
@@ -24,7 +25,7 @@ class _LoginPageState extends State<LoginPage> {
       Navigator.pushReplacement(
         context,
         MaterialPageRoute(
-          builder: (context) => const Homepage(),
+          builder: (context) => data.LoadingDataPage(pageIndex: 0,),
         ),
       );
 

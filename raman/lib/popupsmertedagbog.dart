@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'Opsummering.dart';
 import 'homepage.dart';
+import 'fetch_data.dart' as data;
 
 class MyPopup extends StatelessWidget {
   final String title;
@@ -36,7 +37,9 @@ class MyPopup extends StatelessWidget {
                     Navigator.pushAndRemoveUntil(
                       context,
                       MaterialPageRoute(
-                        builder: (context) => const Homepage(),
+                        builder: (context) => data.LoadingDataPage(
+                          pageIndex: 0,
+                        ),
                       ),
                       (Route<dynamic> route) => false,
                     );
@@ -55,7 +58,9 @@ class MyPopup extends StatelessWidget {
                     Navigator.pushAndRemoveUntil(
                       context,
                       MaterialPageRoute(
-                        builder: (context) => const Opsummering(),
+                        builder: (context) => data.LoadingDataPage(
+                          pageIndex: 1,
+                        ),
                       ),
                       (Route<dynamic> route) => false,
                     );
