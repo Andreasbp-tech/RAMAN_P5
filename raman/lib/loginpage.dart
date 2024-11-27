@@ -4,6 +4,7 @@ import 'homepage.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'errormessage.dart';
 import 'globals.dart' as globals;
+import 'package:awesome_notifications/awesome_notifications.dart';
 import 'fetch_data.dart' as data;
 
 class LoginPage extends StatefulWidget {
@@ -21,11 +22,18 @@ class _LoginPageState extends State<LoginPage> {
         email: _emailController.text,
         password: _passwordController.text,
       );
+      AwesomeNotifications().isNotificationAllowed().then((isAllowed) {
+        if (!isAllowed) {
+          AwesomeNotifications().requestPermissionToSendNotifications();
+        }
+      });
       //Denne linje "pusher replacement" i navigator, så man ikke retunerer til loginpage.
       Navigator.pushReplacement(
         context,
         MaterialPageRoute(
-          builder: (context) => data.LoadingDataPage(pageIndex: 0,),
+          builder: (context) => data.LoadingDataPage(
+            pageIndex: 0,
+          ),
         ),
       );
 

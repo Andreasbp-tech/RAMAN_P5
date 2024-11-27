@@ -23,26 +23,78 @@ class _ProfilState extends State<Profil> {
   double moodValue = 5;
   double activityValue = 5;
   Map<String, bool> activitiesBoolMap = data.activitiesBoolMap;
+
   void generateRandomBoolValues(Map<String, bool> activitiesBoolMap) {
     Random random = Random();
     activitiesBoolMap.updateAll((key, value) => random.nextBool());
   }
 
-  void _generateData() {
+  Future<void> _generateData() async {
     DateTime now = DateTime.now();
     for (var i = 0; i < 30; i++) {
-      painValue = double.parse((Random().nextDouble() * 10).toStringAsFixed(1));
+      List<Map<String, Map<String, bool>>> senesteDagesAktiviteter = [];
+      painValue =
+          double.parse((Random().nextDouble() * 6).toStringAsFixed(1)) + 2;
       sleepValue =
-          double.parse((Random().nextDouble() * 10).toStringAsFixed(1));
+          double.parse((Random().nextDouble() * 6).toStringAsFixed(1)) + 2;
       socialValue =
-          double.parse((Random().nextDouble() * 10).toStringAsFixed(1));
-      moodValue = double.parse((Random().nextDouble() * 10).toStringAsFixed(1));
+          double.parse((Random().nextDouble() * 6).toStringAsFixed(1)) + 2;
+      moodValue =
+          double.parse((Random().nextDouble() * 6).toStringAsFixed(1)) + 2;
       activityValue =
-          double.parse((Random().nextDouble() * 10).toStringAsFixed(1));
+          double.parse((Random().nextDouble() * 6).toStringAsFixed(1)) + 2;
       generateRandomBoolValues(activitiesBoolMap);
 
+      for (var j = 0; j <= 5; j++) {
+        DateTime date = now.subtract(Duration(days: i + j));
+        String dateString = DateFormat('yyyy-MM-dd').format(date);
+        DocumentSnapshot docSnapShot = await FirebaseFirestore.instance
+            .collection("users")
+            .doc(FirebaseAuth.instance.currentUser?.uid)
+            .collection("dage")
+            .doc(dateString)
+            .collection("smertedagbog")
+            .doc("aktiviteter")
+            .get();
+        if (docSnapShot.exists) {
+          Map<String, dynamic> data =
+              docSnapShot.data() as Map<String, dynamic>;
+          Map<String, Map<String, bool>> mellemMap = {};
+
+// Assuming 'Aktivitetsliste' is the key for the map you want to extract
+          if (data['Aktivitetsliste'] is Map<String, dynamic>) {
+            Map<String, dynamic> aktivitetslisteDynamic =
+                data['Aktivitetsliste'] as Map<String, dynamic>;
+            Map<String, bool> aktivitetsliste = aktivitetslisteDynamic
+                .map((key, value) => MapEntry(key, value as bool));
+            if (aktivitetsliste is Map<String, bool>) {
+              mellemMap[dateString] = aktivitetsliste;
+              senesteDagesAktiviteter.add(mellemMap);
+            }
+          }
+        }
+      }
       DateTime date = now.subtract(Duration(days: i));
       String dagsDato = DateFormat('yyyy-MM-dd').format(date);
+      Map<String, Map<String, bool>> mellemMap = {};
+      mellemMap[dagsDato] = activitiesBoolMap;
+      List<Map<String, Map<String, bool>>> exportList = senesteDagesAktiviteter;
+      exportList[0] = mellemMap;
+      if (painValue < 4) {
+        FirebaseFirestore.instance
+            .collection("users")
+            .doc(data.userUID)
+            .collection("LærOmDinSmerte")
+            .doc("GodeDage")
+            .set({dagsDato: exportList}, SetOptions(merge: true));
+      } else if (painValue > 6) {
+        FirebaseFirestore.instance
+            .collection("users")
+            .doc(data.userUID)
+            .collection("LærOmDinSmerte")
+            .doc("DårligeDage")
+            .set({dagsDato: exportList}, SetOptions(merge: true));
+      }
       FirebaseFirestore.instance
           .collection("users")
           .doc(FirebaseAuth.instance.currentUser!.uid)
