@@ -43,14 +43,88 @@ class _PainJournalState extends State<PainJournal> {
     _fetchData();
   }
 
-  void _fetchData() {
-    painValue = data.painValue;
-    sleepValue = data.sleepValue;
-    socialValue = data.socialValue;
-    moodValue = data.moodValue;
-    activityValue = data.activityValue;
-    activityPrevalanceSortedEntries = data.activityPrevalanceSortedEntries;
-    activitiesBoolMap = data.activitiesBoolMap;
+  Future<void> _fetchData() async {
+    if (data.dataFetched) {
+      painValue = data.painValue;
+      sleepValue = data.sleepValue;
+      socialValue = data.socialValue;
+      moodValue = data.moodValue;
+      activityValue = data.activityValue;
+      activityPrevalanceSortedEntries = data.activityPrevalanceSortedEntries;
+      activitiesBoolMap = data.activitiesBoolMap;
+    } else {
+      DocumentSnapshot documentSnapshot3 = await FirebaseFirestore.instance
+          .collection("users")
+          .doc(FirebaseAuth.instance.currentUser?.uid)
+          .collection("AktivitetsOversigt")
+          .doc("Aktiviteter")
+          .get();
+      Map<String, int> activitiesPrevalence = {};
+      if (documentSnapshot3.exists) {
+        Map<String, dynamic> activityPrevalance =
+            documentSnapshot3.data() as Map<String, dynamic>;
+        Map<String, dynamic> nestedMap = activityPrevalance['Aktiviteter'];
+
+        // Convert to Map<String, int>
+        activitiesPrevalence =
+            nestedMap.map((key, value) => MapEntry(key, value as int));
+
+        // Initialize activitiesPrevalence with zeros
+        activitiesPrevalence = {for (var key in nestedMap.keys) key: 0};
+        DateTime now = DateTime.now();
+
+        for (var i = 0; i < data.prevalenceLength; i++) {
+          DateTime date = now.subtract(Duration(days: i));
+          String prevalenceDate = DateFormat('yyyy-MM-dd').format(date);
+          DocumentSnapshot documentSnapshot4 = await FirebaseFirestore.instance
+              .collection("users")
+              .doc(FirebaseAuth.instance.currentUser?.uid)
+              .collection("dage")
+              .doc(prevalenceDate)
+              .collection("smertedagbog")
+              .doc("aktiviteter")
+              .get();
+          if (documentSnapshot4.exists) {
+            Map<String, dynamic> dbbool =
+                documentSnapshot4.data() as Map<String, dynamic>;
+            Map<String, dynamic> activitiesBoolNestedMap =
+                dbbool['Aktivitetsliste'];
+            Map<String, bool> activitiesBool = activitiesBoolNestedMap
+                .map((key, value) => MapEntry(key, value as bool));
+
+            activitiesBool.forEach((key, value) {
+              if (value == true) {
+                if (activitiesPrevalence.containsKey(key)) {
+                  activitiesPrevalence[key] = activitiesPrevalence[key]! + 1;
+                } else {
+                  activitiesPrevalence[key] = 1;
+                }
+              }
+            });
+          }
+        }
+
+        // Sort the map by values in descending order
+        activityPrevalanceSortedEntries = activitiesPrevalence.entries.toList()
+          ..sort((a, b) => b.value.compareTo(a.value));
+
+        // Convert to Map<String, bool> with all values set to false
+        activitiesBoolMap = {
+          for (var entry in activityPrevalanceSortedEntries) entry.key: false
+        };
+        Map<String, bool> activitiesBool =
+            activitiesBoolMap.map((key, value) => MapEntry(key, value as bool));
+        activitiesBool.forEach((key, value) {
+          if (activitiesBoolMap.containsKey(key)) {
+            activitiesBoolMap[key] = value;
+          }
+        });
+      }
+    }
+
+    setState(() {
+      isLoading = false;
+    });
     isLoading = false;
   }
 

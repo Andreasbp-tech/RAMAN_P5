@@ -42,6 +42,7 @@ List<MapEntry<String, int>> activityPrevalanceSortedEntries = [];
 List<Map<String, Map<String, bool>>> senesteDagesAktiviteter = [];
 List<String> godeDage = [];
 List<String> badDays = [];
+bool dataFetched = false;
 
 class LoadingDataPage extends StatefulWidget {
   int pageIndex = 0;
@@ -59,16 +60,41 @@ class _LoadingDataPageState extends State<LoadingDataPage> {
   String userUID = FirebaseAuth.instance.currentUser!.uid;
 
   Future<void> _fetchData() async {
-    for (var i = 0; i < 90; i++) {
-      DateTime date = now.subtract(Duration(days: i));
-      String dateString = DateFormat('yyyy-MM-dd').format(date);
+    int j = 0;
+    Map<String, dynamic> dataGodeDage;
+    Map<String, dynamic> dataBadDays;
+    while (true) {
       DocumentSnapshot docSnapShot = await FirebaseFirestore.instance
           .collection("users")
           .doc(userUID)
           .collection("LærOmDinSmerte")
           .doc("GodeDage")
           .get();
+<<<<<<< Updated upstream
       if (docSnapShot.exists) {}
+=======
+      DocumentSnapshot docSnapShot2 = await FirebaseFirestore.instance
+          .collection("users")
+          .doc(userUID)
+          .collection("LærOmDinSmerte")
+          .doc("DårligeDage")
+          .get();
+      if (docSnapShot.exists) {
+        Map<String, dynamic> dataGodeDage =
+            docSnapShot.data() as Map<String, dynamic>;
+      }
+      if (docSnapShot2.exists) {
+        Map<String, dynamic> dataBadDays =
+            docSnapShot2.data() as Map<String, dynamic>;
+      }
+
+      for (var i = 0; i < 90; i++) {
+        DateTime date = now.subtract(Duration(days: i));
+        String dateString = DateFormat('yyyy-MM-dd').format(date);
+        // godeDage[0] = dataGodeDage[dateString];
+      }
+      break;
+>>>>>>> Stashed changes
     }
 
     gnsSmerte = 0;
@@ -79,6 +105,7 @@ class _LoadingDataPageState extends State<LoadingDataPage> {
     String dagsDato = DateFormat('yyyy-MM-dd').format(now);
     for (var i = 0; i < gnsInputDataLength; i++) {
       DateTime date = now.subtract(Duration(days: i));
+      
       String dateString = DateFormat('yyyy-MM-dd').format(date);
       DocumentSnapshot docSnapShot = await FirebaseFirestore.instance
           .collection("users")
@@ -411,6 +438,7 @@ class _LoadingDataPageState extends State<LoadingDataPage> {
 
         setState(() {
           isLoading = false;
+          dataFetched = true;
         });
       }
     } catch (e) {
