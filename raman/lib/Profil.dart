@@ -93,14 +93,14 @@ class _ProfilState extends State<Profil> {
       if (painValue < 4) {
         FirebaseFirestore.instance
             .collection("users")
-            .doc(data.userUID)
+            .doc(FirebaseAuth.instance.currentUser?.uid)
             .collection("LærOmDinSmerte")
             .doc("GodeDage")
             .set({dagsDato: exportList}, SetOptions(merge: true));
       } else if (painValue > 6) {
         FirebaseFirestore.instance
             .collection("users")
-            .doc(data.userUID)
+            .doc(FirebaseAuth.instance.currentUser?.uid)
             .collection("LærOmDinSmerte")
             .doc("DårligeDage")
             .set({dagsDato: exportList}, SetOptions(merge: true));
