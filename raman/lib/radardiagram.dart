@@ -44,6 +44,7 @@ class _RadarChartExampleState extends State<RadarChartExample> {
       bottomNavigationBar: const Bottomappbar(),
       body: Column(
         children: [
+          SizedBox(height: 100), // Adjust the height as needed
           Row(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
@@ -75,11 +76,13 @@ class _RadarChartExampleState extends State<RadarChartExample> {
                     radarTouchData: RadarTouchData(enabled: true),
                     dataSets: _getSelectedDataSets(),
                     radarBackgroundColor: Colors.transparent,
-                    borderData: FlBorderData(show: false),
-                    radarBorderData: BorderSide(color: Colors.transparent),
+                    borderData: FlBorderData(show: true),
+                    radarBorderData: BorderSide(color: Colors.black, width: 1),
                     titlePositionPercentageOffset: 0.2,
-                    titleTextStyle:
-                        TextStyle(color: Colors.black, fontSize: 14),
+                    titleTextStyle: TextStyle(
+                        color: Colors.black,
+                        fontSize: 18,
+                        fontWeight: FontWeight.bold),
                     getTitle: (index, angle) {
                       switch (index) {
                         case 0:
@@ -97,9 +100,10 @@ class _RadarChartExampleState extends State<RadarChartExample> {
                       }
                     },
                     tickCount: 10, // Set the number of ticks
-                    ticksTextStyle: TextStyle(color: Colors.grey, fontSize: 10),
-                    tickBorderData: BorderSide(color: Colors.grey),
-                    gridBorderData: BorderSide(color: Colors.grey, width: 2),
+                    ticksTextStyle:
+                        TextStyle(color: Colors.transparent, fontSize: 10),
+                    tickBorderData: BorderSide(color: Colors.black),
+                    gridBorderData: BorderSide(color: Colors.black, width: 1),
                     radarShape: RadarShape.polygon,
                   ),
                 ),
@@ -120,38 +124,61 @@ class _RadarChartExampleState extends State<RadarChartExample> {
           onChanged: onChanged,
           activeColor: color,
         ),
-        Text(period),
+        Text(
+          period,
+          style: TextStyle(
+            fontSize: 28, // Increase the text size
+            fontWeight: FontWeight.bold, // Make the text bold
+          ),
+        ),
       ],
     );
   }
 
   List<RadarDataSet> _getSelectedDataSets() {
     List<RadarDataSet> dataSets = [];
+
+    // Add the transparent dataset with values 0 and 10
+    dataSets.add(RadarDataSet(
+      fillColor: Colors.transparent,
+      borderColor: Colors.transparent,
+      dataEntries: [
+        RadarEntry(value: 0),
+        RadarEntry(value: 10),
+        RadarEntry(value: 10),
+        RadarEntry(value: 10),
+        RadarEntry(value: 10),
+      ],
+    ));
+
     if (isDaySelected) {
       dataSets.add(RadarDataSet(
-        fillColor: Colors.blue.withOpacity(0.3),
+        fillColor: Colors.blue.withOpacity(0.6),
         borderColor: Colors.blue,
-        entryRadius: 3,
-        dataEntries: dayData.map((e) => RadarEntry(value: e)).toList(),
-        borderWidth: 2,
+        entryRadius: 2,
+        dataEntries:
+            dayData.map((e) => RadarEntry(value: e.isNaN ? 0 : e)).toList(),
+        borderWidth: 3,
       ));
     }
     if (isWeekSelected) {
       dataSets.add(RadarDataSet(
-        fillColor: Colors.green.withOpacity(0.3),
+        fillColor: Colors.green.withOpacity(0.4),
         borderColor: Colors.green,
-        entryRadius: 3,
-        dataEntries: weekData.map((e) => RadarEntry(value: e)).toList(),
-        borderWidth: 2,
+        entryRadius: 2,
+        dataEntries:
+            weekData.map((e) => RadarEntry(value: e.isNaN ? 0 : e)).toList(),
+        borderWidth: 3,
       ));
     }
     if (isMonthSelected) {
       dataSets.add(RadarDataSet(
-        fillColor: Colors.red.withOpacity(0.3),
+        fillColor: Colors.red.withOpacity(0.2),
         borderColor: Colors.red,
-        entryRadius: 3,
-        dataEntries: monthData.map((e) => RadarEntry(value: e)).toList(),
-        borderWidth: 2,
+        entryRadius: 2,
+        dataEntries:
+            monthData.map((e) => RadarEntry(value: e.isNaN ? 0 : e)).toList(),
+        borderWidth: 3,
       ));
     }
     if (dataSets.isEmpty) {

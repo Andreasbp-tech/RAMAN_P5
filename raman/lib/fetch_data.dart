@@ -47,6 +47,23 @@ bool dataFetched = false;
 class LoadingDataPage extends StatefulWidget {
   int pageIndex = 0;
   bool isLoading = true;
+  //start of punktdiagram fetching
+  double painValue = 0;
+  double sleepValue = 0;
+  double socialValue = 0;
+  double moodValue = 0;
+  double activityValue = 0;
+  double smerteUge = 0;
+  double humorUge = 0;
+  double aktivitetUge = 0;
+  double socialUge = 0;
+  double sovnUge = 0;
+  double smerteManed = 0;
+  double humorManed = 0;
+  double aktivitetManed = 0;
+  double socialManed = 0;
+  double sovnManed = 0;
+
   LoadingDataPage({super.key, required this.pageIndex});
 
   @override
@@ -54,7 +71,6 @@ class LoadingDataPage extends StatefulWidget {
 }
 
 class _LoadingDataPageState extends State<LoadingDataPage> {
-  //start of punktdiagram fetching
   bool isLoading = true;
   DateTime now = DateTime.now();
   String userUID = FirebaseAuth.instance.currentUser!.uid;
@@ -188,6 +204,8 @@ class _LoadingDataPageState extends State<LoadingDataPage> {
           .collection("smertedagbog")
           .doc("VAS")
           .get();
+      print("getdata:");
+      print(i);
       if (docSnapShot.exists) {
         Map<String, dynamic> data = docSnapShot.data() as Map<String, dynamic>;
         smerteUge = smerteUge + data['Smerte']?.toDouble();
@@ -196,6 +214,8 @@ class _LoadingDataPageState extends State<LoadingDataPage> {
         aktivitetUge = aktivitetUge + data['Aktivitetsniveau']?.toDouble();
         socialUge = socialUge + data['Social']?.toDouble();
         jUge++;
+        print("Snapshot exists:");
+        print(i);
       }
     }
     smerteUge = smerteUge / jUge;
@@ -216,6 +236,8 @@ class _LoadingDataPageState extends State<LoadingDataPage> {
           .collection("smertedagbog")
           .doc("VAS")
           .get();
+      print("getdataMManed:");
+      print(i);
       if (docSnapShot.exists) {
         Map<String, dynamic> data = docSnapShot.data() as Map<String, dynamic>;
         smerteManed = smerteManed + data['Smerte']?.toDouble();
@@ -224,6 +246,8 @@ class _LoadingDataPageState extends State<LoadingDataPage> {
         aktivitetManed = aktivitetManed + data['Aktivitetsniveau']?.toDouble();
         socialManed = socialManed + data['Social']?.toDouble();
         jManed++;
+        print("SnapshotManed exists:");
+        print(i);
       }
     }
     smerteManed = smerteManed / jManed;
