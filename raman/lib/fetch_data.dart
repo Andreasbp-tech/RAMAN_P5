@@ -101,7 +101,7 @@ class _LoadingDataPageState extends State<LoadingDataPage> {
     String dagsDato = DateFormat('yyyy-MM-dd').format(now);
     for (var i = 0; i < gnsInputDataLength; i++) {
       DateTime date = now.subtract(Duration(days: i));
-      
+
       String dateString = DateFormat('yyyy-MM-dd').format(date);
       DocumentSnapshot docSnapShot = await FirebaseFirestore.instance
           .collection("users")
@@ -135,14 +135,18 @@ class _LoadingDataPageState extends State<LoadingDataPage> {
           .collection("smertedagbog")
           .doc("VAS")
           .get();
+      print("getdata:");
+      print(i);
       if (docSnapShot.exists) {
         Map<String, dynamic> data = docSnapShot.data() as Map<String, dynamic>;
         smerteUge = smerteUge + data['Smerte']?.toDouble();
         humorUge = humorUge + data['Humør']?.toDouble();
         sovnUge = sovnUge + data['Søvn']?.toDouble();
-        aktivitetUge = aktivitetUge + data['Aktivitet']?.toDouble();
+        aktivitetUge = aktivitetUge + data['Aktivitetsniveau']?.toDouble();
         socialUge = socialUge + data['Social']?.toDouble();
         jUge++;
+        print("Snapshot exists:");
+        print(i);
       }
     }
     smerteUge = smerteUge / jUge;
@@ -163,14 +167,18 @@ class _LoadingDataPageState extends State<LoadingDataPage> {
           .collection("smertedagbog")
           .doc("VAS")
           .get();
+      print("getdataMManed:");
+      print(i);
       if (docSnapShot.exists) {
         Map<String, dynamic> data = docSnapShot.data() as Map<String, dynamic>;
         smerteManed = smerteManed + data['Smerte']?.toDouble();
         humorManed = humorManed + data['Humør']?.toDouble();
         sovnManed = sovnManed + data['Søvn']?.toDouble();
-        aktivitetManed = aktivitetManed + data['Aktivitet']?.toDouble();
+        aktivitetManed = aktivitetManed + data['Aktivitetsniveau']?.toDouble();
         socialManed = socialManed + data['Social']?.toDouble();
         jManed++;
+        print("SnapshotManed exists:");
+        print(i);
       }
     }
     smerteManed = smerteManed / jManed;
