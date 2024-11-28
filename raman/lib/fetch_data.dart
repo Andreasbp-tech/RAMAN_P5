@@ -70,9 +70,6 @@ class _LoadingDataPageState extends State<LoadingDataPage> {
           .collection("LærOmDinSmerte")
           .doc("GodeDage")
           .get();
-<<<<<<< Updated upstream
-      if (docSnapShot.exists) {}
-=======
       DocumentSnapshot docSnapShot2 = await FirebaseFirestore.instance
           .collection("users")
           .doc(userUID)
@@ -94,7 +91,6 @@ class _LoadingDataPageState extends State<LoadingDataPage> {
         // godeDage[0] = dataGodeDage[dateString];
       }
       break;
->>>>>>> Stashed changes
     }
 
     gnsSmerte = 0;
