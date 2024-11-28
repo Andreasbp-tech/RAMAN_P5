@@ -157,7 +157,7 @@ class _RadarChartExampleState extends State<RadarChartExample> {
         borderColor: Colors.blue,
         entryRadius: 2,
         dataEntries:
-            dayData.map((e) => RadarEntry(value: e.clamp(0, 10))).toList(),
+            dayData.map((e) => RadarEntry(value: e.isNaN ? 0 : e)).toList(),
         borderWidth: 3,
       ));
     }
@@ -167,7 +167,7 @@ class _RadarChartExampleState extends State<RadarChartExample> {
         borderColor: Colors.green,
         entryRadius: 2,
         dataEntries:
-            weekData.map((e) => RadarEntry(value: e.clamp(0, 10))).toList(),
+            weekData.map((e) => RadarEntry(value: e.isNaN ? 0 : e)).toList(),
         borderWidth: 3,
       ));
     }
@@ -177,7 +177,7 @@ class _RadarChartExampleState extends State<RadarChartExample> {
         borderColor: Colors.red,
         entryRadius: 2,
         dataEntries:
-            monthData.map((e) => RadarEntry(value: e.clamp(0, 10))).toList(),
+            monthData.map((e) => RadarEntry(value: e.isNaN ? 0 : e)).toList(),
         borderWidth: 3,
       ));
     }
