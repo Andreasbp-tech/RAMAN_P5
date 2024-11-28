@@ -192,7 +192,7 @@ class _LoadingDataPageState extends State<LoadingDataPage> {
     print("gnsSmerteUpperLimit = $gnsSmerteUpperLimit");
     print("gnsSmerteLowerLimit = $gnsSmerteLowerLimit");
 
-    int jUge = 0;
+    int jUge = 1;
     for (var i = 0; i < 7; i++) {
       DateTime date = now.subtract(Duration(days: i));
       String dateString = DateFormat('yyyy-MM-dd').format(date);
@@ -224,7 +224,7 @@ class _LoadingDataPageState extends State<LoadingDataPage> {
     aktivitetUge = aktivitetUge / jUge;
     socialUge = socialUge / jUge;
 
-    int jManed = 0;
+    int jManed = 1;
     for (var i = 0; i < 31; i++) {
       DateTime date = now.subtract(Duration(days: i));
       String dateString = DateFormat('yyyy-MM-dd').format(date);
