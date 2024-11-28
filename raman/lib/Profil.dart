@@ -56,6 +56,35 @@ class _ProfilState extends State<Profil> {
       activityValue =
           double.parse((Random().nextDouble() * 6).toStringAsFixed(1)) + 2;
       generateRandomBoolValues(activitiesBoolMap);
+      DateTime date = now.subtract(Duration(days: i));
+      String dagsDato = DateFormat('yyyy-MM-dd').format(date);
+      FirebaseFirestore.instance
+          .collection("users")
+          .doc(FirebaseAuth.instance.currentUser!.uid)
+          .collection("dage")
+          .doc(dagsDato)
+          .collection("smertedagbog")
+          .doc("VAS")
+          .set(
+        {
+          "Smerte": painValue,
+          "Søvn": sleepValue,
+          "Social": socialValue,
+          "Humør": moodValue,
+          "Aktivitetsniveau": activityValue,
+        },
+      );
+      FirebaseFirestore.instance
+          .collection("users")
+          .doc(FirebaseAuth.instance.currentUser!.uid)
+          .collection("dage")
+          .doc(dagsDato)
+          .collection("smertedagbog")
+          .doc("aktiviteter")
+          .set(
+        {"Aktivitetsliste": activitiesBoolMap},
+      );
+      print(activitiesBoolMap);
 
       for (var j = 0; j <= 5; j++) {
         DateTime date = now.subtract(Duration(days: i + j));
@@ -84,8 +113,7 @@ class _ProfilState extends State<Profil> {
           }
         }
       }
-      DateTime date = now.subtract(Duration(days: i));
-      String dagsDato = DateFormat('yyyy-MM-dd').format(date);
+
       Map<String, Map<String, bool>> mellemMap = {};
       mellemMap[dagsDato] = activitiesBoolMap;
       List<Map<String, Map<String, bool>>> exportList = senesteDagesAktiviteter;
@@ -105,33 +133,6 @@ class _ProfilState extends State<Profil> {
             .doc("DårligeDage")
             .set({dagsDato: exportList}, SetOptions(merge: true));
       }
-      FirebaseFirestore.instance
-          .collection("users")
-          .doc(FirebaseAuth.instance.currentUser!.uid)
-          .collection("dage")
-          .doc(dagsDato)
-          .collection("smertedagbog")
-          .doc("VAS")
-          .set(
-        {
-          "Smerte": painValue,
-          "Søvn": sleepValue,
-          "Social": socialValue,
-          "Humør": moodValue,
-          "Aktivitetsniveau": activityValue,
-        },
-      );
-      FirebaseFirestore.instance
-          .collection("users")
-          .doc(FirebaseAuth.instance.currentUser!.uid)
-          .collection("dage")
-          .doc(dagsDato)
-          .collection("smertedagbog")
-          .doc("aktiviteter")
-          .set(
-        {"Aktivitetsliste": activitiesBoolMap},
-      );
-      print(activitiesBoolMap);
     }
     print(painValue);
     showMyPopup(context, 'Godt arbejde!',

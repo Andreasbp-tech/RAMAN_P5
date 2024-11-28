@@ -116,7 +116,7 @@ class _LoadingDataPageState extends State<LoadingDataPage> {
         for (var i = 0; i < 90; i++) {
           DateTime date = DateTime.now().subtract(Duration(days: i));
           String dateString = DateFormat('yyyy-MM-dd').format(date);
-          String printedString = DateFormat('dd-MM-yyyy').format(date);
+          String printedString = DateFormat('dd-MM-yy').format(date);
           if (dataGodeDage.containsKey(dateString) &&
               dataGodeDage[dateString] is List) {
             godeDage.add(printedString);
