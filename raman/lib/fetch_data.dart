@@ -61,36 +61,89 @@ class _LoadingDataPageState extends State<LoadingDataPage> {
 
   Future<void> _fetchData() async {
     int j = 0;
-    Map<String, dynamic> dataGodeDage;
-    Map<String, dynamic> dataBadDays;
-    while (true) {
-      DocumentSnapshot docSnapShot = await FirebaseFirestore.instance
-          .collection("users")
-          .doc(userUID)
-          .collection("LærOmDinSmerte")
-          .doc("GodeDage")
-          .get();
-      DocumentSnapshot docSnapShot2 = await FirebaseFirestore.instance
-          .collection("users")
-          .doc(userUID)
-          .collection("LærOmDinSmerte")
-          .doc("DårligeDage")
-          .get();
-      if (docSnapShot.exists) {
-        Map<String, dynamic> dataGodeDage =
-            docSnapShot.data() as Map<String, dynamic>;
-      }
-      if (docSnapShot2.exists) {
-        Map<String, dynamic> dataBadDays =
-            docSnapShot2.data() as Map<String, dynamic>;
-      }
+    int k = 0;
+    godeDage = [];
+    badDays = [];
+    print("Fetch started");
 
-      for (var i = 0; i < 90; i++) {
-        DateTime date = now.subtract(Duration(days: i));
-        String dateString = DateFormat('yyyy-MM-dd').format(date);
-        // godeDage[0] = dataGodeDage[dateString];
+    Map<String, dynamic> dataGodeDage = {};
+    Map<String, dynamic> dataBadDays = {};
+
+    while (true) {
+      print("Gode dårlige dage started");
+
+      try {
+        DocumentSnapshot docSnapShot = await FirebaseFirestore.instance
+            .collection("users")
+            .doc(userUID)
+            .collection("LærOmDinSmerte")
+            .doc("GodeDage")
+            .get();
+
+        DocumentSnapshot docSnapShot2 = await FirebaseFirestore.instance
+            .collection("users")
+            .doc(userUID)
+            .collection("LærOmDinSmerte")
+            .doc("DårligeDage")
+            .get();
+
+        if (docSnapShot.exists) {
+          dataGodeDage = docSnapShot.data() as Map<String, dynamic>;
+          print("doc1 exist");
+        }
+
+        if (docSnapShot2.exists) {
+          dataBadDays = docSnapShot2.data() as Map<String, dynamic>;
+          print("doc2 exist");
+        }
+
+        for (var i = 0; i < 90; i++) {
+          DateTime date = DateTime.now().subtract(Duration(days: i));
+          String dateString = DateFormat('yyyy-MM-dd').format(date);
+          String printedString = DateFormat('dd-MM-yyyy').format(date);
+          if (dataGodeDage.containsKey(dateString) &&
+              dataGodeDage[dateString] is List) {
+            godeDage.add(printedString);
+
+            j++;
+            print(j);
+          }
+          print(i);
+
+          if (j == 5) {
+            print("i break out of good loop");
+            break;
+          }
+        }
+
+        for (var i = 0; i < 90; i++) {
+          DateTime date = DateTime.now().subtract(Duration(days: i));
+          String dateString = DateFormat('yyyy-MM-dd').format(date);
+          String printedString = DateFormat('dd-MM-yy').format(date);
+          print("date $dateString");
+          if (dataBadDays.containsKey(dateString) &&
+              dataBadDays[dateString] is List) {
+            print("jeg kan genkende lister");
+            badDays.add(printedString);
+            print(badDays);
+            k++;
+            print(k);
+          }
+
+          print(i);
+          print(badDays);
+
+          if (k == 5) {
+            print("i break out of bad loop");
+            break;
+          }
+        }
+
+        break;
+      } catch (e) {
+        print("Error fetching data: $e");
+        break;
       }
-      break;
     }
 
     gnsSmerte = 0;
@@ -101,7 +154,7 @@ class _LoadingDataPageState extends State<LoadingDataPage> {
     String dagsDato = DateFormat('yyyy-MM-dd').format(now);
     for (var i = 0; i < gnsInputDataLength; i++) {
       DateTime date = now.subtract(Duration(days: i));
-      
+
       String dateString = DateFormat('yyyy-MM-dd').format(date);
       DocumentSnapshot docSnapShot = await FirebaseFirestore.instance
           .collection("users")
@@ -140,7 +193,7 @@ class _LoadingDataPageState extends State<LoadingDataPage> {
         smerteUge = smerteUge + data['Smerte']?.toDouble();
         humorUge = humorUge + data['Humør']?.toDouble();
         sovnUge = sovnUge + data['Søvn']?.toDouble();
-        aktivitetUge = aktivitetUge + data['Aktivitet']?.toDouble();
+        aktivitetUge = aktivitetUge + data['Aktivitetsniveau']?.toDouble();
         socialUge = socialUge + data['Social']?.toDouble();
         jUge++;
       }
@@ -168,7 +221,7 @@ class _LoadingDataPageState extends State<LoadingDataPage> {
         smerteManed = smerteManed + data['Smerte']?.toDouble();
         humorManed = humorManed + data['Humør']?.toDouble();
         sovnManed = sovnManed + data['Søvn']?.toDouble();
-        aktivitetManed = aktivitetManed + data['Aktivitet']?.toDouble();
+        aktivitetManed = aktivitetManed + data['Aktivitetsniveau']?.toDouble();
         socialManed = socialManed + data['Social']?.toDouble();
         jManed++;
       }

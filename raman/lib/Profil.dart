@@ -30,6 +30,18 @@ class _ProfilState extends State<Profil> {
   }
 
   Future<void> _generateData() async {
+    FirebaseFirestore.instance
+        .collection("users")
+        .doc(FirebaseAuth.instance.currentUser?.uid)
+        .collection("LærOmDinSmerte")
+        .doc("DårligeDage")
+        .delete();
+    FirebaseFirestore.instance
+        .collection("users")
+        .doc(FirebaseAuth.instance.currentUser?.uid)
+        .collection("LærOmDinSmerte")
+        .doc("GodeDage")
+        .delete();
     DateTime now = DateTime.now();
     for (var i = 0; i < 30; i++) {
       List<Map<String, Map<String, bool>>> senesteDagesAktiviteter = [];
@@ -67,10 +79,8 @@ class _ProfilState extends State<Profil> {
                 data['Aktivitetsliste'] as Map<String, dynamic>;
             Map<String, bool> aktivitetsliste = aktivitetslisteDynamic
                 .map((key, value) => MapEntry(key, value as bool));
-            if (aktivitetsliste is Map<String, bool>) {
-              mellemMap[dateString] = aktivitetsliste;
-              senesteDagesAktiviteter.add(mellemMap);
-            }
+            mellemMap[dateString] = aktivitetsliste;
+            senesteDagesAktiviteter.add(mellemMap);
           }
         }
       }

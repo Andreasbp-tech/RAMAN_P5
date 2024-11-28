@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'navigationbars.dart';
+import 'fetch_data.dart' as data;
 
 class Laromdinsmerte extends StatefulWidget {
   Laromdinsmerte({super.key});
@@ -63,7 +64,7 @@ class _LaromdinsmerteState extends State<Laromdinsmerte> {
                   buttonHeight), // Use variable for button height
             ),
             child: Text(
-              'God dag 1',
+              data.godeDage[0],
               style: TextStyle(
                   fontSize: buttonFontSize), // Use variable for font size
             ),
@@ -81,7 +82,7 @@ class _LaromdinsmerteState extends State<Laromdinsmerte> {
                   buttonHeight), // Use variable for button height
             ),
             child: Text(
-              'God dag 2',
+              data.godeDage[1],
               style: TextStyle(
                   fontSize: buttonFontSize), // Use variable for font size
             ),
@@ -99,7 +100,7 @@ class _LaromdinsmerteState extends State<Laromdinsmerte> {
                   buttonHeight), // Use variable for button height
             ),
             child: Text(
-              'God dag 3',
+              data.godeDage[2],
               style: TextStyle(
                   fontSize: buttonFontSize), // Use variable for font size
             ),
@@ -117,7 +118,7 @@ class _LaromdinsmerteState extends State<Laromdinsmerte> {
                   buttonHeight), // Use variable for button height
             ),
             child: Text(
-              'God dag 4',
+              data.godeDage[3],
               style: TextStyle(
                   fontSize: buttonFontSize), // Use variable for font size
             ),
@@ -135,7 +136,7 @@ class _LaromdinsmerteState extends State<Laromdinsmerte> {
                   buttonHeight), // Use variable for button height
             ),
             child: Text(
-              'God dag 5',
+              data.godeDage[4],
               style: TextStyle(
                   fontSize: buttonFontSize), // Use variable for font size
             ),
@@ -185,7 +186,7 @@ class _LaromdinsmerteState extends State<Laromdinsmerte> {
                   buttonHeight), // Use variable for button height
             ),
             child: Text(
-              'Dårlig dag 1',
+              data.badDays[0],
               style: TextStyle(
                   fontSize: buttonFontSize), // Use variable for font size
             ),
@@ -203,7 +204,7 @@ class _LaromdinsmerteState extends State<Laromdinsmerte> {
                   buttonHeight), // Use variable for button height
             ),
             child: Text(
-              'Dårlig dag 2',
+              data.badDays[1],
               style: TextStyle(
                   fontSize: buttonFontSize), // Use variable for font size
             ),
@@ -221,7 +222,7 @@ class _LaromdinsmerteState extends State<Laromdinsmerte> {
                   buttonHeight), // Use variable for button height
             ),
             child: Text(
-              'Dårlig dag 3',
+              data.badDays[2],
               style: TextStyle(
                   fontSize: buttonFontSize), // Use variable for font size
             ),
@@ -239,7 +240,7 @@ class _LaromdinsmerteState extends State<Laromdinsmerte> {
                   buttonHeight), // Use variable for button height
             ),
             child: Text(
-              'Dårlig dag 4',
+              data.badDays[3],
               style: TextStyle(
                   fontSize: buttonFontSize), // Use variable for font size
             ),
@@ -257,7 +258,7 @@ class _LaromdinsmerteState extends State<Laromdinsmerte> {
                   buttonHeight), // Use variable for button height
             ),
             child: Text(
-              'Dårlig dag 5',
+              data.badDays[4],
               style: TextStyle(
                   fontSize: buttonFontSize), // Use variable for font size
             ),
