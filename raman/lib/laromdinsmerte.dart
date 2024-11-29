@@ -21,18 +21,20 @@ class _LaromdinsmerteState extends State<Laromdinsmerte> {
       backgroundColor: const Color.fromARGB(255, 243, 243, 228),
       appBar: Topappbar(pagename: "Lær om din smerte"),
       bottomNavigationBar: const Bottomappbar(),
-      body: Padding(
-        padding: const EdgeInsets.all(16.0),
-        child: Row(
-          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-          children: [
-            Expanded(
-              child: buildColumnGode(),
-            ),
-            Expanded(
-              child: buildColumnDarlig(),
-            ),
-          ],
+      body: SingleChildScrollView(
+        child: Padding(
+          padding: const EdgeInsets.all(16.0),
+          child: Row(
+            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+            children: [
+              Expanded(
+                child: buildColumnGode(),
+              ),
+              Expanded(
+                child: buildColumnDarlig(),
+              ),
+            ],
+          ),
         ),
       ),
     );

@@ -214,263 +214,265 @@ class _PainJournalState extends State<PainJournal> {
       backgroundColor: const Color.fromARGB(255, 243, 243, 228),
       appBar: Topappbar(pagename: "Smertedagbog"),
       bottomNavigationBar: const Bottomappbar(),
-      body: Column(
-        children: [
-          if (painValue != null)
-            InverseCustomSlider(
-              title: 'Hvor ondt har du haft i dag?',
-              initialSliderValue: painValue,
-              onChanged: (value) {
-                setState(() {
-                  painValue = value;
-                });
-              },
-            ),
-          if (sleepValue != null)
-            CustomSlider(
-              title: 'Hvordan har du sovet i nat?',
-              initialSliderValue: sleepValue,
-              onChanged: (value) {
-                setState(() {
-                  sleepValue = value;
-                });
-              },
-            ),
-          if (socialValue != null)
-            CustomSlider(
-              title: 'Hvor social har du været i dag?',
-              initialSliderValue: socialValue,
-              onChanged: (value) {
-                setState(() {
-                  socialValue = value;
-                });
-              },
-            ),
-          if (moodValue != null)
-            CustomSlider(
-              title: 'Hvordan har dit humør været i dag?',
-              initialSliderValue: moodValue,
-              onChanged: (value) {
-                setState(() {
-                  moodValue = value;
-                });
-              },
-            ),
-          if (activityValue != null)
-            CustomSlider(
-              title: 'Hvor aktiv har du været i dag?',
-              initialSliderValue: activityValue,
-              onChanged: (value) {
-                setState(() {
-                  activityValue = value;
-                });
-              },
-            ),
+      body: SingleChildScrollView(
+        child: Column(
+          children: [
+            if (painValue != null)
+              InverseCustomSlider(
+                title: 'Hvor ondt har du haft i dag?',
+                initialSliderValue: painValue,
+                onChanged: (value) {
+                  setState(() {
+                    painValue = value;
+                  });
+                },
+              ),
+            if (sleepValue != null)
+              CustomSlider(
+                title: 'Hvordan har du sovet i nat?',
+                initialSliderValue: sleepValue,
+                onChanged: (value) {
+                  setState(() {
+                    sleepValue = value;
+                  });
+                },
+              ),
+            if (socialValue != null)
+              CustomSlider(
+                title: 'Hvor social har du været i dag?',
+                initialSliderValue: socialValue,
+                onChanged: (value) {
+                  setState(() {
+                    socialValue = value;
+                  });
+                },
+              ),
+            if (moodValue != null)
+              CustomSlider(
+                title: 'Hvordan har dit humør været i dag?',
+                initialSliderValue: moodValue,
+                onChanged: (value) {
+                  setState(() {
+                    moodValue = value;
+                  });
+                },
+              ),
+            if (activityValue != null)
+              CustomSlider(
+                title: 'Hvor aktiv har du været i dag?',
+                initialSliderValue: activityValue,
+                onChanged: (value) {
+                  setState(() {
+                    activityValue = value;
+                  });
+                },
+              ),
 
-          const SizedBox(height: 10),
-          // const Text(
-          //   'Hvilke aktiviteter har du udført i dag?',
-          //   style: TextStyle(fontSize: 20),
-          // ),
-          const Text(
-            'Hvilke aktiviteter har du udført i dag?',
-            style: TextStyle(
-              fontSize: 20, // Angiv skriftstørrelse
-              fontWeight: FontWeight.bold, // Gør teksten fed
+            const SizedBox(height: 10),
+            // const Text(
+            //   'Hvilke aktiviteter har du udført i dag?',
+            //   style: TextStyle(fontSize: 20),
+            // ),
+            const Text(
+              'Hvilke aktiviteter har du udført i dag?',
+              style: TextStyle(
+                fontSize: 20, // Angiv skriftstørrelse
+                fontWeight: FontWeight.bold, // Gør teksten fed
+              ),
             ),
-          ),
-          const SizedBox(height: 3),
+            const SizedBox(height: 3),
 
-          SizedBox(
-              height: MediaQuery.of(context).size.height * 0.25,
-              child: Column(
-                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                children: [
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                    children: [
-                      // Første knap med Checkbox
-                      SizedBox(
-                        width: 180, // Sæt ønsket bredde
-                        height: 80, // Sæt ønsket højde
-                        child: ElevatedButton(
-                          onPressed: () {
-                            setState(() {
-                              activitiesBoolMap[
-                                      activityPrevalanceSortedEntries[0].key] =
-                                  !activitiesBoolMap[
-                                      activityPrevalanceSortedEntries[0].key]!;
-                            });
-                          },
-                          style: ElevatedButton.styleFrom(
-                            padding: const EdgeInsets.symmetric(
-                                horizontal: 8), // Justér indhold
-                          ),
-                          child: Row(
-                            mainAxisSize: MainAxisSize.min,
-                            children: [
-                              Checkbox(
-                                value: activitiesBoolMap[
-                                    activityPrevalanceSortedEntries[0].key],
-                                onChanged: (bool? value) {
-                                  setState(() {
-                                    activitiesBoolMap[
-                                        activityPrevalanceSortedEntries[0]
-                                            .key] = value!;
-                                  });
-                                },
-                              ),
-                              Flexible(
-                                child: Text(
-                                  '${activityPrevalanceSortedEntries[0].key}',
-                                  overflow: TextOverflow.ellipsis,
-                                  style: const TextStyle(
-                                    fontSize: 18,
-                                    // Håndter langt tekst
+            SizedBox(
+                height: MediaQuery.of(context).size.height * 0.25,
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                  children: [
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                      children: [
+                        // Første knap med Checkbox
+                        SizedBox(
+                          width: 180, // Sæt ønsket bredde
+                          height: 80, // Sæt ønsket højde
+                          child: ElevatedButton(
+                            onPressed: () {
+                              setState(() {
+                                activitiesBoolMap[
+                                    activityPrevalanceSortedEntries[0]
+                                        .key] = !activitiesBoolMap[
+                                    activityPrevalanceSortedEntries[0].key]!;
+                              });
+                            },
+                            style: ElevatedButton.styleFrom(
+                              padding: const EdgeInsets.symmetric(
+                                  horizontal: 8), // Justér indhold
+                            ),
+                            child: Row(
+                              mainAxisSize: MainAxisSize.min,
+                              children: [
+                                Checkbox(
+                                  value: activitiesBoolMap[
+                                      activityPrevalanceSortedEntries[0].key],
+                                  onChanged: (bool? value) {
+                                    setState(() {
+                                      activitiesBoolMap[
+                                          activityPrevalanceSortedEntries[0]
+                                              .key] = value!;
+                                    });
+                                  },
+                                ),
+                                Flexible(
+                                  child: Text(
+                                    '${activityPrevalanceSortedEntries[0].key}',
+                                    overflow: TextOverflow.ellipsis,
+                                    style: const TextStyle(
+                                      fontSize: 18,
+                                      // Håndter langt tekst
+                                    ),
                                   ),
                                 ),
-                              ),
-                            ],
-                          ),
-                        ),
-                      ),
-
-                      // Anden knap med Checkbox
-                      SizedBox(
-                        width: 180, // Sæt ønsket bredde
-                        height: 80, // Sæt ønsket højde
-                        child: ElevatedButton(
-                          onPressed: () {
-                            setState(() {
-                              activitiesBoolMap[
-                                      activityPrevalanceSortedEntries[1].key] =
-                                  !activitiesBoolMap[
-                                      activityPrevalanceSortedEntries[1].key]!;
-                            });
-                          },
-                          style: ElevatedButton.styleFrom(
-                            padding: const EdgeInsets.symmetric(
-                                horizontal: 8), // Justér indhold
-                          ),
-                          child: Row(
-                            mainAxisSize: MainAxisSize.min,
-                            children: [
-                              Checkbox(
-                                value: activitiesBoolMap[
-                                    activityPrevalanceSortedEntries[1].key],
-                                onChanged: (bool? value) {
-                                  setState(() {
-                                    activitiesBoolMap[
-                                        activityPrevalanceSortedEntries[1]
-                                            .key] = value!;
-                                  });
-                                },
-                              ),
-                              Flexible(
-                                child: Text(
-                                  '${activityPrevalanceSortedEntries[1].key}',
-                                  overflow: TextOverflow.ellipsis,
-                                  style: const TextStyle(
-                                    fontSize: 18, // Håndter langt tekst
-                                  ),
-                                ),
-                              ),
-                            ],
-                          ),
-                        ),
-                      ),
-                    ],
-                  ),
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                    children: [
-                      // Første knap med Checkbox
-                      SizedBox(
-                        width: 180, // Sæt ønsket bredde
-                        height: 80, // Sæt ønsket højde
-                        child: ElevatedButton(
-                          onPressed: () {
-                            setState(() {
-                              activitiesBoolMap[
-                                      activityPrevalanceSortedEntries[2].key] =
-                                  !activitiesBoolMap[
-                                      activityPrevalanceSortedEntries[2].key]!;
-                            });
-                          },
-                          style: ElevatedButton.styleFrom(
-                            padding: const EdgeInsets.symmetric(
-                                horizontal: 8), // Justér indhold
-                          ),
-                          child: Row(
-                            mainAxisSize: MainAxisSize.min,
-                            children: [
-                              Checkbox(
-                                value: activitiesBoolMap[
-                                    activityPrevalanceSortedEntries[2].key],
-                                onChanged: (bool? value) {
-                                  setState(() {
-                                    activitiesBoolMap[
-                                        activityPrevalanceSortedEntries[2]
-                                            .key] = value!;
-                                  });
-                                },
-                              ),
-                              Flexible(
-                                child: Text(
-                                  '${activityPrevalanceSortedEntries[2].key}',
-                                  overflow: TextOverflow
-                                      .ellipsis, // Håndter langt tekst
-                                  style: const TextStyle(
-                                    fontSize: 18,
-                                  ),
-                                ),
-                              ),
-                            ],
-                          ),
-                        ),
-                      ),
-
-                      SizedBox(
-                        width: 180, // Sæt ønsket bredde
-                        height: 80, // Sæt ønsket højde
-                        child: ElevatedButton(
-                          onPressed: () {
-                            _showMultiSelect(activitiesBoolMap);
-                          },
-                          child: const Text(
-                            "Flere aktiviteter",
-                            style: TextStyle(
-                              fontSize: 18, // Angiv skriftstørrelse her
-                              fontWeight:
-                                  FontWeight.bold, // (valgfrit) Gør teksten fed
+                              ],
                             ),
                           ),
                         ),
-                      ),
-                    ],
-                  )
-                ],
-              )),
 
-          SizedBox(
-            width: 200, // Sæt ønsket bredde
-            height: 80, // Sæt ønsket højde
-            child: ElevatedButton(
-              onPressed: _finish,
-              style: ElevatedButton.styleFrom(
-                  // Valgfri stilændringer for knappen
-                  // Ændrer baggrundsfarve (valgfrit)
+                        // Anden knap med Checkbox
+                        SizedBox(
+                          width: 180, // Sæt ønsket bredde
+                          height: 80, // Sæt ønsket højde
+                          child: ElevatedButton(
+                            onPressed: () {
+                              setState(() {
+                                activitiesBoolMap[
+                                    activityPrevalanceSortedEntries[1]
+                                        .key] = !activitiesBoolMap[
+                                    activityPrevalanceSortedEntries[1].key]!;
+                              });
+                            },
+                            style: ElevatedButton.styleFrom(
+                              padding: const EdgeInsets.symmetric(
+                                  horizontal: 8), // Justér indhold
+                            ),
+                            child: Row(
+                              mainAxisSize: MainAxisSize.min,
+                              children: [
+                                Checkbox(
+                                  value: activitiesBoolMap[
+                                      activityPrevalanceSortedEntries[1].key],
+                                  onChanged: (bool? value) {
+                                    setState(() {
+                                      activitiesBoolMap[
+                                          activityPrevalanceSortedEntries[1]
+                                              .key] = value!;
+                                    });
+                                  },
+                                ),
+                                Flexible(
+                                  child: Text(
+                                    '${activityPrevalanceSortedEntries[1].key}',
+                                    overflow: TextOverflow.ellipsis,
+                                    style: const TextStyle(
+                                      fontSize: 18, // Håndter langt tekst
+                                    ),
+                                  ),
+                                ),
+                              ],
+                            ),
+                          ),
+                        ),
+                      ],
+                    ),
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                      children: [
+                        // Første knap med Checkbox
+                        SizedBox(
+                          width: 180, // Sæt ønsket bredde
+                          height: 80, // Sæt ønsket højde
+                          child: ElevatedButton(
+                            onPressed: () {
+                              setState(() {
+                                activitiesBoolMap[
+                                    activityPrevalanceSortedEntries[2]
+                                        .key] = !activitiesBoolMap[
+                                    activityPrevalanceSortedEntries[2].key]!;
+                              });
+                            },
+                            style: ElevatedButton.styleFrom(
+                              padding: const EdgeInsets.symmetric(
+                                  horizontal: 8), // Justér indhold
+                            ),
+                            child: Row(
+                              mainAxisSize: MainAxisSize.min,
+                              children: [
+                                Checkbox(
+                                  value: activitiesBoolMap[
+                                      activityPrevalanceSortedEntries[2].key],
+                                  onChanged: (bool? value) {
+                                    setState(() {
+                                      activitiesBoolMap[
+                                          activityPrevalanceSortedEntries[2]
+                                              .key] = value!;
+                                    });
+                                  },
+                                ),
+                                Flexible(
+                                  child: Text(
+                                    '${activityPrevalanceSortedEntries[2].key}',
+                                    overflow: TextOverflow
+                                        .ellipsis, // Håndter langt tekst
+                                    style: const TextStyle(
+                                      fontSize: 18,
+                                    ),
+                                  ),
+                                ),
+                              ],
+                            ),
+                          ),
+                        ),
+
+                        SizedBox(
+                          width: 180, // Sæt ønsket bredde
+                          height: 80, // Sæt ønsket højde
+                          child: ElevatedButton(
+                            onPressed: () {
+                              _showMultiSelect(activitiesBoolMap);
+                            },
+                            child: const Text(
+                              "Flere aktiviteter",
+                              style: TextStyle(
+                                fontSize: 18, // Angiv skriftstørrelse her
+                                fontWeight: FontWeight
+                                    .bold, // (valgfrit) Gør teksten fed
+                              ),
+                            ),
+                          ),
+                        ),
+                      ],
+                    )
+                  ],
+                )),
+
+            SizedBox(
+              width: 200, // Sæt ønsket bredde
+              height: 80, // Sæt ønsket højde
+              child: ElevatedButton(
+                onPressed: _finish,
+                style: ElevatedButton.styleFrom(
+                    // Valgfri stilændringer for knappen
+                    // Ændrer baggrundsfarve (valgfrit)
+                    ),
+                child: const Text(
+                  'Færdig', // Opdateret tekst
+                  style: TextStyle(
+                    fontSize: 18, // Angiv tekststørrelse
+                    fontWeight: FontWeight.bold, // Gør teksten fed (valgfrit)
                   ),
-              child: const Text(
-                'Færdig', // Opdateret tekst
-                style: TextStyle(
-                  fontSize: 18, // Angiv tekststørrelse
-                  fontWeight: FontWeight.bold, // Gør teksten fed (valgfrit)
                 ),
               ),
             ),
-          ),
-        ],
+          ],
+        ),
       ),
     );
   }
