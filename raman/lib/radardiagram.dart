@@ -10,8 +10,8 @@ class RadarChartExample extends StatefulWidget {
 
 class _RadarChartExampleState extends State<RadarChartExample> {
   bool isDaySelected = true;
-  bool isWeekSelected = false;
-  bool isMonthSelected = true;
+  bool isWeekSelected = true;
+  bool isMonthSelected = false;
 
   // data.dart
   List<double> dayData = [

@@ -5,6 +5,7 @@ import 'opsummering.dart';
 import 'homepage.dart';
 import 'settingspage.dart';
 import 'globals.dart' as globals;
+import 'kalender.dart';
 
 class _PreferredAppBarSize extends Size {
   _PreferredAppBarSize(this.toolbarHeight, this.bottomHeight)
@@ -101,8 +102,8 @@ class _BottomappbarState extends State<Bottomappbar> {
         page = const Homepage();
         break;
       case 1:
-        // Add your Calendar page here
-        return;
+        page = const KalenderWidget();
+        break;
       case 2:
         page = const Profil();
         break;
