@@ -38,28 +38,40 @@ class _KalenderWidgetState extends State<KalenderWidget> {
 class MonthView extends StatelessWidget {
   final DateTime month;
 
-  MonthView({required this.month});
+  const MonthView({required this.month});
 
   @override
   Widget build(BuildContext context) {
     return Column(
       children: [
+        // Display the month name and year
         Text(
           DateFormat.yMMMM().format(month),
-          style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold),
+          style: const TextStyle(fontSize: 24, fontWeight: FontWeight.bold),
         ),
+        const SizedBox(height: 8), // Space between header and grid
         Expanded(
           child: GridView.builder(
-            gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-              crossAxisCount: 7, // 7 days a week
+            gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
+              crossAxisCount: 7, // 7 columns for 7 days of the week
+              mainAxisSpacing: 1, // Vertical gridline thickness
+              crossAxisSpacing: 1, // Horizontal gridline thickness
             ),
-            itemCount: DateTime(month.year, month.month + 1, 0).day,
+            itemCount: _daysInMonth(month),
             itemBuilder: (context, index) {
               DateTime day = DateTime(month.year, month.month, index + 1);
-              return Center(
-                child: Text(
-                  DateFormat.d().format(day),
-                  style: TextStyle(fontSize: 16),
+              return Container(
+                decoration: BoxDecoration(
+                  border: Border.all(
+                    color: Colors.grey.shade300, // Gridline color
+                    width: 0.5, // Gridline thickness
+                  ),
+                ),
+                child: Center(
+                  child: Text(
+                    DateFormat.d().format(day),
+                    style: const TextStyle(fontSize: 16),
+                  ),
                 ),
               );
             },
@@ -67,5 +79,10 @@ class MonthView extends StatelessWidget {
         ),
       ],
     );
+  }
+
+  /// Calculate the number of days in a given month
+  int _daysInMonth(DateTime month) {
+    return DateTime(month.year, month.month + 1, 0).day;
   }
 }
