@@ -158,6 +158,23 @@ class _OptionsMenuState extends State<OptionsMenu> {
     widget.updatedItems(widget.items);
   }
 
+  Color _getColor(String item) {
+    switch (item) {
+      case "Smerte":
+        return Colors.blue;
+      case "Søvn":
+        return Colors.red;
+      case "Social":
+        return Colors.purple;
+      case "Humør":
+        return Colors.green;
+      case "Aktivitet":
+        return Colors.amber;
+      default:
+        return Colors.pink;
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     return Padding(
@@ -177,6 +194,7 @@ class _OptionsMenuState extends State<OptionsMenu> {
               return CheckboxListTile(
                 value: widget.items[item],
                 title: Text(item),
+                activeColor: _getColor(item),
                 controlAffinity: ListTileControlAffinity.leading,
                 onChanged: (isChecked) {
                   _itemChange(item, isChecked!);
@@ -355,8 +373,16 @@ class LineChartSample extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    // Ensure we are only taking the last `datasize` entries
     int actualDataSize =
         smerteData.length < datasize ? smerteData.length : datasize;
+
+    double? interval;
+    if (datasize == 7) {
+      interval = 1;
+    } else {
+      interval = null;
+    }
 
     return Padding(
       padding: const EdgeInsets.all(16.0),
@@ -371,8 +397,8 @@ class LineChartSample extends StatelessWidget {
             border: const Border(
               bottom: BorderSide(color: Colors.black, width: 2),
               left: BorderSide(color: Colors.black, width: 2),
-              top: BorderSide(color: Colors.transparent),
-              right: BorderSide(color: Colors.transparent),
+              top: BorderSide(color: Colors.grey, width: 1),
+              right: BorderSide(color: Colors.grey, width: 1),
             ),
           ),
           gridData: FlGridData(
@@ -403,12 +429,31 @@ class LineChartSample extends StatelessWidget {
           titlesData: FlTitlesData(
             bottomTitles: AxisTitles(
               sideTitles: SideTitles(
+                reservedSize: 40, // Allow extra room for rotated labels
                 showTitles: true,
+                interval: interval,
                 getTitlesWidget: (value, meta) {
-                  if (value.toInt() >= 0 && value.toInt() < actualDataSize) {
+                  // Reverse the keys to align with right-to-left order
+                  int reversedIndex = actualDataSize - 1 - value.toInt();
+                  if (reversedIndex >= 0 && reversedIndex < actualDataSize) {
+                    String rawDate = smerteData.keys
+                        .toList()
+                        .reversed
+                        .elementAt(reversedIndex);
+
+                    // Parse and format the date as dd/MM
+                    List<String> parts = rawDate.split('-');
+                    int day = int.parse(parts[0]);
+                    int month = int.parse(parts[1]);
+                    String formattedDate = '$day/$month';
+
+                    // Rotate the text 90 degrees
                     return Transform.rotate(
-                      angle: -pi / 2, // Rotate 90 degrees
-                      child: Text(smerteData.keys.elementAt(value.toInt())),
+                      angle: -pi / 2, // Rotate 90 degrees counterclockwise
+                      child: Text(
+                        formattedDate,
+                        style: const TextStyle(fontSize: 10),
+                      ),
                     );
                   } else {
                     return const SizedBox.shrink();

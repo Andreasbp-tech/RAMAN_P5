@@ -89,7 +89,7 @@ class SettingsPage extends StatefulWidget {
 }
 
 class _SettingsPageState extends State<SettingsPage> {
-  TimeOfDay selectedTime = TimeOfDay(hour: 12, minute: 0);
+  TimeOfDay selectedTime = TimeOfDay(hour: 20, minute: 0);
   final FirebaseFirestore _firestore = FirebaseFirestore.instance;
   final String userId = FirebaseAuth.instance.currentUser!.uid;
 
@@ -115,7 +115,7 @@ class _SettingsPageState extends State<SettingsPage> {
         });
       }
     } else {
-      int hour = 12;
+      int hour = 20;
       int minute = 0;
       setState(() {
         selectedTime = TimeOfDay(hour: hour, minute: minute);
