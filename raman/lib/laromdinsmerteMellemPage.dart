@@ -1,6 +1,9 @@
 import 'package:flutter/material.dart';
 import 'navigationbars.dart';
 import 'fetch_data.dart' as data;
+import 'larOmDinSmerteSoloDag.dart';
+
+String chosenDateForLarOmDinSmerte = "";
 
 class Laromdinsmerte extends StatefulWidget {
   Laromdinsmerte({super.key});
@@ -45,7 +48,7 @@ class _LaromdinsmerteState extends State<Laromdinsmerte> {
       mainAxisSize: MainAxisSize.min,
       children: [
         SizedBox(height: 30),
-        Text(
+        const Text(
           'Gode dage',
           style: TextStyle(
             fontSize: 32,
@@ -57,7 +60,19 @@ class _LaromdinsmerteState extends State<Laromdinsmerte> {
         Padding(
           padding: const EdgeInsets.symmetric(vertical: 8.0),
           child: ElevatedButton(
-            onPressed: () {},
+            onPressed: () {
+              Navigator.of(context).push(
+                MaterialPageRoute(
+                  builder: (BuildContext context) {
+                    return LarOmDinSmerteSoloDagPage1(
+                      chosenDateIndex: 0,
+                      goodDay: true,
+                      badDay: false,
+                    );
+                  },
+                ),
+              );
+            },
             style: ElevatedButton.styleFrom(
               side: BorderSide(color: Colors.green),
               backgroundColor: Colors.white,
@@ -75,7 +90,19 @@ class _LaromdinsmerteState extends State<Laromdinsmerte> {
         Padding(
           padding: const EdgeInsets.symmetric(vertical: 8.0),
           child: ElevatedButton(
-            onPressed: () {},
+            onPressed: () {
+              Navigator.of(context).push(
+                MaterialPageRoute(
+                  builder: (BuildContext context) {
+                    return LarOmDinSmerteSoloDagPage1(
+                      chosenDateIndex: 1,
+                      goodDay: true,
+                      badDay: false,
+                    );
+                  },
+                ),
+              );
+            },
             style: ElevatedButton.styleFrom(
               side: BorderSide(color: Colors.green),
               backgroundColor: Colors.white,
@@ -93,7 +120,19 @@ class _LaromdinsmerteState extends State<Laromdinsmerte> {
         Padding(
           padding: const EdgeInsets.symmetric(vertical: 8.0),
           child: ElevatedButton(
-            onPressed: () {},
+            onPressed: () {
+              Navigator.of(context).push(
+                MaterialPageRoute(
+                  builder: (BuildContext context) {
+                    return LarOmDinSmerteSoloDagPage1(
+                      chosenDateIndex: 2,
+                      goodDay: true,
+                      badDay: false,
+                    );
+                  },
+                ),
+              );
+            },
             style: ElevatedButton.styleFrom(
               side: BorderSide(color: Colors.green),
               backgroundColor: Colors.white,
@@ -111,7 +150,19 @@ class _LaromdinsmerteState extends State<Laromdinsmerte> {
         Padding(
           padding: const EdgeInsets.symmetric(vertical: 8.0),
           child: ElevatedButton(
-            onPressed: () {},
+            onPressed: () {
+              Navigator.of(context).push(
+                MaterialPageRoute(
+                  builder: (BuildContext context) {
+                    return LarOmDinSmerteSoloDagPage1(
+                      chosenDateIndex: 3,
+                      goodDay: true,
+                      badDay: false,
+                    );
+                  },
+                ),
+              );
+            },
             style: ElevatedButton.styleFrom(
               side: BorderSide(color: Colors.green),
               backgroundColor: Colors.white,
@@ -129,7 +180,19 @@ class _LaromdinsmerteState extends State<Laromdinsmerte> {
         Padding(
           padding: const EdgeInsets.symmetric(vertical: 8.0),
           child: ElevatedButton(
-            onPressed: () {},
+            onPressed: () {
+              Navigator.of(context).push(
+                MaterialPageRoute(
+                  builder: (BuildContext context) {
+                    return LarOmDinSmerteSoloDagPage1(
+                      chosenDateIndex: 4,
+                      goodDay: true,
+                      badDay: false,
+                    );
+                  },
+                ),
+              );
+            },
             style: ElevatedButton.styleFrom(
               side: BorderSide(color: Colors.green),
               backgroundColor: Colors.white,
@@ -179,7 +242,19 @@ class _LaromdinsmerteState extends State<Laromdinsmerte> {
         Padding(
           padding: const EdgeInsets.symmetric(vertical: 8.0),
           child: ElevatedButton(
-            onPressed: () {},
+            onPressed: () {
+              Navigator.of(context).push(
+                MaterialPageRoute(
+                  builder: (BuildContext context) {
+                    return LarOmDinSmerteSoloDagPage1(
+                      chosenDateIndex: 0,
+                      goodDay: false,
+                      badDay: true,
+                    );
+                  },
+                ),
+              );
+            },
             style: ElevatedButton.styleFrom(
               side: BorderSide(color: Colors.red),
               backgroundColor: Colors.white,
@@ -197,7 +272,19 @@ class _LaromdinsmerteState extends State<Laromdinsmerte> {
         Padding(
           padding: const EdgeInsets.symmetric(vertical: 8.0),
           child: ElevatedButton(
-            onPressed: () {},
+            onPressed: () {
+              Navigator.of(context).push(
+                MaterialPageRoute(
+                  builder: (BuildContext context) {
+                    return LarOmDinSmerteSoloDagPage1(
+                      chosenDateIndex: 1,
+                      goodDay: false,
+                      badDay: true,
+                    );
+                  },
+                ),
+              );
+            },
             style: ElevatedButton.styleFrom(
               side: BorderSide(color: Colors.red),
               backgroundColor: Colors.white,
@@ -215,7 +302,19 @@ class _LaromdinsmerteState extends State<Laromdinsmerte> {
         Padding(
           padding: const EdgeInsets.symmetric(vertical: 8.0),
           child: ElevatedButton(
-            onPressed: () {},
+            onPressed: () {
+              Navigator.of(context).push(
+                MaterialPageRoute(
+                  builder: (BuildContext context) {
+                    return LarOmDinSmerteSoloDagPage1(
+                      chosenDateIndex: 2,
+                      goodDay: false,
+                      badDay: true,
+                    );
+                  },
+                ),
+              );
+            },
             style: ElevatedButton.styleFrom(
               side: BorderSide(color: Colors.red),
               backgroundColor: Colors.white,
@@ -233,7 +332,19 @@ class _LaromdinsmerteState extends State<Laromdinsmerte> {
         Padding(
           padding: const EdgeInsets.symmetric(vertical: 8.0),
           child: ElevatedButton(
-            onPressed: () {},
+            onPressed: () {
+              Navigator.of(context).push(
+                MaterialPageRoute(
+                  builder: (BuildContext context) {
+                    return LarOmDinSmerteSoloDagPage1(
+                      chosenDateIndex: 3,
+                      goodDay: false,
+                      badDay: true,
+                    );
+                  },
+                ),
+              );
+            },
             style: ElevatedButton.styleFrom(
               side: BorderSide(color: Colors.red),
               backgroundColor: Colors.white,
@@ -251,7 +362,19 @@ class _LaromdinsmerteState extends State<Laromdinsmerte> {
         Padding(
           padding: const EdgeInsets.symmetric(vertical: 8.0),
           child: ElevatedButton(
-            onPressed: () {},
+            onPressed: () {
+              Navigator.of(context).push(
+                MaterialPageRoute(
+                  builder: (BuildContext context) {
+                    return LarOmDinSmerteSoloDagPage1(
+                      chosenDateIndex: 4,
+                      goodDay: false,
+                      badDay: true,
+                    );
+                  },
+                ),
+              );
+            },
             style: ElevatedButton.styleFrom(
               side: BorderSide(color: Colors.red),
               backgroundColor: Colors.white,

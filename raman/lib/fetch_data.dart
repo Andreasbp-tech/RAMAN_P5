@@ -42,6 +42,8 @@ List<MapEntry<String, int>> activityPrevalanceSortedEntries = [];
 List<Map<String, Map<String, bool>>> senesteDagesAktiviteter = [];
 List<String> godeDage = [];
 List<String> badDays = [];
+List<Map<String, Map<String, bool>>> dataGodeDageForUseInApp = [];
+List<Map<String, Map<String, bool>>> dataBadDaysForUseInApp = [];
 bool dataFetched = false;
 
 class LoadingDataPage extends StatefulWidget {
@@ -80,6 +82,8 @@ class _LoadingDataPageState extends State<LoadingDataPage> {
     int k = 0;
     godeDage = [];
     badDays = [];
+    dataGodeDageForUseInApp = [];
+    dataBadDaysForUseInApp = [];
     print("Fetch started");
 
     Map<String, dynamic> dataGodeDage = {};
@@ -106,6 +110,7 @@ class _LoadingDataPageState extends State<LoadingDataPage> {
         if (docSnapShot.exists) {
           dataGodeDage = docSnapShot.data() as Map<String, dynamic>;
           print("doc1 exist");
+          print(dataGodeDage);
         }
 
         if (docSnapShot2.exists) {
@@ -120,11 +125,31 @@ class _LoadingDataPageState extends State<LoadingDataPage> {
           if (dataGodeDage.containsKey(dateString) &&
               dataGodeDage[dateString] is List) {
             godeDage.add(printedString);
+            // Initialize nestedMap for each date
+            Map<String, Map<String, bool>> nestedMap = {};
+            for (var entry in dataGodeDage[dateString]) {
+              entry.forEach((key, value) {
+                if (value is Map<String, dynamic>) {
+                  Map<String, bool> boolMap = {};
+                  value.forEach((nestedKey, nestedValue) {
+                    if (nestedValue is bool) {
+                      boolMap[nestedKey] = nestedValue;
+                    }
+                  });
+                  nestedMap[key] = boolMap;
+                }
+              });
+            }
+
+            dataGodeDageForUseInApp.add(nestedMap);
+
+            // print(dataGodeDageForUseInApp);
 
             j++;
-            print(j);
+            // print(j);
           }
-          print(i);
+
+          // print(i);
 
           if (j == 5) {
             print("i break out of good loop");
@@ -136,18 +161,35 @@ class _LoadingDataPageState extends State<LoadingDataPage> {
           DateTime date = DateTime.now().subtract(Duration(days: i));
           String dateString = DateFormat('yyyy-MM-dd').format(date);
           String printedString = DateFormat('dd-MM-yy').format(date);
-          print("date $dateString");
+          // print("date $dateString");
           if (dataBadDays.containsKey(dateString) &&
               dataBadDays[dateString] is List) {
-            print("jeg kan genkende lister");
+            // print("jeg kan genkende lister");
             badDays.add(printedString);
-            print(badDays);
+            Map<String, Map<String, bool>> nestedMap = {};
+            for (var entry in dataBadDays[dateString]) {
+              entry.forEach((key, value) {
+                if (value is Map<String, dynamic>) {
+                  Map<String, bool> boolMap = {};
+                  value.forEach((nestedKey, nestedValue) {
+                    if (nestedValue is bool) {
+                      boolMap[nestedKey] = nestedValue;
+                    }
+                  });
+                  nestedMap[key] = boolMap;
+                }
+              });
+            }
+
+            dataBadDaysForUseInApp.add(nestedMap);
+            print(dataBadDaysForUseInApp);
+            // print(badDays);
             k++;
-            print(k);
+            // print(k);
           }
 
-          print(i);
-          print(badDays);
+          // print(i);
+          // print(badDays);
 
           if (k == 5) {
             print("i break out of bad loop");
@@ -536,7 +578,7 @@ class _LoadingDataPageState extends State<LoadingDataPage> {
     if (isLoading) {
       return Scaffold(
         backgroundColor: const Color.fromARGB(255, 243, 243, 228),
-        appBar: Topappbar(pagename: "Loading data"),
+        appBar: Topappbar(pagename: "Indlæser data"),
         body: const Center(child: CircularProgressIndicator()),
       );
     } else if (widget.pageIndex == 1) {
