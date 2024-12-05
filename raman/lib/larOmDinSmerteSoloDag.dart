@@ -101,6 +101,7 @@ class _LarOmDinSmerteSoloDagPage1State
     setState(() {});
   }
 
+  double textSizePage2 = 18;
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -119,27 +120,10 @@ class _LarOmDinSmerteSoloDagPage1State
               children: <Widget>[
                 SingleChildScrollView(
                   child: Padding(
-                    padding: const EdgeInsets.all(16.0),
+                    padding: const EdgeInsets.all(4.0),
                     child: Column(
                       children: [
-                        // GridView.builder(
-                        //   shrinkWrap: true,
-                        //   itemCount: top10aktiviteter.length,
-                        //   gridDelegate:
-                        //       const SliverGridDelegateWithFixedCrossAxisCount(
-                        //     crossAxisCount: 5,
-                        //     childAspectRatio: 2,
-                        //   ),
-                        //   itemBuilder: (context, index) {
-                        //     return Card(
-                        //       color: cardColors[index % cardColors.length],
-                        //       child: Center(
-                        //         child: Text(top10aktiviteter[index]),
-                        //       ),
-                        //     );
-                        //   },
-                        // ),
-                        const SizedBox(height: 20),
+                        const SizedBox(height: 1),
                         CustomBarChart(
                             aktiviteterForDagen: aktiviteterForDagen,
                             cardColors: cardColors,
@@ -149,7 +133,70 @@ class _LarOmDinSmerteSoloDagPage1State
                   ),
                 ),
                 SingleChildScrollView(
-                  child: Container(),
+                  child: Column(children: [
+                    Padding(
+                      padding: const EdgeInsets.all(16.0),
+                      child: Text(
+                        "Smertescore: ${data.godeDageVas[widget.chosenDateIndex].values.elementAt(3)}",
+                        style: TextStyle(
+                            fontSize: textSizePage2 + 4,
+                            fontWeight: FontWeight.bold),
+                      ),
+                    ),
+                    Padding(
+                      padding: const EdgeInsets.all(16.0),
+                      child: Container(
+                        decoration: BoxDecoration(
+                            border: Border.all(color: Colors.black, width: 2.0),
+                            borderRadius: BorderRadius.circular(12)),
+                        padding: const EdgeInsets.all(16.0),
+                        child: Column(
+                          children: [
+                            Row(
+                              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                              children: [
+                                Text(
+                                  "Social aktivitet: ${data.godeDageVas[widget.chosenDateIndex].values.elementAt(0)}",
+                                  style: TextStyle(fontSize: textSizePage2),
+                                ),
+                                Text(
+                                  "Søvn: ${data.godeDageVas[widget.chosenDateIndex].values.elementAt(1)}",
+                                  style: TextStyle(fontSize: textSizePage2),
+                                ),
+                              ],
+                            ),
+                            Row(
+                              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                              children: [
+                                Text(
+                                  "Fysisk aktivitet: ${data.godeDageVas[widget.chosenDateIndex].values.elementAt(4)}",
+                                  style: TextStyle(fontSize: textSizePage2),
+                                ),
+                                Text(
+                                  "Humør: ${data.godeDageVas[widget.chosenDateIndex].values.elementAt(2)}",
+                                  style: TextStyle(fontSize: textSizePage2),
+                                ),
+                              ],
+                            ),
+                          ],
+                        ),
+                      ),
+                    ),
+                    Padding(
+                      padding: const EdgeInsets.all(16.0),
+                      child: Container(
+                        decoration: BoxDecoration(
+                            border: Border.all(color: Colors.black, width: 2.0),
+                            borderRadius: BorderRadius.circular(12)),
+                        padding: const EdgeInsets.all(16.0),
+                        child: Text(
+                          'This is a longer piece of text that will automatically wrap to fit within the available screen width. '
+                          'You can adjust the padding or other constraints to see how the text adapts to different screen sizes.',
+                          style: TextStyle(fontSize: textSizePage2),
+                        ),
+                      ),
+                    ),
+                  ]),
                 ),
               ],
             ),
@@ -159,7 +206,7 @@ class _LarOmDinSmerteSoloDagPage1State
             child: SmoothPageIndicator(
               controller: _pageController,
               count: 2,
-              effect: WormEffect(
+              effect: const WormEffect(
                 dotHeight: 12,
                 dotWidth: 12,
                 activeDotColor: Colors.blue,
@@ -290,7 +337,7 @@ class CustomBarChart extends StatelessWidget {
   }
 
   Widget bottomTitles(double value, TitleMeta meta) {
-    const style = TextStyle(fontSize: 10);
+    const style = TextStyle(fontSize: 12, fontWeight: FontWeight.bold);
     String text;
     switch (value.toInt()) {
       case 5:
@@ -322,7 +369,7 @@ class CustomBarChart extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Padding(
-      padding: const EdgeInsets.all(24),
+      padding: const EdgeInsets.all(20),
       child: Column(
         mainAxisSize: MainAxisSize.min,
         crossAxisAlignment: CrossAxisAlignment.center,
@@ -352,7 +399,7 @@ class CustomBarChart extends StatelessWidget {
           ),
           const SizedBox(height: 5),
           AspectRatio(
-            aspectRatio: 0.7,
+            aspectRatio: 0.65,
             child: BarChart(
               BarChartData(
                 alignment: BarChartAlignment.spaceBetween,

@@ -42,6 +42,8 @@ List<MapEntry<String, int>> activityPrevalanceSortedEntries = [];
 List<Map<String, Map<String, bool>>> senesteDagesAktiviteter = [];
 List<String> godeDage = [];
 List<String> badDays = [];
+List<Map<String, double>> godeDageVas = [];
+List<Map<String, double>> badDaysVas = [];
 List<Map<String, Map<String, bool>>> dataGodeDageForUseInApp = [];
 List<Map<String, Map<String, bool>>> dataBadDaysForUseInApp = [];
 bool dataFetched = false;
@@ -84,38 +86,46 @@ class _LoadingDataPageState extends State<LoadingDataPage> {
     badDays = [];
     dataGodeDageForUseInApp = [];
     dataBadDaysForUseInApp = [];
-    print("Fetch started");
+    godeDageVas = [];
+    badDaysVas = [];
+    // print("Fetch started");
 
     Map<String, dynamic> dataGodeDage = {};
     Map<String, dynamic> dataBadDays = {};
 
     while (true) {
-      print("Gode dårlige dage started");
+      // print("Gode dårlige dage started");
 
       try {
-        DocumentSnapshot docSnapShot = await FirebaseFirestore.instance
+        DocumentSnapshot docSnapShotGodeDage = await FirebaseFirestore.instance
             .collection("users")
             .doc(userUID)
             .collection("LærOmDinSmerte")
             .doc("GodeDage")
             .get();
 
-        DocumentSnapshot docSnapShot2 = await FirebaseFirestore.instance
+        DocumentSnapshot docSnapShotDarligeDage = await FirebaseFirestore
+            .instance
             .collection("users")
             .doc(userUID)
             .collection("LærOmDinSmerte")
             .doc("DårligeDage")
             .get();
 
-        if (docSnapShot.exists) {
-          dataGodeDage = docSnapShot.data() as Map<String, dynamic>;
-          print("doc1 exist");
-          print(dataGodeDage);
+        CollectionReference colRefPainJournalVAS = FirebaseFirestore.instance
+            .collection("users")
+            .doc(userUID)
+            .collection("dage");
+
+        if (docSnapShotGodeDage.exists) {
+          dataGodeDage = docSnapShotGodeDage.data() as Map<String, dynamic>;
+          // print("doc1 exist");
+          // print(dataGodeDage);
         }
 
-        if (docSnapShot2.exists) {
-          dataBadDays = docSnapShot2.data() as Map<String, dynamic>;
-          print("doc2 exist");
+        if (docSnapShotDarligeDage.exists) {
+          dataBadDays = docSnapShotDarligeDage.data() as Map<String, dynamic>;
+          // print("doc2 exist");
         }
 
         for (var i = 0; i < 90; i++) {
@@ -125,6 +135,31 @@ class _LoadingDataPageState extends State<LoadingDataPage> {
           if (dataGodeDage.containsKey(dateString) &&
               dataGodeDage[dateString] is List) {
             godeDage.add(printedString);
+            try {
+              // print("I try for VAS");
+              DocumentSnapshot docSnapVASScore = await colRefPainJournalVAS
+                  .doc(dateString)
+                  .collection("smertedagbog")
+                  .doc("VAS")
+                  .get();
+              if (docSnapVASScore.exists) {
+                // print("VAS-exists");
+                Map<String, dynamic> VASscore =
+                    docSnapVASScore.data() as Map<String, dynamic>;
+                // print(VASscore);
+                Map<String, double> convertedVAS = VASscore.map(
+                  (key, value) {
+                    if (value is double) {
+                      return MapEntry(key, value);
+                    } else {
+                      return MapEntry(key, 0.0);
+                    }
+                  },
+                );
+                godeDageVas.add(convertedVAS);
+                // print(godeDageVas);
+              }
+            } catch (e) {}
             // Initialize nestedMap for each date
             Map<String, Map<String, bool>> nestedMap = {};
             for (var entry in dataGodeDage[dateString]) {
@@ -166,6 +201,31 @@ class _LoadingDataPageState extends State<LoadingDataPage> {
               dataBadDays[dateString] is List) {
             // print("jeg kan genkende lister");
             badDays.add(printedString);
+            try {
+              // print("I try for VAS");
+              DocumentSnapshot docSnapVASScore = await colRefPainJournalVAS
+                  .doc(dateString)
+                  .collection("smertedagbog")
+                  .doc("VAS")
+                  .get();
+              if (docSnapVASScore.exists) {
+                // print("VAS-exists");
+                Map<String, dynamic> VASscore =
+                    docSnapVASScore.data() as Map<String, dynamic>;
+                print(VASscore);
+                Map<String, double> convertedVAS = VASscore.map(
+                  (key, value) {
+                    if (value is double) {
+                      return MapEntry(key, value);
+                    } else {
+                      return MapEntry(key, 0.0);
+                    }
+                  },
+                );
+                badDaysVas.add(convertedVAS);
+                // print(godeDageVas);
+              }
+            } catch (e) {}
             Map<String, Map<String, bool>> nestedMap = {};
             for (var entry in dataBadDays[dateString]) {
               entry.forEach((key, value) {
@@ -182,7 +242,7 @@ class _LoadingDataPageState extends State<LoadingDataPage> {
             }
 
             dataBadDaysForUseInApp.add(nestedMap);
-            print(dataBadDaysForUseInApp);
+            // print(dataBadDaysForUseInApp);
             // print(badDays);
             k++;
             // print(k);
@@ -230,9 +290,9 @@ class _LoadingDataPageState extends State<LoadingDataPage> {
     gnsSmerte = gnsSmerte / gnsInputDataLength;
     gnsSmerteUpperLimit = gnsSmerte + (gnsSmerte * 0.33);
     gnsSmerteLowerLimit = gnsSmerte - (gnsSmerte * 0.33);
-    print("gnsSmerte = $gnsSmerte");
-    print("gnsSmerteUpperLimit = $gnsSmerteUpperLimit");
-    print("gnsSmerteLowerLimit = $gnsSmerteLowerLimit");
+    // print("gnsSmerte = $gnsSmerte");
+    // print("gnsSmerteUpperLimit = $gnsSmerteUpperLimit");
+    // print("gnsSmerteLowerLimit = $gnsSmerteLowerLimit");
 
     int jUge = 1;
     for (var i = 0; i < 7; i++) {
@@ -246,8 +306,8 @@ class _LoadingDataPageState extends State<LoadingDataPage> {
           .collection("smertedagbog")
           .doc("VAS")
           .get();
-      print("getdata:");
-      print(i);
+      // print("getdata:");
+      // print(i);
       if (docSnapShot.exists) {
         Map<String, dynamic> data = docSnapShot.data() as Map<String, dynamic>;
         smerteUge = smerteUge + data['Smerte']?.toDouble();
@@ -256,8 +316,8 @@ class _LoadingDataPageState extends State<LoadingDataPage> {
         aktivitetUge = aktivitetUge + data['Aktivitetsniveau']?.toDouble();
         socialUge = socialUge + data['Social']?.toDouble();
         jUge++;
-        print("Snapshot exists:");
-        print(i);
+        // print("Snapshot exists:");
+        // print(i);
       }
     }
     smerteUge = smerteUge / jUge;
@@ -278,8 +338,8 @@ class _LoadingDataPageState extends State<LoadingDataPage> {
           .collection("smertedagbog")
           .doc("VAS")
           .get();
-      print("getdataMManed:");
-      print(i);
+      // print("getdataMManed:");
+      // print(i);
       if (docSnapShot.exists) {
         Map<String, dynamic> data = docSnapShot.data() as Map<String, dynamic>;
         smerteManed = smerteManed + data['Smerte']?.toDouble();
@@ -288,8 +348,8 @@ class _LoadingDataPageState extends State<LoadingDataPage> {
         aktivitetManed = aktivitetManed + data['Aktivitetsniveau']?.toDouble();
         socialManed = socialManed + data['Social']?.toDouble();
         jManed++;
-        print("SnapshotManed exists:");
-        print(i);
+        // print("SnapshotManed exists:");
+        // print(i);
       }
     }
     smerteManed = smerteManed / jManed;
