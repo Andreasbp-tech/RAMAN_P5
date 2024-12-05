@@ -68,6 +68,7 @@ class _LaromdinsmerteState extends State<Laromdinsmerte> {
                       chosenDateIndex: 0,
                       goodDay: true,
                       badDay: false,
+                      chosenDate: data.godeDage[0],
                     );
                   },
                 ),
@@ -98,6 +99,7 @@ class _LaromdinsmerteState extends State<Laromdinsmerte> {
                       chosenDateIndex: 1,
                       goodDay: true,
                       badDay: false,
+                      chosenDate: data.godeDage[1],
                     );
                   },
                 ),
@@ -128,6 +130,7 @@ class _LaromdinsmerteState extends State<Laromdinsmerte> {
                       chosenDateIndex: 2,
                       goodDay: true,
                       badDay: false,
+                      chosenDate: data.godeDage[2],
                     );
                   },
                 ),
@@ -158,6 +161,7 @@ class _LaromdinsmerteState extends State<Laromdinsmerte> {
                       chosenDateIndex: 3,
                       goodDay: true,
                       badDay: false,
+                      chosenDate: data.godeDage[3],
                     );
                   },
                 ),
@@ -188,6 +192,7 @@ class _LaromdinsmerteState extends State<Laromdinsmerte> {
                       chosenDateIndex: 4,
                       goodDay: true,
                       badDay: false,
+                      chosenDate: data.godeDage[4],
                     );
                   },
                 ),
@@ -250,6 +255,7 @@ class _LaromdinsmerteState extends State<Laromdinsmerte> {
                       chosenDateIndex: 0,
                       goodDay: false,
                       badDay: true,
+                      chosenDate: data.badDays[0],
                     );
                   },
                 ),
@@ -280,6 +286,7 @@ class _LaromdinsmerteState extends State<Laromdinsmerte> {
                       chosenDateIndex: 1,
                       goodDay: false,
                       badDay: true,
+                      chosenDate: data.badDays[1],
                     );
                   },
                 ),
@@ -310,6 +317,7 @@ class _LaromdinsmerteState extends State<Laromdinsmerte> {
                       chosenDateIndex: 2,
                       goodDay: false,
                       badDay: true,
+                      chosenDate: data.badDays[2],
                     );
                   },
                 ),
@@ -340,6 +348,7 @@ class _LaromdinsmerteState extends State<Laromdinsmerte> {
                       chosenDateIndex: 3,
                       goodDay: false,
                       badDay: true,
+                      chosenDate: data.badDays[3],
                     );
                   },
                 ),
@@ -370,6 +379,7 @@ class _LaromdinsmerteState extends State<Laromdinsmerte> {
                       chosenDateIndex: 4,
                       goodDay: false,
                       badDay: true,
+                      chosenDate: data.badDays[4],
                     );
                   },
                 ),

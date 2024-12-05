@@ -20,11 +20,14 @@ class Topappbar extends StatelessWidget implements PreferredSizeWidget {
   final String pagename;
   final Widget? leading;
   final Widget? titleWidget;
+  Color? titleBoxColor;
+  Color? titleTextColor;
   @override
   final Size preferredSize;
   final PreferredSizeWidget? bottom;
   final double? elevation;
   final double? toolbarHeight;
+  
 
   Topappbar({
     super.key,
@@ -34,9 +37,28 @@ class Topappbar extends StatelessWidget implements PreferredSizeWidget {
     this.bottom,
     this.toolbarHeight,
     this.elevation,
+    this.titleBoxColor,
+    this.titleTextColor,
   })  : assert(elevation == null || elevation >= 0.0),
         preferredSize =
             _PreferredAppBarSize(toolbarHeight, bottom?.preferredSize.height);
+
+            _titleBoxColor(Color? titleBoxColorInput){
+              Color titleBoxColorOutput = const Color.fromARGB(255, 243, 243, 228);
+              if (titleBoxColorInput!= null) {
+                titleBoxColorOutput = titleBoxColorInput;
+              }
+              return titleBoxColorOutput;
+            }
+            _titleTextColor(Color? titleBoxColorInput, Color? titleTextColorInput){;
+              Color titleTextColorOutput = const Color.fromARGB(255, 0, 0, 0);
+              if (titleBoxColorInput!= null) {
+                if (titleTextColorInput !=null) {
+                  titleTextColorOutput = titleTextColorInput;
+                }
+              }
+              return titleTextColorOutput;
+            }
 
   @override
   Widget build(BuildContext context) {
@@ -66,7 +88,17 @@ class Topappbar extends StatelessWidget implements PreferredSizeWidget {
           }
         },
       ),
-      title: SizedBox(child: Text(pagename)),
+      title: Container(
+        padding: EdgeInsets.all(8.0),
+        decoration: BoxDecoration(
+          color:  _titleBoxColor(titleBoxColor),// Change this to your desired color
+          borderRadius: BorderRadius.circular(8.0),
+        ),
+        child: Text(
+          pagename,
+          style: TextStyle(color: _titleTextColor(titleBoxColor, titleTextColor)), // Adjust text color if needed
+        ),
+      ),
       centerTitle: true,
       actions: [
         IconButton(

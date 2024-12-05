@@ -9,11 +9,13 @@ class LarOmDinSmerteSoloDagPage1 extends StatefulWidget {
   int chosenDateIndex;
   bool goodDay;
   bool badDay;
+  String chosenDate;
   LarOmDinSmerteSoloDagPage1(
       {super.key,
       required this.chosenDateIndex,
       required this.goodDay,
-      required this.badDay});
+      required this.badDay,
+      required this.chosenDate});
 
   @override
   State<LarOmDinSmerteSoloDagPage1> createState() =>
@@ -25,7 +27,6 @@ class _LarOmDinSmerteSoloDagPage1State
   List<Map<String, Map<String, bool>>> aktiviteterForAlleIndlesteGodeDage = [];
   List<Map<String, Map<String, bool>>> aktiviteterForAlleIndlesteDarligeDage =
       [];
-  String chosenDate = "";
 
   List<String> top10aktiviteter = [];
   final PageController _pageController = PageController();
@@ -52,7 +53,6 @@ class _LarOmDinSmerteSoloDagPage1State
   }
 
   _fetchData() {
-    chosenDate = laromdinsmerteMellemPage.chosenDateForLarOmDinSmerte;
     aktiviteterForAlleIndlesteGodeDage = data.dataGodeDageForUseInApp;
     aktiviteterForAlleIndlesteDarligeDage = data.dataBadDaysForUseInApp;
     if (widget.goodDay) {
@@ -61,6 +61,24 @@ class _LarOmDinSmerteSoloDagPage1State
     } else if (widget.badDay) {
       aktiviteterForDagen = data.dataBadDaysForUseInApp[widget.chosenDateIndex];
     }
+  }
+
+  _titleBoxColor() {
+    Color titleBoxColor = const Color.fromARGB(255, 243, 243, 228);
+    if (widget.goodDay) {
+      titleBoxColor = const Color.fromARGB(199, 33, 196, 18);
+    } else if (widget.badDay) {
+      titleBoxColor = const Color.fromARGB(200, 200, 20, 20);
+    }
+    return titleBoxColor;
+  }
+
+  _titleTextColor() {
+    Color titleColor = const Color.fromARGB(255, 0, 0, 0);
+    if (widget.goodDay || widget.badDay) {
+      titleColor = const Color.fromARGB(255, 255, 255, 255);
+    }
+    return titleColor;
   }
 
   void processData() {
@@ -88,7 +106,9 @@ class _LarOmDinSmerteSoloDagPage1State
     return Scaffold(
       backgroundColor: const Color.fromARGB(255, 243, 243, 228),
       appBar: Topappbar(
-        pagename: chosenDate,
+        pagename: widget.chosenDate,
+        titleBoxColor: _titleBoxColor(),
+        titleTextColor: _titleTextColor(),
       ),
       bottomNavigationBar: const Bottomappbar(),
       body: Column(
@@ -226,9 +246,6 @@ class CustomBarChart extends StatelessWidget {
       required this.cardColors,
       required this.top10aktiviteter});
 
-  final pilateColor = Colors.purple;
-  final cyclingColor = Colors.cyan;
-  final quickWorkoutColor = Colors.blue;
   final betweenSpace = 0.0;
   final double barWidth = 20;
 
@@ -271,240 +288,6 @@ class CustomBarChart extends StatelessWidget {
       }),
     );
   }
-
-  // BarChartGroupData generateGroupData(
-  //     int x, Map<String, double> top10aktiviteterMedDouble, double barWidth,List<String>top10aktiviteter) {
-  //   return BarChartGroupData(
-  //     x: x,
-  //     groupVertically: true,
-  //     barsSpace: 25,
-  //     barRods: [
-  //       BarChartRodData(
-  //         fromY: 0,
-  //         toY: top10aktiviteterMedDouble.values.singleWhere((element) =>  element == top10aktiviteter[0],),
-  //         color: cardColors[0],
-  //         width: barWidth,
-  //       ),
-  //       BarChartRodData(
-  //         fromY: top10aktiviteterMedDouble.values.elementAt(0) + betweenSpace,
-  //         toY: top10aktiviteterMedDouble.values.elementAt(0) +
-  //             betweenSpace +
-  //             top10aktiviteterMedDouble.values.elementAt(1),
-  //         color: cardColors[1],
-  //         width: barWidth,
-  //       ),
-  //       BarChartRodData(
-  //         fromY: top10aktiviteterMedDouble.values.elementAt(0) +
-  //             betweenSpace +
-  //             top10aktiviteterMedDouble.values.elementAt(1) +
-  //             betweenSpace,
-  //         toY: top10aktiviteterMedDouble.values.elementAt(0) +
-  //             betweenSpace +
-  //             top10aktiviteterMedDouble.values.elementAt(1) +
-  //             betweenSpace +
-  //             top10aktiviteterMedDouble.values.elementAt(2),
-  //         color: cardColors[2],
-  //         width: barWidth,
-  //       ),
-  //       BarChartRodData(
-  //         fromY: top10aktiviteterMedDouble.values.elementAt(0) +
-  //             betweenSpace +
-  //             top10aktiviteterMedDouble.values.elementAt(1) +
-  //             betweenSpace +
-  //             top10aktiviteterMedDouble.values.elementAt(2),
-  //         toY: top10aktiviteterMedDouble.values.elementAt(0) +
-  //             betweenSpace +
-  //             top10aktiviteterMedDouble.values.elementAt(1) +
-  //             betweenSpace +
-  //             top10aktiviteterMedDouble.values.elementAt(2) +
-  //             betweenSpace +
-  //             top10aktiviteterMedDouble.values.elementAt(3),
-  //         color: cardColors[3],
-  //         width: barWidth,
-  //       ),
-  //       BarChartRodData(
-  //         fromY: top10aktiviteterMedDouble.values.elementAt(0) +
-  //             betweenSpace +
-  //             top10aktiviteterMedDouble.values.elementAt(1) +
-  //             betweenSpace +
-  //             top10aktiviteterMedDouble.values.elementAt(2) +
-  //             betweenSpace +
-  //             top10aktiviteterMedDouble.values.elementAt(3),
-  //         toY: top10aktiviteterMedDouble.values.elementAt(0) +
-  //             betweenSpace +
-  //             top10aktiviteterMedDouble.values.elementAt(1) +
-  //             betweenSpace +
-  //             top10aktiviteterMedDouble.values.elementAt(2) +
-  //             betweenSpace +
-  //             top10aktiviteterMedDouble.values.elementAt(3) +
-  //             betweenSpace +
-  //             top10aktiviteterMedDouble.values.elementAt(4),
-  //         color: cardColors[4],
-  //         width: barWidth,
-  //       ),
-  //       BarChartRodData(
-  //         fromY: top10aktiviteterMedDouble.values.elementAt(0) +
-  //             betweenSpace +
-  //             top10aktiviteterMedDouble.values.elementAt(1) +
-  //             betweenSpace +
-  //             top10aktiviteterMedDouble.values.elementAt(2) +
-  //             betweenSpace +
-  //             top10aktiviteterMedDouble.values.elementAt(3) +
-  //             betweenSpace +
-  //             top10aktiviteterMedDouble.values.elementAt(4),
-  //         toY: top10aktiviteterMedDouble.values.elementAt(0) +
-  //             betweenSpace +
-  //             top10aktiviteterMedDouble.values.elementAt(1) +
-  //             betweenSpace +
-  //             top10aktiviteterMedDouble.values.elementAt(2) +
-  //             betweenSpace +
-  //             top10aktiviteterMedDouble.values.elementAt(3) +
-  //             betweenSpace +
-  //             top10aktiviteterMedDouble.values.elementAt(4) +
-  //             betweenSpace +
-  //             top10aktiviteterMedDouble.values.elementAt(5),
-  //         color: cardColors[5],
-  //         width: barWidth,
-  //       ),
-  //       BarChartRodData(
-  //         fromY: top10aktiviteterMedDouble.values.elementAt(0) +
-  //             betweenSpace +
-  //             top10aktiviteterMedDouble.values.elementAt(1) +
-  //             betweenSpace +
-  //             top10aktiviteterMedDouble.values.elementAt(2) +
-  //             betweenSpace +
-  //             top10aktiviteterMedDouble.values.elementAt(3) +
-  //             betweenSpace +
-  //             top10aktiviteterMedDouble.values.elementAt(4) +
-  //             betweenSpace +
-  //             top10aktiviteterMedDouble.values.elementAt(5),
-  //         toY: top10aktiviteterMedDouble.values.elementAt(0) +
-  //             betweenSpace +
-  //             top10aktiviteterMedDouble.values.elementAt(1) +
-  //             betweenSpace +
-  //             top10aktiviteterMedDouble.values.elementAt(2) +
-  //             betweenSpace +
-  //             top10aktiviteterMedDouble.values.elementAt(3) +
-  //             betweenSpace +
-  //             top10aktiviteterMedDouble.values.elementAt(4) +
-  //             betweenSpace +
-  //             top10aktiviteterMedDouble.values.elementAt(5) +
-  //             betweenSpace +
-  //             top10aktiviteterMedDouble.values.elementAt(6),
-  //         color: cardColors[6],
-  //         width: barWidth,
-  //       ),
-  //       BarChartRodData(
-  //         fromY: top10aktiviteterMedDouble.values.elementAt(0) +
-  //             betweenSpace +
-  //             top10aktiviteterMedDouble.values.elementAt(1) +
-  //             betweenSpace +
-  //             top10aktiviteterMedDouble.values.elementAt(2) +
-  //             betweenSpace +
-  //             top10aktiviteterMedDouble.values.elementAt(3) +
-  //             betweenSpace +
-  //             top10aktiviteterMedDouble.values.elementAt(4) +
-  //             betweenSpace +
-  //             top10aktiviteterMedDouble.values.elementAt(5) +
-  //             betweenSpace +
-  //             top10aktiviteterMedDouble.values.elementAt(6),
-  //         toY: top10aktiviteterMedDouble.values.elementAt(0) +
-  //             betweenSpace +
-  //             top10aktiviteterMedDouble.values.elementAt(1) +
-  //             betweenSpace +
-  //             top10aktiviteterMedDouble.values.elementAt(2) +
-  //             betweenSpace +
-  //             top10aktiviteterMedDouble.values.elementAt(3) +
-  //             betweenSpace +
-  //             top10aktiviteterMedDouble.values.elementAt(4) +
-  //             betweenSpace +
-  //             top10aktiviteterMedDouble.values.elementAt(5) +
-  //             betweenSpace +
-  //             top10aktiviteterMedDouble.values.elementAt(6) +
-  //             betweenSpace +
-  //             top10aktiviteterMedDouble.values.elementAt(7),
-  //         color: cardColors[7],
-  //         width: barWidth,
-  //       ),
-  //       BarChartRodData(
-  //         fromY: top10aktiviteterMedDouble.values.elementAt(0) +
-  //             betweenSpace +
-  //             top10aktiviteterMedDouble.values.elementAt(1) +
-  //             betweenSpace +
-  //             top10aktiviteterMedDouble.values.elementAt(2) +
-  //             betweenSpace +
-  //             top10aktiviteterMedDouble.values.elementAt(3) +
-  //             betweenSpace +
-  //             top10aktiviteterMedDouble.values.elementAt(4) +
-  //             betweenSpace +
-  //             top10aktiviteterMedDouble.values.elementAt(5) +
-  //             betweenSpace +
-  //             top10aktiviteterMedDouble.values.elementAt(6) +
-  //             betweenSpace +
-  //             top10aktiviteterMedDouble.values.elementAt(7),
-  //         toY: top10aktiviteterMedDouble.values.elementAt(0) +
-  //             betweenSpace +
-  //             top10aktiviteterMedDouble.values.elementAt(1) +
-  //             betweenSpace +
-  //             top10aktiviteterMedDouble.values.elementAt(2) +
-  //             betweenSpace +
-  //             top10aktiviteterMedDouble.values.elementAt(3) +
-  //             betweenSpace +
-  //             top10aktiviteterMedDouble.values.elementAt(4) +
-  //             betweenSpace +
-  //             top10aktiviteterMedDouble.values.elementAt(5) +
-  //             betweenSpace +
-  //             top10aktiviteterMedDouble.values.elementAt(6) +
-  //             betweenSpace +
-  //             top10aktiviteterMedDouble.values.elementAt(7) +
-  //             betweenSpace +
-  //             top10aktiviteterMedDouble.values.elementAt(8),
-  //         color: cardColors[8],
-  //         width: barWidth,
-  //       ),
-  //       BarChartRodData(
-  //         fromY: top10aktiviteterMedDouble.values.elementAt(0) +
-  //             betweenSpace +
-  //             top10aktiviteterMedDouble.values.elementAt(1) +
-  //             betweenSpace +
-  //             top10aktiviteterMedDouble.values.elementAt(2) +
-  //             betweenSpace +
-  //             top10aktiviteterMedDouble.values.elementAt(3) +
-  //             betweenSpace +
-  //             top10aktiviteterMedDouble.values.elementAt(4) +
-  //             betweenSpace +
-  //             top10aktiviteterMedDouble.values.elementAt(5) +
-  //             betweenSpace +
-  //             top10aktiviteterMedDouble.values.elementAt(6) +
-  //             betweenSpace +
-  //             top10aktiviteterMedDouble.values.elementAt(7) +
-  //             betweenSpace +
-  //             top10aktiviteterMedDouble.values.elementAt(8),
-  //         toY: top10aktiviteterMedDouble.values.elementAt(0) +
-  //             betweenSpace +
-  //             top10aktiviteterMedDouble.values.elementAt(1) +
-  //             betweenSpace +
-  //             top10aktiviteterMedDouble.values.elementAt(2) +
-  //             betweenSpace +
-  //             top10aktiviteterMedDouble.values.elementAt(3) +
-  //             betweenSpace +
-  //             top10aktiviteterMedDouble.values.elementAt(4) +
-  //             betweenSpace +
-  //             top10aktiviteterMedDouble.values.elementAt(5) +
-  //             betweenSpace +
-  //             top10aktiviteterMedDouble.values.elementAt(6) +
-  //             betweenSpace +
-  //             top10aktiviteterMedDouble.values.elementAt(7) +
-  //             betweenSpace +
-  //             top10aktiviteterMedDouble.values.elementAt(8) +
-  //             betweenSpace +
-  //             top10aktiviteterMedDouble.values.elementAt(9),
-  //         color: cardColors[9],
-  //         width: barWidth,
-  //       ),
-  //     ],
-  //   );
-  // }
 
   Widget bottomTitles(double value, TitleMeta meta) {
     const style = TextStyle(fontSize: 10);
