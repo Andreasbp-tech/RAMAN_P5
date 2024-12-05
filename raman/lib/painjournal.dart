@@ -172,14 +172,14 @@ class _PainJournalState extends State<PainJournal> {
           .doc(data.userUID)
           .collection("LærOmDinSmerte")
           .doc("GodeDage")
-          .set({dagsDato: exportList});
+          .set({dagsDato: exportList}, SetOptions(merge: true));
     } else if (painValue > data.gnsSmerteUpperLimit) {
       FirebaseFirestore.instance
           .collection("users")
           .doc(data.userUID)
           .collection("LærOmDinSmerte")
           .doc("DårligeDage")
-          .set({dagsDato: exportList});
+          .set({dagsDato: exportList}, SetOptions(merge: true));
     }
     showMyPopup(context, 'Godt arbejde!',
         "Vil du gå til hjemmeskærm eller opsummering?");

@@ -3,6 +3,7 @@ import 'package:raman/painjournal.dart';
 import 'navigationbars.dart';
 import 'notifications.dart';
 import 'package:awesome_notifications/awesome_notifications.dart';
+import 'fetch_data.dart';
 
 class Homepage extends StatefulWidget {
   const Homepage({super.key});
@@ -39,7 +40,17 @@ class _HomepageState extends State<Homepage> {
               children: [
                 Expanded(
                   child: ElevatedButton(
-                    onPressed: () {},
+                    onPressed: () {
+                      Navigator.of(context).push(
+                        MaterialPageRoute(
+                          builder: (BuildContext context) {
+                            return LoadingDataPage(
+                              pageIndex: 0,
+                            );
+                          },
+                        ),
+                      );
+                    },
                     style: ElevatedButton.styleFrom(
                       padding: const EdgeInsets.symmetric(vertical: 15),
                     ),
@@ -53,7 +64,8 @@ class _HomepageState extends State<Homepage> {
                         // SizedBox(width: 8),
                         Text('E-læring',
                             style: const TextStyle(
-                                fontSize: 22,)),
+                              fontSize: 22,
+                            )),
                       ],
                     ),
                   ),
@@ -81,7 +93,10 @@ class _HomepageState extends State<Homepage> {
                           child: Icon(Icons.menu_book, size: 140),
                         ),
                         // SizedBox(width: 8),
-                        Text('Smerte-\ndagbog', style: TextStyle(fontSize: 22,)),
+                        Text('Smerte-\ndagbog',
+                            style: TextStyle(
+                              fontSize: 22,
+                            )),
                       ],
                     ),
                   ),
@@ -106,7 +121,10 @@ class _HomepageState extends State<Homepage> {
                           child: Icon(Icons.fitness_center, size: 140),
                         ),
                         // SizedBox(width: 8),
-                        Text('Øvelser', style: TextStyle(fontSize: 22,)),
+                        Text('Øvelser',
+                            style: TextStyle(
+                              fontSize: 22,
+                            )),
                       ],
                     ),
                   ),
@@ -129,7 +147,9 @@ class _HomepageState extends State<Homepage> {
                         Text(
                           'Konsultations-\nlogbog',
                           textAlign: TextAlign.center,
-                          style: TextStyle(fontSize: 22,),
+                          style: TextStyle(
+                            fontSize: 22,
+                          ),
                         ),
                       ],
                     ),
@@ -156,7 +176,9 @@ class _HomepageState extends State<Homepage> {
                         ),
                         // SizedBox(width: 8),
                         Text('Patienthistorier',
-                            style: TextStyle(fontSize: 22,)),
+                            style: TextStyle(
+                              fontSize: 22,
+                            )),
                       ],
                     ),
                   ),

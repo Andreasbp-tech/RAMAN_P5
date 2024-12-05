@@ -119,14 +119,14 @@ class _LarOmDinSmerteSoloDagPage1State
         painDivergencePercentage =
             ((gnsSmerte - data.smerteManed) / data.smerteManed);
         fieldContent =
-            "Igennem de angivede dage kan det ses at den gennemsnitlige smerte har været $gnsSmerte, det viser sig at afvige med $painDivergencePercentage fra det nuværende månedelige gennemsnit for smerte. Du kan se mere om hvilke aktiviteter der kan have været årsagen til dette på den forrige side.";
+            "Igennem de angivede dage kan det ses at den gennemsnitlige smerte har været ${gnsSmerte.toStringAsFixed(2)}, det viser sig at afvige med ${painDivergencePercentage.toStringAsFixed(2)} fra det nuværende månedelige gennemsnit for smerte. Du kan se mere om hvilke aktiviteter der kan have været årsagen til dette på den forrige side.";
       } else {
         painDivergencePercentage = (data.godeDageVas[widget.chosenDateIndex]
                     ["Smerte"]! -
                 data.godeDageVas[widget.chosenDateIndex]["Gennemsnitsmerte"]!) /
             data.godeDageVas[widget.chosenDateIndex]["Gennemsnitsmerte"]!;
         fieldContent =
-            "Denne dag har været en god dag, da din smerte har været på ${data.godeDageVas[widget.chosenDateIndex]["Smerte"]}, dette er væsentligt bedre end hvad du ellers indrapporterer, det er faktisk hele $painDivergencePercentage% lavere. Du kan se mere om hvilke aktiviteter der kan have været årsagen til dette på den forrige side.";
+            "Denne dag har været en god dag, da din smerte har været på ${data.godeDageVas[widget.chosenDateIndex]["Smerte"]!.toStringAsFixed(2)}, dette er væsentligt bedre end hvad du ellers indrapporterer, det er faktisk hele ${painDivergencePercentage.toStringAsFixed(2)}% lavere. Du kan se mere om hvilke aktiviteter der kan have været årsagen til dette på den forrige side.";
       }
     }
     if (widget.badDay) {
@@ -483,13 +483,13 @@ class CustomBarChart extends StatelessWidget {
                 borderData: FlBorderData(show: true),
                 gridData: const FlGridData(show: true),
                 barGroups: [
-                  generateGroupData(
-                      0,
-                      addDoubleToList(
-                          aktiviteterForDagen.values.elementAt(5), 1.0),
-                      barWidth,
-                      top10aktiviteter,
-                      0.0),
+                  // generateGroupData(
+                  //     0,
+                  //     addDoubleToList(
+                  //         aktiviteterForDagen.values.elementAt(5), 1.0),
+                  //     barWidth,
+                  //     top10aktiviteter,
+                  //     0.0),
                   generateGroupData(
                       1,
                       addDoubleToList(
