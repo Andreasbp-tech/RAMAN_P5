@@ -10,7 +10,7 @@ int prevalenceLength = 14;
 int fetchVASDatasize = 31;
 int fetchGodeOgDaarligeDageDataSize = 31;
 int dataLengthForAktivitiesOnGoodAndBadDays = 5;
-double gnsSmerte = 0;
+double gnsSmerte = 5;
 double gnsSmerteUpperLimit = 0;
 double gnsSmerteLowerLimit = 0;
 int gnsInputDataLength = 7;
@@ -166,6 +166,7 @@ class _LoadingDataPageState extends State<LoadingDataPage> {
     gnsSmerteUpperLimit = 0;
     gnsSmerteLowerLimit = 0;
     senesteDagesAktiviteter = [];
+    int l = 0;
 
     String dagsDato = DateFormat('yyyy-MM-dd').format(now);
     for (var i = 0; i < gnsInputDataLength; i++) {
@@ -185,14 +186,17 @@ class _LoadingDataPageState extends State<LoadingDataPage> {
         gnsSmerte = gnsSmerte + data['Smerte']?.toDouble();
       }
     }
-    gnsSmerte = gnsSmerte / gnsInputDataLength;
-    gnsSmerteUpperLimit = gnsSmerte + (gnsSmerte * 0.33);
-    gnsSmerteLowerLimit = gnsSmerte - (gnsSmerte * 0.33);
-    print("gnsSmerte = $gnsSmerte");
-    print("gnsSmerteUpperLimit = $gnsSmerteUpperLimit");
-    print("gnsSmerteLowerLimit = $gnsSmerteLowerLimit");
 
-    int jUge = 1;
+    if (l != 0) {
+      gnsSmerte = gnsSmerte / l;
+      gnsSmerteUpperLimit = gnsSmerte + (gnsSmerte * 0.33);
+      gnsSmerteLowerLimit = gnsSmerte - (gnsSmerte * 0.33);
+      print("gnsSmerte = $gnsSmerte");
+      print("gnsSmerteUpperLimit = $gnsSmerteUpperLimit");
+      print("gnsSmerteLowerLimit = $gnsSmerteLowerLimit");
+    }
+
+    int jUge = 0;
     for (var i = 0; i < 7; i++) {
       DateTime date = now.subtract(Duration(days: i));
       String dateString = DateFormat('yyyy-MM-dd').format(date);
@@ -218,13 +222,14 @@ class _LoadingDataPageState extends State<LoadingDataPage> {
         print(i);
       }
     }
-    smerteUge = smerteUge / jUge;
-    humorUge = humorUge / jUge;
-    sovnUge = sovnUge / jUge;
-    aktivitetUge = aktivitetUge / jUge;
-    socialUge = socialUge / jUge;
-
-    int jManed = 1;
+    if (jUge != 0) {
+      smerteUge = smerteUge / jUge;
+      humorUge = humorUge / jUge;
+      sovnUge = sovnUge / jUge;
+      aktivitetUge = aktivitetUge / jUge;
+      socialUge = socialUge / jUge;
+    }
+    int jManed = 0;
     for (var i = 0; i < 31; i++) {
       DateTime date = now.subtract(Duration(days: i));
       String dateString = DateFormat('yyyy-MM-dd').format(date);
@@ -250,11 +255,14 @@ class _LoadingDataPageState extends State<LoadingDataPage> {
         print(i);
       }
     }
-    smerteManed = smerteManed / jManed;
-    humorManed = humorManed / jManed;
-    sovnManed = sovnManed / jManed;
-    aktivitetManed = aktivitetManed / jManed;
-    socialManed = socialManed / jManed;
+
+    if (jManed != 0) {
+      smerteManed = smerteManed / jManed;
+      humorManed = humorManed / jManed;
+      sovnManed = sovnManed / jManed;
+      aktivitetManed = aktivitetManed / jManed;
+      socialManed = socialManed / jManed;
+    }
 
     for (var i = 0; i <= dataLengthForAktivitiesOnGoodAndBadDays; i++) {
       DateTime date = now.subtract(Duration(days: i));
