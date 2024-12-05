@@ -290,6 +290,23 @@ class _LoadingDataPageState extends State<LoadingDataPage> {
             senesteDagesAktiviteter.add(mellemMap);
           }
         }
+      } else {
+        Map<String, Map<String, bool>> mellemMap = {};
+        try {
+          DocumentSnapshot docSnapShot = await FirebaseFirestore.instance
+              .collection("users")
+              .doc(userUID)
+              .collection("AktivitetsOversigt")
+              .doc("Aktiviteter")
+              .get();
+          if (docSnapShot.exists) {
+            Map<String, dynamic> data =
+                docSnapShot.data() as Map<String, dynamic>;
+            Map<String, bool> boolMap =
+                data["Aktiviteter"].map((key, value) => MapEntry(key, false));
+            senesteDagesAktiviteter.add(mellemMap);
+          }
+        } catch (e) {}
       }
     }
     for (var i = fetchVASDatasize; i >= 0; i--) {
