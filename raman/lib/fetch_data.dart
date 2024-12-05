@@ -97,7 +97,6 @@ class _LoadingDataPageState extends State<LoadingDataPage> {
       // print("Gode dårlige dage started");
 
       try {
-        
         DocumentSnapshot docSnapShotGodeDage = await FirebaseFirestore.instance
             .collection("users")
             .doc(userUID)
@@ -188,7 +187,7 @@ class _LoadingDataPageState extends State<LoadingDataPage> {
           // print(i);
 
           if (j == 5) {
-            print("i break out of good loop");
+            // print("i break out of good loop");
             break;
           }
         }
@@ -253,7 +252,7 @@ class _LoadingDataPageState extends State<LoadingDataPage> {
           // print(badDays);
 
           if (k == 5) {
-            print("i break out of bad loop");
+            // print("i break out of bad loop");
             break;
           }
         }
@@ -394,6 +393,23 @@ class _LoadingDataPageState extends State<LoadingDataPage> {
             senesteDagesAktiviteter.add(mellemMap);
           }
         }
+      } else {
+        Map<String, Map<String, bool>> mellemMap = {};
+        try {
+          DocumentSnapshot docSnapShot = await FirebaseFirestore.instance
+              .collection("users")
+              .doc(userUID)
+              .collection("AktivitetsOversigt")
+              .doc("Aktiviteter")
+              .get();
+          if (docSnapShot.exists) {
+            Map<String, dynamic> data =
+                docSnapShot.data() as Map<String, dynamic>;
+            Map<String, bool> boolMap =
+                data["Aktiviteter"].map((key, value) => MapEntry(key, false));
+            senesteDagesAktiviteter.add(mellemMap);
+          }
+        } catch (e) {}
       }
     }
     for (var i = fetchVASDatasize; i >= 0; i--) {
