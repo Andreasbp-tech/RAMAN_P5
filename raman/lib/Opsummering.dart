@@ -7,7 +7,7 @@ import 'painjournal.dart';
 import 'loginpage.dart';
 import 'radardiagram.dart';
 import 'punktdiagram.dart';
-import 'laromdinsmerte.dart';
+import 'laromdinsmerteMellemPage.dart';
 
 class Opsummering extends StatefulWidget {
   const Opsummering({super.key});

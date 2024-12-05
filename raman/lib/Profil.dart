@@ -118,14 +118,14 @@ class _ProfilState extends State<Profil> {
       mellemMap[dagsDato] = activitiesBoolMap;
       List<Map<String, Map<String, bool>>> exportList = senesteDagesAktiviteter;
       exportList[0] = mellemMap;
-      if (painValue < 4) {
+      if (painValue < 4.5) {
         FirebaseFirestore.instance
             .collection("users")
             .doc(FirebaseAuth.instance.currentUser?.uid)
             .collection("LærOmDinSmerte")
             .doc("GodeDage")
             .set({dagsDato: exportList}, SetOptions(merge: true));
-      } else if (painValue > 6) {
+      } else if (painValue > 5.5) {
         FirebaseFirestore.instance
             .collection("users")
             .doc(FirebaseAuth.instance.currentUser?.uid)

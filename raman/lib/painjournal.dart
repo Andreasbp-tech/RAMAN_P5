@@ -217,56 +217,51 @@ class _PainJournalState extends State<PainJournal> {
       body: SingleChildScrollView(
         child: Column(
           children: [
-            if (painValue != null)
-              InverseCustomSlider(
-                title: 'Hvor ondt har du haft i dag?',
-                initialSliderValue: painValue,
-                onChanged: (value) {
-                  setState(() {
-                    painValue = value;
-                  });
-                },
-              ),
-            if (sleepValue != null)
-              CustomSlider(
-                title: 'Hvordan har du sovet i nat?',
-                initialSliderValue: sleepValue,
-                onChanged: (value) {
-                  setState(() {
-                    sleepValue = value;
-                  });
-                },
-              ),
-            if (socialValue != null)
-              CustomSlider(
-                title: 'Hvor social har du været i dag?',
-                initialSliderValue: socialValue,
-                onChanged: (value) {
-                  setState(() {
-                    socialValue = value;
-                  });
-                },
-              ),
-            if (moodValue != null)
-              CustomSlider(
-                title: 'Hvordan har dit humør været i dag?',
-                initialSliderValue: moodValue,
-                onChanged: (value) {
-                  setState(() {
-                    moodValue = value;
-                  });
-                },
-              ),
-            if (activityValue != null)
-              CustomSlider(
-                title: 'Hvor aktiv har du været i dag?',
-                initialSliderValue: activityValue,
-                onChanged: (value) {
-                  setState(() {
-                    activityValue = value;
-                  });
-                },
-              ),
+            InverseCustomSlider(
+              title: 'Hvor ondt har du haft i dag?',
+              initialSliderValue: painValue,
+              onChanged: (value) {
+                setState(() {
+                  painValue = value;
+                });
+              },
+            ),
+            CustomSlider(
+              title: 'Hvordan har du sovet i nat?',
+              initialSliderValue: sleepValue,
+              onChanged: (value) {
+                setState(() {
+                  sleepValue = value;
+                });
+              },
+            ),
+            CustomSlider(
+              title: 'Hvor social har du været i dag?',
+              initialSliderValue: socialValue,
+              onChanged: (value) {
+                setState(() {
+                  socialValue = value;
+                });
+              },
+            ),
+            CustomSlider(
+              title: 'Hvordan har dit humør været i dag?',
+              initialSliderValue: moodValue,
+              onChanged: (value) {
+                setState(() {
+                  moodValue = value;
+                });
+              },
+            ),
+            CustomSlider(
+              title: 'Hvor aktiv har du været i dag?',
+              initialSliderValue: activityValue,
+              onChanged: (value) {
+                setState(() {
+                  activityValue = value;
+                });
+              },
+            ),
 
             const SizedBox(height: 10),
             // const Text(

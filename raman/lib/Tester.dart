@@ -1,370 +1,397 @@
-// import 'package:flutter/material.dart';
+import 'dart:async';
+import 'dart:math';
 
-// class TesterPage extends StatefulWidget {
-//   const TesterPage({Key? key}) : super(key: key);
+import 'package:fl_chart_app/presentation/resources/app_resources.dart';
+import 'package:fl_chart_app/util/extensions/color_extensions.dart';
+import 'package:fl_chart/fl_chart.dart';
+import 'package:flutter/material.dart';
 
-//   @override
-//   State<TesterPage> createState() => _TesterPageState();
-// }
+class BarChartSample1 extends StatefulWidget {
+  BarChartSample1({super.key});
 
-// class _TesterPageState extends State<TesterPage> {
-//   List<String> _selectedItems = [];
+  List<Color> get availableColors => const <Color>[
+        AppColors.contentColorPurple,
+        AppColors.contentColorYellow,
+        AppColors.contentColorBlue,
+        AppColors.contentColorOrange,
+        AppColors.contentColorPink,
+        AppColors.contentColorRed,
+      ];
 
-//   void _showMultiSelect() async {
-//     final List<String> items = ['Flutter', 'Node.js', 'React Native', 'Java', 'Docker', 'MySQL'];
-//     final List<String>? results = await showDialog(
-//       context: context,
-//       builder: (BuildContext context) {
-//         return MultiSelect(items: items);
-//       },
-//     );
+  final Color barBackgroundColor =
+      AppColors.contentColorWhite.darken().withOpacity(0.3);
+  final Color barColor = AppColors.contentColorWhite;
+  final Color touchedBarColor = AppColors.contentColorGreen;
 
-//     if (results != null) {
-//       setState(() {
-//         _selectedItems = results;
-//       });
-//     }
-//   }
+  @override
+  State<StatefulWidget> createState() => BarChartSample1State();
+}
 
-//   @override
-//   Widget build(BuildContext context) {
-//     return Scaffold(
-//       appBar: AppBar(
-//         title: const Text('Multi-Select Dropdown'),
-//       ),
-//       body: Padding(
-//         padding: const EdgeInsets.all(20),
-//         child: Column(
-//           crossAxisAlignment: CrossAxisAlignment.start,
-//           children: [
-//             ElevatedButton(
-//               onPressed: _showMultiSelect,
-//               child: const Text('Select Your Favorite Topics'),
-//             ),
-//             const Divider(height: 30),
-//             Wrap(
-//               children: _selectedItems.map((e) => Chip(label: Text(e))).toList(),
-//             ),
-//           ],
-//         ),
-//       ),
-//     );
-//   }
-// }
+class BarChartSample1State extends State<BarChartSample1> {
+  final Duration animDuration = const Duration(milliseconds: 250);
 
-// class MultiSelect extends StatefulWidget {
-//   final List<String> items;
+  int touchedIndex = -1;
 
-//   const MultiSelect({Key? key, required this.items}) : super(key: key);
+  bool isPlaying = false;
 
-//   @override
-//   State<MultiSelect> createState() => _MultiSelectState();
-// }
+  @override
+  Widget build(BuildContext context) {
+    return AspectRatio(
+      aspectRatio: 1,
+      child: Stack(
+        children: <Widget>[
+          Padding(
+            padding: const EdgeInsets.all(16),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.stretch,
+              children: <Widget>[
+                const Text(
+                  'Mingguan',
+                  style: TextStyle(
+                    color: AppColors.contentColorGreen,
+                    fontSize: 24,
+                    fontWeight: FontWeight.bold,
+                  ),
+                ),
+                const SizedBox(
+                  height: 4,
+                ),
+                Text(
+                  'Grafik konsumsi kalori',
+                  style: TextStyle(
+                    color: AppColors.contentColorGreen.darken(),
+                    fontSize: 18,
+                    fontWeight: FontWeight.bold,
+                  ),
+                ),
+                const SizedBox(
+                  height: 38,
+                ),
+                Expanded(
+                  child: Padding(
+                    padding: const EdgeInsets.symmetric(horizontal: 8),
+                    child: BarChart(
+                      isPlaying ? randomData() : mainBarData(),
+                      duration: animDuration,
+                    ),
+                  ),
+                ),
+                const SizedBox(
+                  height: 12,
+                ),
+              ],
+            ),
+          ),
+          Padding(
+            padding: const EdgeInsets.all(8),
+            child: Align(
+              alignment: Alignment.topRight,
+              child: IconButton(
+                icon: Icon(
+                  isPlaying ? Icons.pause : Icons.play_arrow,
+                  color: AppColors.contentColorGreen,
+                ),
+                onPressed: () {
+                  setState(() {
+                    isPlaying = !isPlaying;
+                    if (isPlaying) {
+                      refreshState();
+                    }
+                  });
+                },
+              ),
+            ),
+          )
+        ],
+      ),
+    );
+  }
 
-// class _MultiSelectState extends State<MultiSelect> {
-//   final List<String> _selectedItems = [];
+  BarChartGroupData makeGroupData(
+    int x,
+    double y, {
+    bool isTouched = false,
+    Color? barColor,
+    double width = 22,
+    List<int> showTooltips = const [],
+  }) {
+    barColor ??= widget.barColor;
+    return BarChartGroupData(
+      x: x,
+      barRods: [
+        BarChartRodData(
+          toY: isTouched ? y + 1 : y,
+          color: isTouched ? widget.touchedBarColor : barColor,
+          width: width,
+          borderSide: isTouched
+              ? BorderSide(color: widget.touchedBarColor.darken(80))
+              : const BorderSide(color: Colors.white, width: 0),
+          backDrawRodData: BackgroundBarChartRodData(
+            show: true,
+            toY: 20,
+            color: widget.barBackgroundColor,
+          ),
+        ),
+      ],
+      showingTooltipIndicators: showTooltips,
+    );
+  }
 
-//   void _itemChange(String itemValue, bool isSelected) {
-//     setState(() {
-//       if (isSelected) {
-//         _selectedItems.add(itemValue);
-//       } else {
-//         _selectedItems.remove(itemValue);
-//       }
-//     });
-//   }
+  List<BarChartGroupData> showingGroups() => List.generate(7, (i) {
+        switch (i) {
+          case 0:
+            return makeGroupData(0, 5, isTouched: i == touchedIndex);
+          case 1:
+            return makeGroupData(1, 6.5, isTouched: i == touchedIndex);
+          case 2:
+            return makeGroupData(2, 5, isTouched: i == touchedIndex);
+          case 3:
+            return makeGroupData(3, 7.5, isTouched: i == touchedIndex);
+          case 4:
+            return makeGroupData(4, 9, isTouched: i == touchedIndex);
+          case 5:
+            return makeGroupData(5, 11.5, isTouched: i == touchedIndex);
+          case 6:
+            return makeGroupData(6, 6.5, isTouched: i == touchedIndex);
+          default:
+            return throw Error();
+        }
+      });
 
-//   void _cancel() {
-//     Navigator.pop(context);
-//   }
+  BarChartData mainBarData() {
+    return BarChartData(
+      barTouchData: BarTouchData(
+        touchTooltipData: BarTouchTooltipData(
+          getTooltipColor: (_) => Colors.blueGrey,
+          tooltipHorizontalAlignment: FLHorizontalAlignment.right,
+          tooltipMargin: -10,
+          getTooltipItem: (group, groupIndex, rod, rodIndex) {
+            String weekDay;
+            switch (group.x) {
+              case 0:
+                weekDay = 'Monday';
+                break;
+              case 1:
+                weekDay = 'Tuesday';
+                break;
+              case 2:
+                weekDay = 'Wednesday';
+                break;
+              case 3:
+                weekDay = 'Thursday';
+                break;
+              case 4:
+                weekDay = 'Friday';
+                break;
+              case 5:
+                weekDay = 'Saturday';
+                break;
+              case 6:
+                weekDay = 'Sunday';
+                break;
+              default:
+                throw Error();
+            }
+            return BarTooltipItem(
+              '$weekDay\n',
+              const TextStyle(
+                color: Colors.white,
+                fontWeight: FontWeight.bold,
+                fontSize: 18,
+              ),
+              children: <TextSpan>[
+                TextSpan(
+                  text: (rod.toY - 1).toString(),
+                  style: const TextStyle(
+                    color: Colors.white, //widget.touchedBarColor,
+                    fontSize: 16,
+                    fontWeight: FontWeight.w500,
+                  ),
+                ),
+              ],
+            );
+          },
+        ),
+        touchCallback: (FlTouchEvent event, barTouchResponse) {
+          setState(() {
+            if (!event.isInterestedForInteractions ||
+                barTouchResponse == null ||
+                barTouchResponse.spot == null) {
+              touchedIndex = -1;
+              return;
+            }
+            touchedIndex = barTouchResponse.spot!.touchedBarGroupIndex;
+          });
+        },
+      ),
+      titlesData: FlTitlesData(
+        show: true,
+        rightTitles: const AxisTitles(
+          sideTitles: SideTitles(showTitles: false),
+        ),
+        topTitles: const AxisTitles(
+          sideTitles: SideTitles(showTitles: false),
+        ),
+        bottomTitles: AxisTitles(
+          sideTitles: SideTitles(
+            showTitles: true,
+            getTitlesWidget: getTitles,
+            reservedSize: 38,
+          ),
+        ),
+        leftTitles: const AxisTitles(
+          sideTitles: SideTitles(
+            showTitles: false,
+          ),
+        ),
+      ),
+      borderData: FlBorderData(
+        show: false,
+      ),
+      barGroups: showingGroups(),
+      gridData: const FlGridData(show: false),
+    );
+  }
 
-//   void _submit() {
-//     Navigator.pop(context, _selectedItems);
-//   }
+  Widget getTitles(double value, TitleMeta meta) {
+    const style = TextStyle(
+      color: Colors.white,
+      fontWeight: FontWeight.bold,
+      fontSize: 14,
+    );
+    Widget text;
+    switch (value.toInt()) {
+      case 0:
+        text = const Text('M', style: style);
+        break;
+      case 1:
+        text = const Text('T', style: style);
+        break;
+      case 2:
+        text = const Text('W', style: style);
+        break;
+      case 3:
+        text = const Text('T', style: style);
+        break;
+      case 4:
+        text = const Text('F', style: style);
+        break;
+      case 5:
+        text = const Text('S', style: style);
+        break;
+      case 6:
+        text = const Text('S', style: style);
+        break;
+      default:
+        text = const Text('', style: style);
+        break;
+    }
+    return SideTitleWidget(
+      axisSide: meta.axisSide,
+      space: 16,
+      child: text,
+    );
+  }
 
-//   @override
-//   Widget build(BuildContext context) {
-//     return AlertDialog(
-//       title: const Text('Select Topics'),
-//       content: SingleChildScrollView(
-//         child: ListBody(
-//           children: widget.items.map((item) {
-//             return CheckboxListTile(
-//               value: _selectedItems.contains(item),
-//               title: Text(item),
-//               controlAffinity: ListTileControlAffinity.leading,
-//               onChanged: (isChecked) => _itemChange(item, isChecked!),
-//             );
-//           }).toList(),
-//         ),
-//       ),
-//       actions: [
-//         TextButton(
-//           onPressed: _cancel,
-//           child: const Text('Cancel'),
-//         ),
-//         ElevatedButton(
-//           onPressed: _submit,
-//           child: const Text('Submit'),
-//         ),
-//       ],
-//     );
-//   }
-// }
+  BarChartData randomData() {
+    return BarChartData(
+      barTouchData: BarTouchData(
+        enabled: false,
+      ),
+      titlesData: FlTitlesData(
+        show: true,
+        bottomTitles: AxisTitles(
+          sideTitles: SideTitles(
+            showTitles: true,
+            getTitlesWidget: getTitles,
+            reservedSize: 38,
+          ),
+        ),
+        leftTitles: const AxisTitles(
+          sideTitles: SideTitles(
+            showTitles: false,
+          ),
+        ),
+        topTitles: const AxisTitles(
+          sideTitles: SideTitles(
+            showTitles: false,
+          ),
+        ),
+        rightTitles: const AxisTitles(
+          sideTitles: SideTitles(
+            showTitles: false,
+          ),
+        ),
+      ),
+      borderData: FlBorderData(
+        show: false,
+      ),
+      barGroups: List.generate(7, (i) {
+        switch (i) {
+          case 0:
+            return makeGroupData(
+              0,
+              Random().nextInt(15).toDouble() + 6,
+              barColor: widget.availableColors[
+                  Random().nextInt(widget.availableColors.length)],
+            );
+          case 1:
+            return makeGroupData(
+              1,
+              Random().nextInt(15).toDouble() + 6,
+              barColor: widget.availableColors[
+                  Random().nextInt(widget.availableColors.length)],
+            );
+          case 2:
+            return makeGroupData(
+              2,
+              Random().nextInt(15).toDouble() + 6,
+              barColor: widget.availableColors[
+                  Random().nextInt(widget.availableColors.length)],
+            );
+          case 3:
+            return makeGroupData(
+              3,
+              Random().nextInt(15).toDouble() + 6,
+              barColor: widget.availableColors[
+                  Random().nextInt(widget.availableColors.length)],
+            );
+          case 4:
+            return makeGroupData(
+              4,
+              Random().nextInt(15).toDouble() + 6,
+              barColor: widget.availableColors[
+                  Random().nextInt(widget.availableColors.length)],
+            );
+          case 5:
+            return makeGroupData(
+              5,
+              Random().nextInt(15).toDouble() + 6,
+              barColor: widget.availableColors[
+                  Random().nextInt(widget.availableColors.length)],
+            );
+          case 6:
+            return makeGroupData(
+              6,
+              Random().nextInt(15).toDouble() + 6,
+              barColor: widget.availableColors[
+                  Random().nextInt(widget.availableColors.length)],
+            );
+          default:
+            return throw Error();
+        }
+      }),
+      gridData: const FlGridData(show: false),
+    );
+  }
 
-// // import 'package:flutter/material.dart';
-
-// // class TesterPage extends StatefulWidget {
-// //   const TesterPage({Key? key}) : super(key: key);
-
-// //   @override
-// //   State<TesterPage> createState() => _TesterPageState();
-// // }
-
-// // class _TesterPageState extends State<TesterPage> {
-// //   bool _isDropdownOpen = false;
-
-// //   final Map<String, bool> _items = {
-// //     'Flutter': false,
-// //     'Node.js': false,
-// //     'React Native': false,
-// //     'Java': false,
-// //     'Docker': false,
-// //     'MySQL': false,
-// //   };
-
-// //   void _itemChange(String itemValue, bool isSelected) {
-// //     setState(() {
-// //       _items[itemValue] = isSelected;
-// //     });
-// //   }
-
-// //   @override
-// //   Widget build(BuildContext context) {
-// //     return Scaffold(
-// //       appBar: AppBar(
-// //         title: const Text('Inline Multi-Select Dropdown'),
-// //       ),
-// //       body: Padding(
-// //         padding: const EdgeInsets.all(20),
-// //         child: Column(
-// //           crossAxisAlignment: CrossAxisAlignment.start,
-// //           children: [
-// //             GestureDetector(
-// //               onTap: () {
-// //                 setState(() {
-// //                   _isDropdownOpen = !_isDropdownOpen;
-// //                 });
-// //               },
-// //               child: Container(
-// //                 padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 15),
-// //                 decoration: BoxDecoration(
-// //                   border: Border.all(color: Colors.grey),
-// //                   borderRadius: BorderRadius.circular(5),
-// //                 ),
-// //                 child: Row(
-// //                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
-// //                   children: [
-// //                     Text(_items.entries.where((entry) => entry.value).isEmpty
-// //                         ? 'Select Your Favorite Topics'
-// //                         : _items.entries.where((entry) => entry.value).map((entry) => entry.key).join(', ')),
-// //                     Icon(_isDropdownOpen ? Icons.arrow_drop_up : Icons.arrow_drop_down),
-// //                   ],
-// //                 ),
-// //               ),
-// //             ),
-// //             if (_isDropdownOpen)
-// //               Column(
-// //                 children: _items.keys.map((item) {
-// //                   return CheckboxListTile(
-// //                     value: _items[item],
-// //                     title: Text(item),
-// //                     controlAffinity: ListTileControlAffinity.leading,
-// //                     onChanged: (isChecked) => _itemChange(item, isChecked!),
-// //                   );
-// //                 }).toList(),
-// //               ),
-// //             const Divider(height: 30),
-// //             Wrap(
-// //               children: _items.entries
-// //                   .where((entry) => entry.value)
-// //                   .map((entry) => Chip(label: Text(entry.key)))
-// //                   .toList(),
-// //             ),
-// //           ],
-// //         ),
-// //       ),
-// //     );
-// //   }
-// // }
-
-// // import 'package:flutter/material.dart';
-
-// // class TesterPage extends StatefulWidget {
-// //   const TesterPage({Key? key}) : super(key: key);
-
-// //   @override
-// //   State<TesterPage> createState() => _TesterPageState();
-// // }
-
-// // class _TesterPageState extends State<TesterPage> {
-// //   final Map<String, bool> _items = {
-// //     'Flutter': false,
-// //     'Node.js': false,
-// //     'React Native': false,
-// //     'Java': false,
-// //     'Docker': false,
-// //     'MySQL': false,
-// //   };
-
-// //   bool _isDropdownOpen = false;
-
-// //   void _toggleDropdown() {
-// //     setState(() {
-// //       _isDropdownOpen = !_isDropdownOpen;
-// //     });
-// //   }
-
-// //   @override
-// //   Widget build(BuildContext context) {
-// //     return Scaffold(
-// //       appBar: AppBar(
-// //         title: const Text('Stack Dropdown Menu'),
-// //       ),
-// //       body: Stack(
-// //         children: [
-// //           Padding(
-// //             padding: const EdgeInsets.all(20),
-// //             child: Column(
-// //               crossAxisAlignment: CrossAxisAlignment.start,
-// //               children: [
-// //                 GestureDetector(
-// //                   onTap: _toggleDropdown,
-// //                   child: Container(
-// //                     padding: const EdgeInsets.symmetric(
-// //                         horizontal: 10, vertical: 15),
-// //                     decoration: BoxDecoration(
-// //                       border: Border.all(color: Colors.grey),
-// //                       borderRadius: BorderRadius.circular(5),
-// //                     ),
-// //                     child: Row(
-// //                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
-// //                       children: [
-// //                         Text(
-// //                             _items.entries.where((entry) => entry.value).isEmpty
-// //                                 ? 'Select Your Favorite Topics'
-// //                                 : _items.entries
-// //                                     .where((entry) => entry.value)
-// //                                     .map((entry) => entry.key)
-// //                                     .join(', ')),
-// //                         Icon(_isDropdownOpen
-// //                             ? Icons.arrow_drop_up
-// //                             : Icons.arrow_drop_down),
-// //                       ],
-// //                     ),
-// //                   ),
-// //                 ),
-// //                 const Divider(height: 30),
-// //                 Wrap(
-// //                   children: _items.entries
-// //                       .where((entry) => entry.value)
-// //                       .map((entry) => Chip(label: Text(entry.key)))
-// //                       .toList(),
-// //                 ),
-// //               ],
-// //             ),
-// //           ),
-// //           if (_isDropdownOpen)
-// //             Positioned(
-// //               top: 80, // Adjust this value based on your layout
-// //               left: 20,
-// //               right: 20,
-// //               child: Material(
-// //                 elevation: 4.0,
-// //                 child: Column(
-// //                   children: _items.keys.map((item) {
-// //                     return CheckboxListTile(
-// //                       value: _items[item],
-// //                       title: Text(item),
-// //                       controlAffinity: ListTileControlAffinity.leading,
-// //                       onChanged: (isChecked) {
-// //                         setState(() {
-// //                           _items[item] = isChecked!;
-// //                         });
-// //                       },
-// //                     );
-// //                   }).toList(),
-// //                 ),
-// //               ),
-// //             ),
-// //         ],
-// //       ),
-// //     );
-// //   }
-// // }
-// // import 'package:flutter/material.dart';
-
-// // class TesterPage extends StatelessWidget {
-// //   const TesterPage({super.key});
-// //   @override
-// //   Widget build(BuildContext context) {
-// //     return MaterialApp(
-// //       home: Scaffold(
-// //         appBar: AppBar(title: Text('Positioned Example')),
-// //         body: Stack(
-// //           children: [
-// //             Container(
-// //               width: 300,
-// //               height: 300,
-// //               color: Colors.blue[100],
-// //             ),
-// //             Positioned(
-// //               top: 50,
-// //               left: 50,
-// //               child: Container(
-// //                 width: 100,
-// //                 height: 100,
-// //                 color: Colors.red,
-// //               ),
-// //             ),
-// //             Positioned(
-// //               bottom: 20,
-// //               right: 20,
-// //               child: Container(
-// //                 width: 50,
-// //                 height: 50,
-// //                 color: Colors.green,
-// //               ),
-// //             ),
-// //           ],
-// //         ),
-// //       ),
-// //     );
-// //   }
-// // }
-
-// for (var i = 0; i < 31; i++) {
-//       DateTime date = now.subtract(Duration(days: i));
-//       String dateString = DateFormat('yyyy-MM-dd').format(date);
-//       DocumentSnapshot docSnapShot = await FirebaseFirestore.instance
-//           .collection("users")
-//           .doc(userUID)
-//           .collection("dage")
-//           .doc(dateString)
-//           .collection("smertedagbog")
-//           .doc("VAS")
-//           .get();
-//       if (docSnapShot.exists) {
-//         Map<String, dynamic> data = docSnapShot.data() as Map<String, dynamic>;
-//         smerteManed = smerteManed + data['Smerte']?.toDouble();
-//         humorManed = humorManed + data['Humør']?.toDouble();
-//         sovnManed = sovnManed + data['Søvn']?.toDouble();
-//         aktivitetManed = aktivitetManed + data['Aktivitet']?.toDouble();
-//         socialManed = socialManed + data['Social']?.toDouble();
-//       }
-//     }
-//     smerteManed = smerteManed / 31;
-//     humorManed = humorManed / 31;
-//     sovnManed = sovnManed / 31;
-//     aktivitetManed = aktivitetManed / 31;
-//     socialManed = socialManed / 31;
+  Future<dynamic> refreshState() async {
+    setState(() {});
+    await Future<dynamic>.delayed(
+      animDuration + const Duration(milliseconds: 50),
+    );
+    if (isPlaying) {
+      await refreshState();
+    }
+  }
+}
