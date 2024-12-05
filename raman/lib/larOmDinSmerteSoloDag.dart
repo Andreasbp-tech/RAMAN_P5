@@ -101,6 +101,59 @@ class _LarOmDinSmerteSoloDagPage1State
     setState(() {});
   }
 
+  _textFieldContent() {
+    String fieldContent = "";
+    double painDivergencePercentage;
+
+    if (widget.goodDay) {
+      if (widget.chosenDateIndex == 5) {
+        double gnsSmerte = 0;
+        int k = 0;
+        for (var i = 0; i < data.godeDageVas.length; i++) {
+          gnsSmerte = data.godeDageVas[i]["Smerte"]!;
+          k++;
+        }
+        if (k != 0) {
+          gnsSmerte = gnsSmerte / k;
+        }
+        painDivergencePercentage =
+            ((gnsSmerte - data.smerteManed) / data.smerteManed);
+        fieldContent =
+            "Igennem de angivede dage kan det ses at den gennemsnitlige smerte har været $gnsSmerte, det viser sig at afvige med $painDivergencePercentage fra det nuværende månedelige gennemsnit for smerte. Du kan se mere om hvilke aktiviteter der kan have været årsagen til dette på den forrige side.";
+      } else {
+        painDivergencePercentage = (data.godeDageVas[widget.chosenDateIndex]
+                    ["Smerte"]! -
+                data.godeDageVas[widget.chosenDateIndex]["Gennemsnitsmerte"]!) /
+            data.godeDageVas[widget.chosenDateIndex]["Gennemsnitsmerte"]!;
+        fieldContent =
+            "Denne dag har været en god dag, da din smerte har været på ${data.godeDageVas[widget.chosenDateIndex]["Smerte"]}, dette er væsentligt bedre end hvad du ellers indrapporterer, det er faktisk hele $painDivergencePercentage% lavere. Du kan se mere om hvilke aktiviteter der kan have været årsagen til dette på den forrige side.";
+      }
+    }
+    if (widget.badDay) {
+      if (widget.chosenDateIndex == 5) {
+        double gnsSmerte = 0;
+        int k = 0;
+        for (var i = 0; i < data.godeDageVas.length; i++) {
+          gnsSmerte = data.badDaysVas[i]["Smerte"]!;
+          k++;
+        }
+        if (k != 0) {
+          gnsSmerte = gnsSmerte / k;
+        }
+        painDivergencePercentage =
+            ((gnsSmerte - data.smerteManed) / data.smerteManed);
+        fieldContent =
+            "Igennem de angivede dage kan det ses at den gennemsnitlige smerte har været $gnsSmerte, det viser sig at afvige med $painDivergencePercentage fra det nuværende månedlige gennemsnit for smer du kan se mere om hvilke aktiviteter du foretager dig på dagen og i dagene ledende op til disse dårlige dage på den forrige side";
+      } else {
+        painDivergencePercentage = (data.badDaysVas[widget.chosenDateIndex]
+                    ["Smerte"]! -
+                data.badDaysVas[widget.chosenDateIndex]["Gennemsnitsmerte"]!) /
+            data.badDaysVas[widget.chosenDateIndex]["Gennemsnitsmerte"]!;
+      }
+    }
+    return fieldContent;
+  }
+
   double textSizePage2 = 18;
   @override
   Widget build(BuildContext context) {
@@ -136,18 +189,29 @@ class _LarOmDinSmerteSoloDagPage1State
                   child: Column(children: [
                     Padding(
                       padding: const EdgeInsets.all(16.0),
-                      child: Text(
-                        "Smertescore: ${data.godeDageVas[widget.chosenDateIndex].values.elementAt(3)}",
-                        style: TextStyle(
-                            fontSize: textSizePage2 + 4,
-                            fontWeight: FontWeight.bold),
+                      child: Column(
+                        children: [
+                          Text(
+                            "Smerte: ${data.godeDageVas[widget.chosenDateIndex]["Smerte"]}",
+                            style: TextStyle(
+                                fontSize: textSizePage2 + 4,
+                                fontWeight: FontWeight.bold),
+                          ),
+                          Text(
+                            "Gennemsnitsmerte: ${data.godeDageVas[widget.chosenDateIndex]["Gennemsnitsmerte"]}",
+                            style: TextStyle(
+                                fontSize: textSizePage2 - 4,
+                                color: Colors.black.withOpacity(0.4)),
+                          )
+                        ],
                       ),
                     ),
                     Padding(
                       padding: const EdgeInsets.all(16.0),
                       child: Container(
                         decoration: BoxDecoration(
-                            border: Border.all(color: Colors.black, width: 2.0),
+                            border:
+                                Border.all(color: _titleBoxColor(), width: 4),
                             borderRadius: BorderRadius.circular(12)),
                         padding: const EdgeInsets.all(16.0),
                         child: Column(
@@ -156,11 +220,11 @@ class _LarOmDinSmerteSoloDagPage1State
                               mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                               children: [
                                 Text(
-                                  "Social aktivitet: ${data.godeDageVas[widget.chosenDateIndex].values.elementAt(0)}",
+                                  "Social aktivitet: ${data.godeDageVas[widget.chosenDateIndex]["Social"]}",
                                   style: TextStyle(fontSize: textSizePage2),
                                 ),
                                 Text(
-                                  "Søvn: ${data.godeDageVas[widget.chosenDateIndex].values.elementAt(1)}",
+                                  "Søvn: ${data.godeDageVas[widget.chosenDateIndex]["Søvn"]}",
                                   style: TextStyle(fontSize: textSizePage2),
                                 ),
                               ],
@@ -169,11 +233,11 @@ class _LarOmDinSmerteSoloDagPage1State
                               mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                               children: [
                                 Text(
-                                  "Fysisk aktivitet: ${data.godeDageVas[widget.chosenDateIndex].values.elementAt(4)}",
+                                  "Fysisk aktivitet: ${data.godeDageVas[widget.chosenDateIndex]["Aktivitetsniveau"]}",
                                   style: TextStyle(fontSize: textSizePage2),
                                 ),
                                 Text(
-                                  "Humør: ${data.godeDageVas[widget.chosenDateIndex].values.elementAt(2)}",
+                                  "Humør: ${data.godeDageVas[widget.chosenDateIndex]["Humør"]}",
                                   style: TextStyle(fontSize: textSizePage2),
                                 ),
                               ],
@@ -186,12 +250,12 @@ class _LarOmDinSmerteSoloDagPage1State
                       padding: const EdgeInsets.all(16.0),
                       child: Container(
                         decoration: BoxDecoration(
-                            border: Border.all(color: Colors.black, width: 2.0),
+                            border:
+                                Border.all(color: _titleBoxColor(), width: 4),
                             borderRadius: BorderRadius.circular(12)),
                         padding: const EdgeInsets.all(16.0),
                         child: Text(
-                          'This is a longer piece of text that will automatically wrap to fit within the available screen width. '
-                          'You can adjust the padding or other constraints to see how the text adapts to different screen sizes.',
+                          _textFieldContent(),
                           style: TextStyle(fontSize: textSizePage2),
                         ),
                       ),
@@ -462,7 +526,7 @@ class CustomBarChart extends StatelessWidget {
                       top10aktiviteter,
                       0.0),
                 ],
-                maxY: 10,
+                maxY: 50,
               ),
             ),
           ),

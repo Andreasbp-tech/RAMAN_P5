@@ -214,7 +214,20 @@ class _LaromdinsmerteState extends State<Laromdinsmerte> {
         ),
         SizedBox(height: 20),
         ElevatedButton(
-          onPressed: () {},
+          onPressed: () {
+            Navigator.of(context).push(
+                MaterialPageRoute(
+                  builder: (BuildContext context) {
+                    return LarOmDinSmerteSoloDagPage1(
+                      chosenDateIndex: 5,
+                      goodDay: true,
+                      badDay: false,
+                      chosenDate: "Samlet",
+                    );
+                  },
+                ),
+              );
+          },
           style: ElevatedButton.styleFrom(
             backgroundColor: Colors.green,
             foregroundColor: Colors.black,
@@ -401,7 +414,20 @@ class _LaromdinsmerteState extends State<Laromdinsmerte> {
         ),
         SizedBox(height: 20),
         ElevatedButton(
-          onPressed: () {},
+          onPressed: () {
+            Navigator.of(context).push(
+                MaterialPageRoute(
+                  builder: (BuildContext context) {
+                    return LarOmDinSmerteSoloDagPage1(
+                      chosenDateIndex: 5,
+                      goodDay: false,
+                      badDay: true,
+                      chosenDate: "Samlet",
+                    );
+                  },
+                ),
+              );
+          },
           style: ElevatedButton.styleFrom(
             backgroundColor: Colors.red,
             foregroundColor: Colors.black,

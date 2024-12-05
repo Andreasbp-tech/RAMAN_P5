@@ -97,6 +97,7 @@ class _LoadingDataPageState extends State<LoadingDataPage> {
       // print("Gode dårlige dage started");
 
       try {
+        
         DocumentSnapshot docSnapShotGodeDage = await FirebaseFirestore.instance
             .collection("users")
             .doc(userUID)
