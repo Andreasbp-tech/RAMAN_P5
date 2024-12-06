@@ -398,7 +398,7 @@ class LegendWidget extends StatelessWidget {
           width: 10,
           height: 10,
           decoration: BoxDecoration(
-            shape: BoxShape.circle,
+            shape: BoxShape.rectangle,
             color: color,
           ),
         ),
@@ -406,7 +406,7 @@ class LegendWidget extends StatelessWidget {
         Text(
           name,
           style: const TextStyle(
-            color: Color(0xff757391),
+            color: Color.fromARGB(255, 84, 83, 99),
             fontSize: 16,
           ),
         ),

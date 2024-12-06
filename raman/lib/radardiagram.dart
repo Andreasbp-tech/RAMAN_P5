@@ -70,7 +70,7 @@ class _RadarChartExampleState extends State<RadarChartExample> {
           Expanded(
             child: Center(
               child: SizedBox(
-                height: 350, // Adjust the height as needed
+                height: 280, // Adjust the height as needed
                 child: RadarChart(
                   RadarChartData(
                     radarTouchData: RadarTouchData(enabled: true),
