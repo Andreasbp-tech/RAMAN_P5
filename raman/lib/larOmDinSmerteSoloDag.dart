@@ -261,8 +261,9 @@ class _LarOmDinSmerteSoloDagPage1State
                                 top10aktiviteter: top10aktiviteter,
                                 maxYValue:
                                     (widget.chosenDateIndex == 5) ? 50 : 10,
-                                listOfaktiviteterForDagen:
-                                    data.dataGodeDageForUseInApp,
+                                listOfaktiviteterForDagen: (widget.goodDay)
+                                    ? data.dataGodeDageForUseInApp
+                                    : data.dataBadDaysForUseInApp,
                               )
                       ],
                     ),
