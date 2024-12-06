@@ -278,17 +278,18 @@ class _LarOmDinSmerteSoloDagPage1State
                           Text(
                             "Smerte: ${_vasValues("Smerte")!.toStringAsFixed(2)}",
                             style: TextStyle(
-                                fontSize: textSizePage2 + 4,
-                                fontWeight: FontWeight.bold,
-                                color: _vASColorInverted(_vasValues("Smerte"))),
+                              fontSize: textSizePage2 + 4,
+                              fontWeight: FontWeight.bold,
+                              //color: _vASColorInverted(_vasValues("Smerte"))
+                            ),
                           ),
                           Text(
                             "Gennemsnitsmerte: ${_vasValues("Gennemsnitsmerte")!.toStringAsFixed(2)}",
                             style: TextStyle(
                               fontSize: textSizePage2 - 4,
-                              color: _vASColorInverted(
-                                      _vasValues("Gennemsnitsmerte"))
-                                  .withOpacity(1),
+                              // color: _vASColorInverted(
+                              //         _vasValues("Gennemsnitsmerte"))
+                              //     .withOpacity(1),
                             ),
                           )
                         ],
@@ -310,14 +311,16 @@ class _LarOmDinSmerteSoloDagPage1State
                                 Text(
                                   "Social aktivitet: ${_vasValues("Social")!.toStringAsFixed(2)}",
                                   style: TextStyle(
-                                      fontSize: textSizePage2,
-                                      color: _vASColor(_vasValues("Social"))),
+                                    fontSize: textSizePage2,
+                                    //color: _vASColor(_vasValues("Social"))
+                                  ),
                                 ),
                                 Text(
                                   "Søvn: ${_vasValues("Søvn")!.toStringAsFixed(2)}",
                                   style: TextStyle(
-                                      fontSize: textSizePage2,
-                                      color: _vASColor(_vasValues("Søvn"))),
+                                    fontSize: textSizePage2,
+                                    //color: _vASColor(_vasValues("Søvn"))
+                                  ),
                                 ),
                               ],
                             ),
@@ -327,15 +330,17 @@ class _LarOmDinSmerteSoloDagPage1State
                                 Text(
                                   "Fysisk aktivitet: ${_vasValues("Aktivitetsniveau")!.toStringAsFixed(2)}",
                                   style: TextStyle(
-                                      fontSize: textSizePage2,
-                                      color: _vASColor(
-                                          _vasValues("Aktivitetsniveau"))),
+                                    fontSize: textSizePage2,
+                                    //color: _vASColor(
+                                    //    _vasValues("Aktivitetsniveau"))
+                                  ),
                                 ),
                                 Text(
                                   "Humør: ${_vasValues("Humør")!.toStringAsFixed(2)}",
                                   style: TextStyle(
-                                      fontSize: textSizePage2,
-                                      color: _vASColor(_vasValues("Humør"))),
+                                    fontSize: textSizePage2,
+                                    // color: _vASColor(_vasValues("Humør"))
+                                  ),
                                 ),
                               ],
                             ),
@@ -398,7 +403,7 @@ class LegendWidget extends StatelessWidget {
           width: 10,
           height: 10,
           decoration: BoxDecoration(
-            shape: BoxShape.rectangle,
+            shape: BoxShape.circle,
             color: color,
           ),
         ),
@@ -406,7 +411,7 @@ class LegendWidget extends StatelessWidget {
         Text(
           name,
           style: const TextStyle(
-            color: Color.fromARGB(255, 84, 83, 99),
+            color: Color(0xff757391),
             fontSize: 16,
           ),
         ),
