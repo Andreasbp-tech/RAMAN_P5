@@ -27,7 +27,6 @@ class Topappbar extends StatelessWidget implements PreferredSizeWidget {
   final PreferredSizeWidget? bottom;
   final double? elevation;
   final double? toolbarHeight;
-  
 
   Topappbar({
     super.key,
@@ -43,22 +42,24 @@ class Topappbar extends StatelessWidget implements PreferredSizeWidget {
         preferredSize =
             _PreferredAppBarSize(toolbarHeight, bottom?.preferredSize.height);
 
-            _titleBoxColor(Color? titleBoxColorInput){
-              Color titleBoxColorOutput = const Color.fromARGB(255, 243, 243, 228);
-              if (titleBoxColorInput!= null) {
-                titleBoxColorOutput = titleBoxColorInput;
-              }
-              return titleBoxColorOutput;
-            }
-            _titleTextColor(Color? titleBoxColorInput, Color? titleTextColorInput){;
-              Color titleTextColorOutput = const Color.fromARGB(255, 0, 0, 0);
-              if (titleBoxColorInput!= null) {
-                if (titleTextColorInput !=null) {
-                  titleTextColorOutput = titleTextColorInput;
-                }
-              }
-              return titleTextColorOutput;
-            }
+  _titleBoxColor(Color? titleBoxColorInput) {
+    Color titleBoxColorOutput = const Color.fromARGB(0, 243, 243, 228);
+    if (titleBoxColorInput != null) {
+      titleBoxColorOutput = titleBoxColorInput;
+    }
+    return titleBoxColorOutput;
+  }
+
+  _titleTextColor(Color? titleBoxColorInput, Color? titleTextColorInput) {
+    ;
+    Color titleTextColorOutput = const Color.fromARGB(255, 0, 0, 0);
+    if (titleBoxColorInput != null) {
+      if (titleTextColorInput != null) {
+        titleTextColorOutput = titleTextColorInput;
+      }
+    }
+    return titleTextColorOutput;
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -91,12 +92,15 @@ class Topappbar extends StatelessWidget implements PreferredSizeWidget {
       title: Container(
         padding: EdgeInsets.all(8.0),
         decoration: BoxDecoration(
-          color:  _titleBoxColor(titleBoxColor),// Change this to your desired color
+          color: _titleBoxColor(
+              titleBoxColor), // Change this to your desired color
           borderRadius: BorderRadius.circular(8.0),
         ),
         child: Text(
           pagename,
-          style: TextStyle(color: _titleTextColor(titleBoxColor, titleTextColor)), // Adjust text color if needed
+          style: TextStyle(
+              color: _titleTextColor(titleBoxColor,
+                  titleTextColor)), // Adjust text color if needed
         ),
       ),
       centerTitle: true,
