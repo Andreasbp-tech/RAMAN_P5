@@ -144,7 +144,7 @@ class _LarOmDinSmerteSoloDagPage1State
         painDivergencePercentage =
             (((gnsSmerte - data.smerteManed) / data.smerteManed) * 100).abs();
         fieldContent =
-            "Igennem de angivede dage kan det ses at den gennemsnitlige smerte har været ${_vasValues("Smerte")!.toStringAsFixed(2)}, det viser sig at afvige med ${painDivergencePercentage.toStringAsFixed(1)}% fra det nuværende månedelige gennemsnit for smerte. Du kan se mere om hvilke aktiviteter der kan have været årsagen til dette på den forrige side.";
+            "Igennem de angivede dage kan det ses, at den gennemsnitlige smerte har været ${_vasValues("Smerte")!.toStringAsFixed(1)}. Det afviger med ${painDivergencePercentage.toStringAsFixed(1)}% fra det nuværende månedelige gennemsnit for smerte. Du kan se mere om hvilke aktiviteter, der kan have været årsagen til dette på den forrige side.";
       } else {
         painDivergencePercentage = ((data.godeDageVas[widget.chosenDateIndex]
                         ["Smerte"]! -
@@ -154,7 +154,7 @@ class _LarOmDinSmerteSoloDagPage1State
                 100)
             .abs();
         fieldContent =
-            "Denne dag har været en god dag, da din smerte har været på ${data.godeDageVas[widget.chosenDateIndex]["Smerte"]!.toStringAsFixed(1)}, dette er væsentligt bedre end hvad du ellers indrapporterer, det er faktisk hele ${painDivergencePercentage.toStringAsFixed(1)}% lavere. Du kan se mere om hvilke aktiviteter der kan have været årsagen til dette på den forrige side.";
+            "Denne dag har været en god dag, da din smerte har været på ${data.godeDageVas[widget.chosenDateIndex]["Smerte"]!.toStringAsFixed(1)}. Dette er væsentligt bedre, end hvad du ellers indrapporterer. Det er faktisk hele ${painDivergencePercentage.toStringAsFixed(1)}% lavere. Du kan se mere om hvilke aktiviteter, der kan have været årsagen til dette på den forrige side.";
       }
     }
     if (widget.badDay) {
@@ -171,7 +171,7 @@ class _LarOmDinSmerteSoloDagPage1State
         painDivergencePercentage =
             (((gnsSmerte - data.smerteManed) / data.smerteManed) * 100).abs();
         fieldContent =
-            "Igennem de angivede dage kan det ses at den gennemsnitlige smerte har været ${_vasValues("Smerte")!.toStringAsFixed(2)}, det viser sig at afvige med ${painDivergencePercentage.toStringAsFixed(1)}% fra det nuværende månedlige gennemsnit for smer du kan se mere om hvilke aktiviteter du foretager dig på dagen og i dagene ledende op til disse dårlige dage på den forrige side";
+            "Igennem de angivede dage kan det ses, at den gennemsnitlige smerte har været ${_vasValues("Smerte")!.toStringAsFixed(1)}. Det afviger med ${painDivergencePercentage.toStringAsFixed(1)}% fra det nuværende månedlige gennemsnit for smerte. Du kan se mere om hvilke aktiviteter du foretager dig på dagen og på dagene ledende op til disse dårlige dage på den forrige side";
       } else {
         painDivergencePercentage = ((data.badDaysVas[widget.chosenDateIndex]
                         ["Smerte"]! -
@@ -181,7 +181,7 @@ class _LarOmDinSmerteSoloDagPage1State
                 100)
             .abs();
         fieldContent =
-            "Denne dag har været en dårlig dag, dette kan ses da du har haft mere ondt end ellers, du har indrapporteret din smerte til at være på ${data.badDaysVas[widget.chosenDateIndex]["Smerte"]!.toStringAsFixed(1)}, dette afviger sig med ${painDivergencePercentage.toStringAsFixed(1)}% fra den nuværende måneds gennemsnit.";
+            "Denne dag har været en dårlig dag. Dette kan ses, da du har haft mere ondt end ellers. Du har indrapporteret din smerte til at være på ${data.badDaysVas[widget.chosenDateIndex]["Smerte"]!.toStringAsFixed(1)}. Dette afviger sig med ${painDivergencePercentage.toStringAsFixed(1)}% fra den nuværende måneds gennemsnit.";
       }
     }
     return fieldContent;
