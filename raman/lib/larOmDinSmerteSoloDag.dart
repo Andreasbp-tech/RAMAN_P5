@@ -254,7 +254,7 @@ class _LarOmDinSmerteSoloDagPage1State
                                 cardColors: cardColors,
                                 top10aktiviteter: top10aktiviteter,
                                 maxYValue:
-                                    (widget.chosenDateIndex == 5) ? 40 : 10,
+                                    (widget.chosenDateIndex == 5) ? 35 : 10,
                               )
                             : CustomBarChartSamlet(
                                 cardColors: cardColors,
