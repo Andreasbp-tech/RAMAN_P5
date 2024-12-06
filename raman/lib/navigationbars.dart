@@ -137,8 +137,7 @@ class _BottomappbarState extends State<Bottomappbar> {
         page = const KalenderWidget();
         break;
       case 2:
-        page = const Profil();
-        break;
+        return;
       case 3:
         page = const Opsummering();
         break;

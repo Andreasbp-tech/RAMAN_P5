@@ -17,6 +17,7 @@ class _LaromdinsmerteState extends State<Laromdinsmerte> {
   final double buttonFontSize = 18;
   final double samletButtonFontSize = 20;
   final double buttonHeight = 80;
+  final double verticalPadding = 6;
 
   @override
   Widget build(BuildContext context) {
@@ -51,14 +52,14 @@ class _LaromdinsmerteState extends State<Laromdinsmerte> {
         const Text(
           'Gode dage',
           style: TextStyle(
-            fontSize: 32,
+            fontSize: 28,
             fontWeight: FontWeight.bold,
             color: Colors.green,
           ),
         ),
         SizedBox(height: 20),
         Padding(
-          padding: const EdgeInsets.symmetric(vertical: 8.0),
+          padding: EdgeInsets.symmetric(vertical: verticalPadding),
           child: ElevatedButton(
             onPressed: () {
               Navigator.of(context).push(
@@ -89,7 +90,7 @@ class _LaromdinsmerteState extends State<Laromdinsmerte> {
           ),
         ),
         Padding(
-          padding: const EdgeInsets.symmetric(vertical: 8.0),
+          padding: EdgeInsets.symmetric(vertical: verticalPadding),
           child: ElevatedButton(
             onPressed: () {
               Navigator.of(context).push(
@@ -120,7 +121,7 @@ class _LaromdinsmerteState extends State<Laromdinsmerte> {
           ),
         ),
         Padding(
-          padding: const EdgeInsets.symmetric(vertical: 8.0),
+          padding: EdgeInsets.symmetric(vertical: verticalPadding),
           child: ElevatedButton(
             onPressed: () {
               Navigator.of(context).push(
@@ -151,7 +152,7 @@ class _LaromdinsmerteState extends State<Laromdinsmerte> {
           ),
         ),
         Padding(
-          padding: const EdgeInsets.symmetric(vertical: 8.0),
+          padding: EdgeInsets.symmetric(vertical: verticalPadding),
           child: ElevatedButton(
             onPressed: () {
               Navigator.of(context).push(
@@ -182,7 +183,7 @@ class _LaromdinsmerteState extends State<Laromdinsmerte> {
           ),
         ),
         Padding(
-          padding: const EdgeInsets.symmetric(vertical: 8.0),
+          padding: EdgeInsets.symmetric(vertical: verticalPadding),
           child: ElevatedButton(
             onPressed: () {
               Navigator.of(context).push(
@@ -216,17 +217,17 @@ class _LaromdinsmerteState extends State<Laromdinsmerte> {
         ElevatedButton(
           onPressed: () {
             Navigator.of(context).push(
-                MaterialPageRoute(
-                  builder: (BuildContext context) {
-                    return LarOmDinSmerteSoloDagPage1(
-                      chosenDateIndex: 5,
-                      goodDay: true,
-                      badDay: false,
-                      chosenDate: "Samlet",
-                    );
-                  },
-                ),
-              );
+              MaterialPageRoute(
+                builder: (BuildContext context) {
+                  return LarOmDinSmerteSoloDagPage1(
+                    chosenDateIndex: 5,
+                    goodDay: true,
+                    badDay: false,
+                    chosenDate: "Samlet",
+                  );
+                },
+              ),
+            );
           },
           style: ElevatedButton.styleFrom(
             backgroundColor: Colors.green,
@@ -251,14 +252,14 @@ class _LaromdinsmerteState extends State<Laromdinsmerte> {
         Text(
           'Dårlige dage',
           style: TextStyle(
-            fontSize: 32,
+            fontSize: 28,
             fontWeight: FontWeight.bold,
             color: Colors.red,
           ),
         ),
         SizedBox(height: 20),
         Padding(
-          padding: const EdgeInsets.symmetric(vertical: 8.0),
+          padding: EdgeInsets.symmetric(vertical: verticalPadding),
           child: ElevatedButton(
             onPressed: () {
               Navigator.of(context).push(
@@ -289,7 +290,7 @@ class _LaromdinsmerteState extends State<Laromdinsmerte> {
           ),
         ),
         Padding(
-          padding: const EdgeInsets.symmetric(vertical: 8.0),
+          padding: EdgeInsets.symmetric(vertical: verticalPadding),
           child: ElevatedButton(
             onPressed: () {
               Navigator.of(context).push(
@@ -320,7 +321,7 @@ class _LaromdinsmerteState extends State<Laromdinsmerte> {
           ),
         ),
         Padding(
-          padding: const EdgeInsets.symmetric(vertical: 8.0),
+          padding: EdgeInsets.symmetric(vertical: verticalPadding),
           child: ElevatedButton(
             onPressed: () {
               Navigator.of(context).push(
@@ -351,7 +352,7 @@ class _LaromdinsmerteState extends State<Laromdinsmerte> {
           ),
         ),
         Padding(
-          padding: const EdgeInsets.symmetric(vertical: 8.0),
+          padding: EdgeInsets.symmetric(vertical: verticalPadding),
           child: ElevatedButton(
             onPressed: () {
               Navigator.of(context).push(
@@ -416,17 +417,17 @@ class _LaromdinsmerteState extends State<Laromdinsmerte> {
         ElevatedButton(
           onPressed: () {
             Navigator.of(context).push(
-                MaterialPageRoute(
-                  builder: (BuildContext context) {
-                    return LarOmDinSmerteSoloDagPage1(
-                      chosenDateIndex: 5,
-                      goodDay: false,
-                      badDay: true,
-                      chosenDate: "Samlet",
-                    );
-                  },
-                ),
-              );
+              MaterialPageRoute(
+                builder: (BuildContext context) {
+                  return LarOmDinSmerteSoloDagPage1(
+                    chosenDateIndex: 5,
+                    goodDay: false,
+                    badDay: true,
+                    chosenDate: "Samlet",
+                  );
+                },
+              ),
+            );
           },
           style: ElevatedButton.styleFrom(
             backgroundColor: Colors.red,

@@ -30,7 +30,7 @@ class _PunktdiagramState extends State<Punktdiagram> {
     //this List is to define the options available for the user
     "Uge",
     "Måned",
-    "År",
+    //"År",
   ];
 
   String? chosenDataLength =
@@ -193,7 +193,10 @@ class _OptionsMenuState extends State<OptionsMenu> {
             children: widget.items.keys.map((item) {
               return CheckboxListTile(
                 value: widget.items[item],
-                title: Text(item),
+                title: Text(
+                  item,
+                  style: const TextStyle(fontSize: 13),
+                ),
                 activeColor: _getColor(item),
                 controlAffinity: ListTileControlAffinity.leading,
                 onChanged: (isChecked) {

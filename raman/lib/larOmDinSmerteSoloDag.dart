@@ -254,13 +254,13 @@ class _LarOmDinSmerteSoloDagPage1State
                                 cardColors: cardColors,
                                 top10aktiviteter: top10aktiviteter,
                                 maxYValue:
-                                    (widget.chosenDateIndex == 5) ? 50 : 10,
+                                    (widget.chosenDateIndex == 5) ? 40 : 10,
                               )
                             : CustomBarChartSamlet(
                                 cardColors: cardColors,
                                 top10aktiviteter: top10aktiviteter,
                                 maxYValue:
-                                    (widget.chosenDateIndex == 5) ? 50 : 10,
+                                    (widget.chosenDateIndex == 5) ? 35 : 10,
                                 listOfaktiviteterForDagen: (widget.goodDay)
                                     ? data.dataGodeDageForUseInApp
                                     : data.dataBadDaysForUseInApp,
