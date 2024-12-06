@@ -157,7 +157,7 @@ class _LoadingDataPageState extends State<LoadingDataPage> {
                   },
                 );
                 godeDageVas.add(convertedVAS);
-                // print(godeDageVas);
+                print(godeDageVas);
               }
             } catch (e) {}
             // Initialize nestedMap for each date
@@ -178,7 +178,7 @@ class _LoadingDataPageState extends State<LoadingDataPage> {
 
             dataGodeDageForUseInApp.add(nestedMap);
 
-            // print(dataGodeDageForUseInApp);
+            print(dataGodeDageForUseInApp);
 
             j++;
             // print(j);
@@ -294,9 +294,9 @@ class _LoadingDataPageState extends State<LoadingDataPage> {
       gnsSmerte = gnsSmerte / l;
       gnsSmerteUpperLimit = gnsSmerte + (gnsSmerte * 0.33);
       gnsSmerteLowerLimit = gnsSmerte - (gnsSmerte * 0.33);
-      print("gnsSmerte = $gnsSmerte");
-      print("gnsSmerteUpperLimit = $gnsSmerteUpperLimit");
-      print("gnsSmerteLowerLimit = $gnsSmerteLowerLimit");
+      // print("gnsSmerte = $gnsSmerte");
+      // print("gnsSmerteUpperLimit = $gnsSmerteUpperLimit");
+      // print("gnsSmerteLowerLimit = $gnsSmerteLowerLimit");
     }
 
     int jUge = 0;

@@ -32,16 +32,16 @@ class _LarOmDinSmerteSoloDagPage1State
   final PageController _pageController = PageController();
 
   final List<Color> cardColors = [
-    Colors.red,
-    Colors.green,
-    Colors.blue,
-    Colors.orange,
-    Colors.purple,
-    Colors.yellow,
-    Colors.cyan,
-    Colors.pink,
-    Colors.teal,
-    Colors.brown,
+    Color(0xFFDC143C), // Crimson
+    Color(0xFF32CD32), // Lime Green
+    Color(0xFF4169E1), // Royal Blue
+    Color(0xFFFFD700), // Gold
+    Color(0xFFFF00FF), // Magenta
+    Color(0xFF40E0D0), // Turquoise
+    Color(0xFFFF7F50), // Coral
+    Color(0xFF4B0082), // Indigo
+    Color(0xFF7FFF00), // Chartreuse
+    Color(0xFF708090), // Slate Gray
   ];
   Map<String, Map<String, bool>> aktiviteterForDagen = {};
 
@@ -55,11 +55,14 @@ class _LarOmDinSmerteSoloDagPage1State
   _fetchData() {
     aktiviteterForAlleIndlesteGodeDage = data.dataGodeDageForUseInApp;
     aktiviteterForAlleIndlesteDarligeDage = data.dataBadDaysForUseInApp;
-    if (widget.goodDay) {
-      aktiviteterForDagen =
-          data.dataGodeDageForUseInApp[widget.chosenDateIndex];
-    } else if (widget.badDay) {
-      aktiviteterForDagen = data.dataBadDaysForUseInApp[widget.chosenDateIndex];
+    if (widget.chosenDateIndex != 5) {
+      if (widget.goodDay) {
+        aktiviteterForDagen =
+            data.dataGodeDageForUseInApp[widget.chosenDateIndex];
+      } else if (widget.badDay) {
+        aktiviteterForDagen =
+            data.dataBadDaysForUseInApp[widget.chosenDateIndex];
+      }
     }
   }
 
@@ -101,6 +104,28 @@ class _LarOmDinSmerteSoloDagPage1State
     setState(() {});
   }
 
+  Color _vASColor(double value) {
+    double ratio = value / 10;
+    if (ratio <= 0.5) {
+      // Transition from red to yellow
+      return Color.lerp(Colors.red, Colors.yellow, ratio * 2)!;
+    } else {
+      // Transition from yellow to green
+      return Color.lerp(Colors.yellow, Colors.green, (ratio - 0.5) * 2)!;
+    }
+  }
+
+  Color _vASColorInverted(double value) {
+    double ratio = value / 10;
+    if (ratio <= 0.5) {
+      // Transition from red to yellow
+      return Color.lerp(Colors.green, Colors.yellow, ratio * 2)!;
+    } else {
+      // Transition from yellow to green
+      return Color.lerp(Colors.yellow, Colors.red, (ratio - 0.5) * 2)!;
+    }
+  }
+
   _textFieldContent() {
     String fieldContent = "";
     double painDivergencePercentage;
@@ -119,7 +144,7 @@ class _LarOmDinSmerteSoloDagPage1State
         painDivergencePercentage =
             (((gnsSmerte - data.smerteManed) / data.smerteManed) * 100).abs();
         fieldContent =
-            "Igennem de angivede dage kan det ses at den gennemsnitlige smerte har været ${gnsSmerte.toStringAsFixed(1)}, det viser sig at afvige med ${painDivergencePercentage.toStringAsFixed(1)}% fra det nuværende månedelige gennemsnit for smerte. Du kan se mere om hvilke aktiviteter der kan have været årsagen til dette på den forrige side.";
+            "Igennem de angivede dage kan det ses at den gennemsnitlige smerte har været ${_vasValues("Smerte")!.toStringAsFixed(2)}, det viser sig at afvige med ${painDivergencePercentage.toStringAsFixed(1)}% fra det nuværende månedelige gennemsnit for smerte. Du kan se mere om hvilke aktiviteter der kan have været årsagen til dette på den forrige side.";
       } else {
         painDivergencePercentage = ((data.godeDageVas[widget.chosenDateIndex]
                         ["Smerte"]! -
@@ -146,7 +171,7 @@ class _LarOmDinSmerteSoloDagPage1State
         painDivergencePercentage =
             (((gnsSmerte - data.smerteManed) / data.smerteManed) * 100).abs();
         fieldContent =
-            "Igennem de angivede dage kan det ses at den gennemsnitlige smerte har været ${gnsSmerte.toStringAsFixed(1)}, det viser sig at afvige med ${painDivergencePercentage.toStringAsFixed(1)}% fra det nuværende månedlige gennemsnit for smer du kan se mere om hvilke aktiviteter du foretager dig på dagen og i dagene ledende op til disse dårlige dage på den forrige side";
+            "Igennem de angivede dage kan det ses at den gennemsnitlige smerte har været ${_vasValues("Smerte")!.toStringAsFixed(2)}, det viser sig at afvige med ${painDivergencePercentage.toStringAsFixed(1)}% fra det nuværende månedlige gennemsnit for smer du kan se mere om hvilke aktiviteter du foretager dig på dagen og i dagene ledende op til disse dårlige dage på den forrige side";
       } else {
         painDivergencePercentage = ((data.badDaysVas[widget.chosenDateIndex]
                         ["Smerte"]! -
@@ -163,15 +188,40 @@ class _LarOmDinSmerteSoloDagPage1State
   }
 
   _vasValues(String searchedForString) {
-    double? vASscoreToReturn;
-    if (widget.goodDay) {
-      vASscoreToReturn =
-          data.godeDageVas[widget.chosenDateIndex][searchedForString];
+    double calculateAverage(List<Map<String, double>> data, String key) {
+      double sum = 0;
+      int count = 0;
+
+      for (var entry in data) {
+        if (entry.containsKey(key)) {
+          sum += entry[key]!;
+          count++;
+        }
+      }
+
+      return count > 0 ? sum / count : 0;
     }
-    if (widget.badDay) {
-      vASscoreToReturn =
-          data.badDaysVas[widget.chosenDateIndex][searchedForString];
+
+    double? vASscoreToReturn = 0;
+    if (widget.chosenDateIndex != 5) {
+      if (widget.goodDay) {
+        vASscoreToReturn =
+            data.godeDageVas[widget.chosenDateIndex][searchedForString];
+      }
+      if (widget.badDay) {
+        vASscoreToReturn =
+            data.badDaysVas[widget.chosenDateIndex][searchedForString];
+      }
+    } else {
+      if (widget.goodDay) {
+        vASscoreToReturn =
+            calculateAverage(data.godeDageVas, searchedForString);
+      }
+      if (widget.badDay) {
+        vASscoreToReturn = calculateAverage(data.badDaysVas, searchedForString);
+      }
     }
+
     return vASscoreToReturn;
   }
 
@@ -198,14 +248,22 @@ class _LarOmDinSmerteSoloDagPage1State
                     child: Column(
                       children: [
                         const SizedBox(height: 1),
-                        CustomBarChart(
-                            aktiviteterForDagen: aktiviteterForDagen,
-                            cardColors: cardColors,
-                            top10aktiviteter: top10aktiviteter,
-                            maxYValue: (widget.chosenDateIndex == 5) ? 50 : 10,
-                            chosenDate: widget.chosenDateIndex,
-                                ? data.dataGodeDageForUseInApp
-                                : data.dataBadDaysForUseInApp)
+                        (widget.chosenDateIndex != 5)
+                            ? CustomBarChartSoloDag(
+                                aktiviteterForDagen: aktiviteterForDagen,
+                                cardColors: cardColors,
+                                top10aktiviteter: top10aktiviteter,
+                                maxYValue:
+                                    (widget.chosenDateIndex == 5) ? 50 : 10,
+                              )
+                            : CustomBarChartSamlet(
+                                cardColors: cardColors,
+                                top10aktiviteter: top10aktiviteter,
+                                maxYValue:
+                                    (widget.chosenDateIndex == 5) ? 50 : 10,
+                                listOfaktiviteterForDagen:
+                                    data.dataGodeDageForUseInApp,
+                              )
                       ],
                     ),
                   ),
@@ -220,13 +278,17 @@ class _LarOmDinSmerteSoloDagPage1State
                             "Smerte: ${_vasValues("Smerte")!.toStringAsFixed(2)}",
                             style: TextStyle(
                                 fontSize: textSizePage2 + 4,
-                                fontWeight: FontWeight.bold),
+                                fontWeight: FontWeight.bold,
+                                color: _vASColorInverted(_vasValues("Smerte"))),
                           ),
                           Text(
                             "Gennemsnitsmerte: ${_vasValues("Gennemsnitsmerte")!.toStringAsFixed(2)}",
                             style: TextStyle(
-                                fontSize: textSizePage2 - 4,
-                                color: Colors.black.withOpacity(0.4)),
+                              fontSize: textSizePage2 - 4,
+                              color: _vASColorInverted(
+                                      _vasValues("Gennemsnitsmerte"))
+                                  .withOpacity(1),
+                            ),
                           )
                         ],
                       ),
@@ -246,11 +308,15 @@ class _LarOmDinSmerteSoloDagPage1State
                               children: [
                                 Text(
                                   "Social aktivitet: ${_vasValues("Social")!.toStringAsFixed(2)}",
-                                  style: TextStyle(fontSize: textSizePage2),
+                                  style: TextStyle(
+                                      fontSize: textSizePage2,
+                                      color: _vASColor(_vasValues("Social"))),
                                 ),
                                 Text(
                                   "Søvn: ${_vasValues("Søvn")!.toStringAsFixed(2)}",
-                                  style: TextStyle(fontSize: textSizePage2),
+                                  style: TextStyle(
+                                      fontSize: textSizePage2,
+                                      color: _vASColor(_vasValues("Søvn"))),
                                 ),
                               ],
                             ),
@@ -259,11 +325,16 @@ class _LarOmDinSmerteSoloDagPage1State
                               children: [
                                 Text(
                                   "Fysisk aktivitet: ${_vasValues("Aktivitetsniveau")!.toStringAsFixed(2)}",
-                                  style: TextStyle(fontSize: textSizePage2),
+                                  style: TextStyle(
+                                      fontSize: textSizePage2,
+                                      color: _vASColor(
+                                          _vasValues("Aktivitetsniveau"))),
                                 ),
                                 Text(
                                   "Humør: ${_vasValues("Humør")!.toStringAsFixed(2)}",
-                                  style: TextStyle(fontSize: textSizePage2),
+                                  style: TextStyle(
+                                      fontSize: textSizePage2,
+                                      color: _vASColor(_vasValues("Humør"))),
                                 ),
                               ],
                             ),
@@ -372,18 +443,18 @@ class Legend {
   final Color color;
 }
 
-class CustomBarChart extends StatelessWidget {
+class CustomBarChartSoloDag extends StatelessWidget {
   Map<String, Map<String, bool>> aktiviteterForDagen;
   List<String> top10aktiviteter;
   List<Color> cardColors;
   double maxYValue;
+
+  CustomBarChartSoloDag({
     super.key,
     required this.aktiviteterForDagen,
     required this.cardColors,
     required this.top10aktiviteter,
     required this.maxYValue,
-    required this.chosenDate,
-    required this.alleDageSamlet,
   });
 
   final betweenSpace = 0.0;
@@ -393,6 +464,204 @@ class CustomBarChart extends StatelessWidget {
     inputMap.forEach((key, value) {
       outputMap[key] = value ? doubleSize : 0.0;
     });
+    // print(outputMap);
+    return outputMap;
+  }
+
+  BarChartGroupData generateGroupData(
+      int x,
+      Map<String, double> top10aktiviteterMedDouble,
+      double barWidth,
+      List<String> top10aktiviteter,
+      double betweenSpace) {
+    return BarChartGroupData(
+      x: x,
+      groupVertically: true,
+      barsSpace: 15,
+      barRods: List.generate(top10aktiviteter.length, (index) {
+        double fromY = index == 0
+            ? 0
+            : top10aktiviteter
+                    .take(index)
+                    .map((activity) =>
+                        top10aktiviteterMedDouble[activity] ?? 0.0)
+                    .reduce((a, b) => a + b) +
+                (index * betweenSpace);
+        double toY =
+            fromY + (top10aktiviteterMedDouble[top10aktiviteter[index]] ?? 0.0);
+        return BarChartRodData(
+          fromY: fromY,
+          toY: toY,
+          color: cardColors[index % cardColors.length],
+          width: barWidth,
+          borderRadius: BorderRadius.zero,
+        );
+      }),
+    );
+  }
+
+  Widget bottomTitles(double value, TitleMeta meta) {
+    const style = TextStyle(fontSize: 12, fontWeight: FontWeight.bold);
+    String text;
+    switch (value.toInt()) {
+      case 5:
+        text = 'På dagen';
+        break;
+      case 4:
+        text = '1 dag før';
+        break;
+      case 3:
+        text = '2 dage før';
+        break;
+      case 2:
+        text = '3 dage før';
+        break;
+      case 1:
+        text = '4 dage før';
+        break;
+      case 0:
+        text = '5 dage før';
+      default:
+        text = '';
+    }
+    return SideTitleWidget(
+      axisSide: meta.axisSide,
+      child: Text(text, style: style),
+    );
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return Padding(
+      padding: const EdgeInsets.all(20),
+      child: Column(
+        mainAxisSize: MainAxisSize.min,
+        crossAxisAlignment: CrossAxisAlignment.center,
+        children: [
+          const Text(
+            'Aktiviteter',
+            style: TextStyle(
+              color: Colors.blue,
+              fontSize: 26,
+              fontWeight: FontWeight.bold,
+            ),
+          ),
+          const SizedBox(height: 8),
+          LegendsListWidget(
+            legends: [
+              Legend(top10aktiviteter[0], cardColors[0]),
+              Legend(top10aktiviteter[1], cardColors[1]),
+              Legend(top10aktiviteter[2], cardColors[2]),
+              Legend(top10aktiviteter[3], cardColors[3]),
+              Legend(top10aktiviteter[4], cardColors[4]),
+              Legend(top10aktiviteter[5], cardColors[5]),
+              Legend(top10aktiviteter[6], cardColors[6]),
+              Legend(top10aktiviteter[7], cardColors[7]),
+              Legend(top10aktiviteter[8], cardColors[8]),
+              Legend(top10aktiviteter[9], cardColors[9]),
+            ],
+          ),
+          const SizedBox(height: 5),
+          AspectRatio(
+            aspectRatio: 0.75,
+            child: BarChart(
+              BarChartData(
+                alignment: BarChartAlignment.spaceBetween,
+                titlesData: FlTitlesData(
+                  leftTitles: const AxisTitles(),
+                  rightTitles: const AxisTitles(),
+                  topTitles: const AxisTitles(),
+                  bottomTitles: AxisTitles(
+                    sideTitles: SideTitles(
+                      showTitles: true,
+                      getTitlesWidget: bottomTitles,
+                      reservedSize: 30,
+                    ),
+                  ),
+                ),
+                barTouchData: BarTouchData(enabled: false),
+                borderData: FlBorderData(show: true),
+                gridData: const FlGridData(show: true),
+                barGroups: [
+                  generateGroupData(
+                      1,
+                      addDoubleToList(
+                          aktiviteterForDagen.values.elementAt(4), 1.0),
+                      barWidth,
+                      top10aktiviteter,
+                      0.0),
+                  generateGroupData(
+                      2,
+                      addDoubleToList(
+                          aktiviteterForDagen.values.elementAt(3), 1.0),
+                      barWidth,
+                      top10aktiviteter,
+                      0.0),
+                  generateGroupData(
+                      3,
+                      addDoubleToList(
+                          aktiviteterForDagen.values.elementAt(2), 1.0),
+                      barWidth,
+                      top10aktiviteter,
+                      0.0),
+                  generateGroupData(
+                      4,
+                      addDoubleToList(
+                          aktiviteterForDagen.values.elementAt(1), 1.0),
+                      barWidth,
+                      top10aktiviteter,
+                      0.0),
+                  generateGroupData(
+                      5,
+                      addDoubleToList(
+                          aktiviteterForDagen.values.elementAt(0), 1.0),
+                      barWidth,
+                      top10aktiviteter,
+                      0.0),
+                ],
+                maxY: maxYValue,
+              ),
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+}
+
+class CustomBarChartSamlet extends StatelessWidget {
+  List<Map<String, Map<String, bool>>> listOfaktiviteterForDagen;
+  List<String> top10aktiviteter;
+  List<Color> cardColors;
+  double maxYValue;
+  CustomBarChartSamlet({
+    super.key,
+    required this.listOfaktiviteterForDagen,
+    required this.cardColors,
+    required this.top10aktiviteter,
+    required this.maxYValue,
+  });
+
+  final betweenSpace = 0.0;
+  final double barWidth = 20;
+  addDoubleToList(List<Map<String, Map<String, bool>>> inputList,
+      double doubleSize, int daysPrior) {
+    if (daysPrior >= inputList.length) {
+      throw IndexError(daysPrior, inputList);
+    }
+
+    Map<String, Map<String, bool>> days = inputList[daysPrior];
+    List<String> keys = days.keys.toList();
+    Map<String, double> outputMap = {};
+
+    for (int i = 0; i < keys.length; i++) {
+      Map<String, bool>? dayActivities = days[keys[i]];
+      dayActivities?.forEach((activity, completed) {
+        outputMap[activity] =
+            (outputMap[activity] ?? 0) + (completed ? 1.0 : 0.0);
+      });
+    }
+
     print(outputMap);
     return outputMap;
   }
@@ -423,6 +692,7 @@ class CustomBarChart extends StatelessWidget {
           toY: toY,
           color: cardColors[index % cardColors.length],
           width: barWidth,
+          borderRadius: BorderRadius.zero,
         );
       }),
     );
@@ -520,36 +790,31 @@ class CustomBarChart extends StatelessWidget {
                   //     0.0),
                   generateGroupData(
                       1,
-                      addDoubleToList(
-                          aktiviteterForDagen.values.elementAt(4), 1.0),
+                      addDoubleToList(listOfaktiviteterForDagen, 1.0, 4),
                       barWidth,
                       top10aktiviteter,
                       0.0),
                   generateGroupData(
                       2,
-                      addDoubleToList(
-                          aktiviteterForDagen.values.elementAt(3), 1.0),
+                      addDoubleToList(listOfaktiviteterForDagen, 1.0, 3),
                       barWidth,
                       top10aktiviteter,
                       0.0),
                   generateGroupData(
                       3,
-                      addDoubleToList(
-                          aktiviteterForDagen.values.elementAt(2), 1.0),
+                      addDoubleToList(listOfaktiviteterForDagen, 1.0, 2),
                       barWidth,
                       top10aktiviteter,
                       0.0),
                   generateGroupData(
                       4,
-                      addDoubleToList(
-                          aktiviteterForDagen.values.elementAt(1), 1.0),
+                      addDoubleToList(listOfaktiviteterForDagen, 1.0, 1),
                       barWidth,
                       top10aktiviteter,
                       0.0),
                   generateGroupData(
                       5,
-                      addDoubleToList(
-                          aktiviteterForDagen.values.elementAt(0), 1.0),
+                      addDoubleToList(listOfaktiviteterForDagen, 1.0, 0),
                       barWidth,
                       top10aktiviteter,
                       0.0),
